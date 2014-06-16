@@ -1,6 +1,4 @@
-import 'package:stagexl/stagexl.dart';
-import 'dart:html' as html;
-import 'gglavatar.dart';
+part of giggl;
 
 /**
  * examples: https://github.com/bp74/StageXL_Samples/
@@ -9,9 +7,9 @@ import 'gglavatar.dart';
 class GglClient {
   Map<int, bool> _keyState = new Map<int, bool>();
   ResourceManager _resMgr;
-  Stage stage;
+  Stage _stage = GglStage.getInstance();
 
-  GglClient(this.stage) {
+  GglClient() {
     _setupResource();
     _setupKeyListener();
   }
@@ -22,22 +20,27 @@ class GglClient {
     _resMgr
       .load()
       .then((_) {
-        stage.addChild(new GglAvatar(stage));
+        _stage.addChild(new GglAvatar());
       })
       .catchError((e) => print(e));
   }
 
   void _setupKeyListener() {
-    stage.focus = stage;
-    stage.onKeyDown.listen((e) => _keyState[e.keyCode] = true);
-    stage.onKeyUp.listen((e) => _keyState[e.keyCode] = false);
+    _stage.focus = _stage;
+    _stage.onKeyDown.listen((e) => _keyState[e.keyCode] = true);
+    _stage.onKeyUp.listen((e) => _keyState[e.keyCode] = false);
     //_stage.onEnterFrame.listen((e) => print(_keyState));
-    stage.onEnterFrame.listen((EnterFrameEvent e) {
+    _stage.onEnterFrame.listen((EnterFrameEvent e) {
       var fps = null;
       fps = fps == null
           ? 1.00 / e.passedTime
           : 0.05 / e.passedTime + 0.95 * fps;
       html.querySelector('#fps').innerHtml = 'fps: ${fps.round()}';
     });
+  }
+
+  void startRender() {
+    var renderLoop = new RenderLoop();
+    renderLoop.addStage(_stage);
   }
 }

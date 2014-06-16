@@ -1,12 +1,6 @@
-import 'dart:html' as html;
-import 'package:stagexl/stagexl.dart';
-import 'gglclient.dart';
+import 'giggl.dart';
 
 void main() {
-  var canvas = html.querySelector('#gglstage');
-  var stage = new Stage(canvas);
-  var renderLoop = new RenderLoop();
-  renderLoop.addStage(stage);
-
-  var client = new GglClient(stage);
+  var client = new GglClient();
+  client.startRender();
 }
