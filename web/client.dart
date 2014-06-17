@@ -3,34 +3,37 @@ part of giggl;
 /**
  * examples: https://github.com/bp74/StageXL_Samples/
  * forums: http://www.stagexl.org/forum.html
+ * TODO: this should be the display object.
+ * Player should be an animatable. Follow examples here:
+ * http://www.stagexl.org/demos/performance.html
  */
-class GglClient {
+class Client {
   Map<int, bool> _keyState = new Map<int, bool>();
-  ResourceManager _resMgr;
-  Stage _stage = GglStage.getInstance();
 
-  GglClient() {
+  Client() {
     _setupResource();
     _setupKeyListener();
   }
 
   void _setupResource() {
-    _resMgr = new ResourceManager()
-      ..addBitmapData("idle", "./res/man_idle.png");
-    _resMgr
+    Player x = new Player();
+    resMgr
       .load()
       .then((_) {
-        _stage.addChild(new GglAvatar());
+        stage.addChild(x);
+
+        x.play();
+        x.move(100, 100);
       })
       .catchError((e) => print(e));
   }
 
   void _setupKeyListener() {
-    _stage.focus = _stage;
-    _stage.onKeyDown.listen((e) => _keyState[e.keyCode] = true);
-    _stage.onKeyUp.listen((e) => _keyState[e.keyCode] = false);
+    stage.focus = stage;
+    stage.onKeyDown.listen((e) => _keyState[e.keyCode] = true);
+    stage.onKeyUp.listen((e) => _keyState[e.keyCode] = false);
     //_stage.onEnterFrame.listen((e) => print(_keyState));
-    _stage.onEnterFrame.listen((EnterFrameEvent e) {
+    stage.onEnterFrame.listen((EnterFrameEvent e) {
       var fps = null;
       fps = fps == null
           ? 1.00 / e.passedTime
@@ -41,6 +44,6 @@ class GglClient {
 
   void startRender() {
     var renderLoop = new RenderLoop();
-    renderLoop.addStage(_stage);
+    renderLoop.addStage(stage);
   }
 }
