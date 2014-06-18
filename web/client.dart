@@ -3,30 +3,35 @@ part of giggl;
 /**
  * examples: https://github.com/bp74/StageXL_Samples/
  * forums: http://www.stagexl.org/forum.html
- * TODO: this should be the display object.
- * Player should be an animatable. Follow examples here:
  * http://www.stagexl.org/demos/performance.html
+ *
+ * TODO Player should be an animatable.
  */
-class Client {
+class Client extends DisplayObjectContainer {
   Client() {
+    ResourceHandler.init();
+    renderLoop.addStage(stage);
     _setupResource();
   }
 
   void _setupResource() {
-    Player x = new Player();
-    resMgr
-      .load()
-      .then((_) {
-        stage.addChild(x);
+    resMgr.load().then((_) {
 
-        x.play();
-        x.move(100, 100);
-      })
-      .catchError((e) => print(e));
-  }
+      Player x = new Player()
+        ..x = 100
+        ..y = 100
+        ..play()
+        ..addTo(this);
+      x.rotation = 1;
 
-  void startRender() {
-    var renderLoop = new RenderLoop();
-    renderLoop.addStage(stage);
+      Player y = new Player()
+        ..x = 250
+        ..y = 250
+        ..play()
+        ..addTo(this);
+
+
+      stage.addChild(this);
+    });
   }
 }
