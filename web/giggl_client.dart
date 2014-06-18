@@ -15,5 +15,3 @@ final html.CanvasElement canvas = html.querySelector('#gglstage');
 final Stage stage = new Stage(canvas);
 final ResourceManager resMgr = new ResourceManager();
 final RenderLoop renderLoop = new RenderLoop();
-
-
