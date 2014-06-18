@@ -5,6 +5,7 @@ import 'dart:html' as html;
 
 part 'client.dart';
 part 'player.dart';
+part 'input_handler.dart';
 
 /**
  * global variables
