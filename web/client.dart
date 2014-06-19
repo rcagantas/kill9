@@ -7,7 +7,7 @@ part of giggl;
  *
  */
 class Client extends DisplayObjectContainer {
-  Player p1, p2;
+  Actor p1, p2;
 
   Client() {
     ResourceHandler.init();
@@ -17,27 +17,32 @@ class Client extends DisplayObjectContainer {
   void _setupResource() {
     resMgr.load().then((_) {
 
-      p1 = new Player()
+      p1 = new Actor()
         ..x = 50
         ..y = 50
-        ..play()
-        ..addTo(this);
-      p1.rotation = .5;
-
-      p2 = new Player()
-        ..x = 100
-        ..y = 100
-        ..play()
         ..addTo(this);
 
       stage.addChild(this);
       renderLoop.addStage(stage);
-      this.onEnterFrame.listen(onFrame);
+      stage.onKeyDown.listen(onFrame);
     });
   }
 
-  void onFrame(EnterFrameEvent event) {
-    p1.x++; p1.y--;
+  Random rand = new Random();
+
+  void onFrame(Event event) {
+    int incx = rand.nextInt(2);
+    int incy = rand.nextInt(2);
+    double incr = .1;
+
+    incx = rand.nextBool()? incx * 1: incx * -1;
+    incy = rand.nextBool()? incy * 1: incy * -1;
+    incr = rand.nextBool()? incr * 1: incr * -1;
+    //p1.x += incx; p1.y += incy;
+    p1.rotation += incr;
+
+    print("${p1.x} ${incx}: ${p1.y} ${incy}: ${p1.rotation} ${incr}");
+
     p1.x = p1.x > stage.stageWidth? 0: p1.x;
     p1.x = p1.x < 0? stage.stageWidth: p1.x;
     p1.y = p1.y > stage.stageHeight? 0: p1.y;

@@ -2,9 +2,10 @@ library giggl;
 
 import 'package:stagexl/stagexl.dart';
 import 'dart:html' as html;
+import 'dart:math';
 
 part 'client.dart';
-part 'player.dart';
+part 'actor.dart';
 part 'input_handler.dart';
 part 'resource_handler.dart';
 
