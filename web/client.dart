@@ -18,22 +18,33 @@ class Client extends DisplayObjectContainer {
     resMgr.load().then((_) {
 
       p1 = new Actor()
-        ..x = 50
-        ..y = 50
+        ..move(stage.stageWidth/2, stage.stageHeight/2)
         ..addTo(this);
 
       stage.addChild(this);
       renderLoop.addStage(stage);
-      stage.onKeyDown.listen(onFrame);
+      //stage.onKeyDown.listen(onFrameRandom);
+      stage.onEnterFrame.listen(onFrameInput);
     });
   }
 
-  Random rand = new Random();
+  InputHandler kb = new InputHandler();
+  void onFrameInput(Event event) {
+    if (p1 == null) return;
+    num ix, iy, inc = 2;
+    ix = iy = 0;
+    if (kb.keyState[87]) { iy = inc; }
+    if (kb.keyState[83]) { iy = -inc; }
+    if (kb.keyState[65]) { ix = inc; }
+    if (kb.keyState[68]) { ix = -inc; }
+    p1.move(p1.x - ix, p1.y - iy);
+  }
 
-  void onFrame(Event event) {
-    int incx = rand.nextInt(2);
-    int incy = rand.nextInt(2);
-    double incr = .1;
+  math.Random rand = new math.Random();
+  void onFrameRandom(Event event) {
+    num incx = rand.nextInt(2);
+    num incy = rand.nextInt(2);
+    num incr = .1;
 
     incx = rand.nextBool()? incx * 1: incx * -1;
     incy = rand.nextBool()? incy * 1: incy * -1;

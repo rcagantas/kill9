@@ -8,6 +8,10 @@ class InputHandler {
     stage.onKeyDown.listen((e) => keyState[e.keyCode] = true);
     stage.onKeyUp.listen((e) => keyState[e.keyCode] = false);
 
+    for(int i = 0; i < 255; i++) {
+      keyState[i] = false;
+    }
+
     stage.onEnterFrame.listen((EnterFrameEvent e) {
       var fps = null;
       fps = fps == null
