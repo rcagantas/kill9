@@ -29,15 +29,26 @@ class Client extends DisplayObjectContainer {
   }
 
   InputHandler kb = new InputHandler();
+  void twistTest(Event event) {
+    if (p1 == null) return;
+
+  }
+
   void onFrameInput(Event event) {
     if (p1 == null) return;
-    num ix, iy, inc = 2;
-    ix = iy = 0;
+    num ix = 0, iy = 0, ih = 0, it = 0, inc = 2, rinc = 0.1;
     if (kb.keyState[87]) { iy = inc; }
     if (kb.keyState[83]) { iy = -inc; }
     if (kb.keyState[65]) { ix = inc; }
     if (kb.keyState[68]) { ix = -inc; }
-    p1.move(p1.x - ix, p1.y - iy);
+    if (kb.keyState[84]) { ih = -rinc; }
+    if (kb.keyState[89]) { ih = rinc; }
+    if (kb.keyState[85]) { it = -rinc; }
+    if (kb.keyState[73]) { it = rinc; }
+
+    //p1.move(p1.x - ix, p1.y - iy);
+    p1.hipRotate(ih);
+    p1.torsoRotate(it);
   }
 
   math.Random rand = new math.Random();
@@ -52,7 +63,7 @@ class Client extends DisplayObjectContainer {
     //p1.x += incx; p1.y += incy;
     p1.rotation += incr;
 
-    print("${p1.x} ${incx}: ${p1.y} ${incy}: ${p1.rotation} ${incr}");
+    //print("${p1.x} ${incx}: ${p1.y} ${incy}: ${p1.rotation} ${incr}");
 
     p1.x = p1.x > stage.stageWidth? 0: p1.x;
     p1.x = p1.x < 0? stage.stageWidth: p1.x;
