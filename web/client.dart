@@ -40,7 +40,7 @@ class Client extends DisplayObjectContainer {
     if (kb.keyState[85]) { it = -rinc; }
     if (kb.keyState[73]) { it = rinc; }
 
-    //p1.move(p1.x - ix, p1.y - iy);
+    p1.move(p1.x - ix, p1.y - iy);
     p1.hipRotate(ih);
     p1.torsoRotate(it);
   }
