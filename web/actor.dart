@@ -13,7 +13,8 @@ class Actor extends DisplayObjectContainer {
       ..addTo(this)
       ..play();
 
-    this.x = this.y = 1; // just in case
+    x = stage.stageWidth/2;
+    y = stage.stageHeight/2;
     torso.pivotX =
     torso.pivotY = adjustment;
     hip.x = -7;
@@ -29,6 +30,7 @@ class Actor extends DisplayObjectContainer {
   void move(num x, num y) {
     if (this.x == x && this.y == y) {
       hip.gotoAndStop(0);
+      return;
     }
     if (!hip.playing) hip.play();
     fixHipRotation(x, y);
@@ -55,5 +57,9 @@ class Actor extends DisplayObjectContainer {
   }
 
   void hipRotate(num r) { hip.rotation += r; }
-  void torsoRotate(num r) { this.rotation += r; }
+  void torsoRotate(num r) {
+    if (r == 0) return;
+    this.rotation += r;
+    fixHipRotation(this.x, this.y);
+  }
 }
