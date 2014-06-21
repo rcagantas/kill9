@@ -54,17 +54,16 @@ class Actor extends DisplayObjectContainer {
     num dy = this.y - y; //stage.stageHeight/2;
     num hrad = math.atan2(dx, dy);
     num trad = this.rotation;
-    this.rotation = trad.abs() > math.PI * 2? 0: trad;
+    //this.rotation = trad.abs() > math.PI * 2? 0: trad;
 
     /*num hdeg = math.atan2(dx, dy) * 180/math.PI;
     num tdeg = trad * 180/math.PI;
     print("${(hdeg - tdeg).abs()}");*/
 
-    num val = hrad - trad;
-    hrad = val.abs() > math.PI/2?
-        hrad - math.PI:
-        hrad;
+    num val = trad - hrad;
     dbgtxt.text = "${val * 180/math.PI}";
+    hrad = val > math.PI/2? hrad - math.PI: hrad;
+    // TODO: incorrect. fix.
 
     hip.rotation = hrad - trad;
   }
@@ -72,7 +71,12 @@ class Actor extends DisplayObjectContainer {
   void hipRotate(num r) { hip.rotation += r; }
   void torsoRotate(num r) {
     if (r == 0) return;
-    this.rotation += r;
+    num trad = this.rotation + r;
+    trad = trad > math.PI? trad - math.PI*2: trad;
+    trad = trad < -math.PI? trad + math.PI*2: trad;
+
+    this.rotation = trad;
+
     fixHipRotation(this.x, this.y);
   }
 }
