@@ -4,6 +4,7 @@ class Actor extends DisplayObjectContainer {
   Bitmap torso;
   FlipBook hip;
   num adjustment;
+  TextField dbgtxt;
 
   Actor() {
     torso = new Bitmap(resMgr.getBitmapData("ac_rifle"));
@@ -24,6 +25,16 @@ class Actor extends DisplayObjectContainer {
 
     this.addChild(torso);
     stage.juggler.add(hip);
+
+    TextFormat tf = new TextFormat('Helvetica', 10, Color.Black);
+    dbgtxt = new TextField()
+      ..defaultTextFormat = tf
+      ..x = 50
+      ..y = 50
+      ..width = 200
+      ..height = 200
+      ..wordWrap = true
+      ..addTo(this);
   }
 
 
@@ -49,10 +60,12 @@ class Actor extends DisplayObjectContainer {
     num tdeg = trad * 180/math.PI;
     print("${(hdeg - tdeg).abs()}");*/
 
-    num val = (hrad - trad).abs();
-    hrad = val > math.PI/2 || val < 0?
+    num val = hrad - trad;
+    hrad = val.abs() > math.PI/2?
         hrad - math.PI:
         hrad;
+    dbgtxt.text = "${val * 180/math.PI}";
+
     hip.rotation = hrad - trad;
   }
 
