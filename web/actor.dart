@@ -55,7 +55,5 @@ class Actor extends DisplayObjectContainer {
   }
 
   void hipRotate(num r) { hip.rotation += r; }
-  void torsoRotate(num r) {
-    this.rotation += r; fixHipRotation(this.x, this.y);
-  }
+  void torsoRotate(num r) { this.rotation += r; }
 }
