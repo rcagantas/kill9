@@ -61,13 +61,13 @@ class Actor extends DisplayObjectContainer {
     displayAngles();
   }
 
-  void torsoRotate(num r) {
-    if (r == 0) return;
-    num trad = peg180(this.rotation + r);
-
-    this.rotation = trad;
+  void turn(num r) {
+    if (this.rotation == r) return;
+    this.rotation = peg180(r);
     fixHipRotation(this.x, this.y);
   }
+
+  void torsoRotate(num r) { turn(this.rotation + r); }
 
   /** there's probably easier ways to do this. */
   num peg180(num val) {
