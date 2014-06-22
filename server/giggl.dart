@@ -22,7 +22,6 @@ void main() {
       ..x = 250
       ..y = 250;
     
-  
     world.addObject(object1);
   
     // connect real world with ggl
@@ -59,19 +58,33 @@ void main() {
     stage.onMouseMove.listen((e) { 
        object1.turnToPoint(e.stageX, e.stageY);
     });
+    
+    stage.onMouseClick.listen ((e) { 
+       WorldObject bullet = object1.weapon.fire();
+       
+       var realbullet = new RealBullet()
+        ..x = bullet.x
+        ..y = bullet.y;
+       
+       stage.addChild(realbullet);
+       bullet.movementEvent.addObserver(realbullet);
+     });
+        
+    
     stage.onEnterFrame.listen((EnterFrameEvent e) {
       html.querySelector('#detail').innerHtml = 'orientation: ${object1.orientation} xV: ${object1.xVelocity} yV: ${object1.yVelocity}';
     });
     });
  }
 
-class VisiBall extends Shape implements Observer
+
+
+
+class RealBullet extends Shape implements Observer
 {
-   VisiBall(num color)
-   {
-    this.graphics.ellipse(0, 0, 20, 40);
-    this.graphics.circle(0, -15, 10);
-    this.graphics.fillColor(color);
+  RealBullet() {
+    this.graphics.ellipse(0, 0, 3,10);
+    this.graphics.fillColor(Color.Blue);
    }
   
   void onNotify (Object data, int event ) {

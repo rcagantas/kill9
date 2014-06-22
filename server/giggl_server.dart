@@ -8,3 +8,4 @@ part 'grid.dart';
 part 'world.dart';
 part 'object.dart';
 part 'utility.dart';
+part 'weapon.dart';

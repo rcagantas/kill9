@@ -1,6 +1,11 @@
 part of giggl_server;
 
+
+
 class WorldObject {
+  
+  // reference to the world
+  World myWorld;
   
   // velocity
   num xVelocity = 0;
@@ -46,8 +51,13 @@ class WorldObject {
 class WorldActor extends WorldObject 
 {
 
-  WorldActor(num radius,num speed, num turnRate):super(radius, speed, turnRate);
-
+  Weapon weapon;
+  
+  WorldActor(num radius,num speed, num turnRate):super(radius, speed, turnRate)
+  {
+    weapon = new Pistol(this);
+  }
+  
   void moveLeft() {
     xVelocity = -speed;  
   }
@@ -94,4 +104,12 @@ class WorldActor extends WorldObject
     super.update(elapsedTime);
   }
 
+}
+
+
+class Projectile extends WorldObject {
+  Projectile(num radius,num speed, num direction):super(radius, speed, 0) {
+    xVelocity = speed * sin(direction);
+    yVelocity = speed * cos(direction);
+  }
 }

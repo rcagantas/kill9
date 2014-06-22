@@ -33,10 +33,12 @@ class World {
   
   void addObject(WorldObject object) {
     _objects.add(object);
+    object.myWorld = this;
   }
   
   void removeObject(WorldObject object) {
     _objects.remove(object);
+    object.myWorld = null;
   }
   
   void _processInput() {
@@ -50,7 +52,8 @@ class World {
     // physics stuff (collision etc.)
     
     // individal object updates
-    _objects.forEach((object)=>object.update(elapsed));
+    var templist = _objects.toList();
+    templist.forEach((object)=>object.update(elapsed));
   }
   
   void _goRound(Timer timer) {
