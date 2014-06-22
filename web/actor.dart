@@ -26,11 +26,11 @@ class Actor extends DisplayObjectContainer {
     this.addChild(torso);
     stage.juggler.add(hip);
 
-    TextFormat tf = new TextFormat('Helvetica', 10, Color.Black);
+    TextFormat tf = new TextFormat('Helvetica', 10, Color.Red);
     dbgtxt = new TextField()
       ..defaultTextFormat = tf
-      ..x = 50
-      ..y = 50
+      ..x = 30
+      ..y = 30
       ..width = 200
       ..height = 200
       ..wordWrap = true
@@ -50,33 +50,41 @@ class Actor extends DisplayObjectContainer {
   }
 
   void fixHipRotation(num x, num y) {
-    num dx = x - this.x; //stage.stageWidth/2;
-    num dy = this.y - y; //stage.stageHeight/2;
-    num hrad = math.atan2(dx, dy);
+    num dx = x - this.x;
+    num dy = y - this.y;
+    num hrad = math.atan2(dy, dx) + math.PI/2;
     num trad = this.rotation;
-    //this.rotation = trad.abs() > math.PI * 2? 0: trad;
 
-    /*num hdeg = math.atan2(dx, dy) * 180/math.PI;
-    num tdeg = trad * 180/math.PI;
-    print("${(hdeg - tdeg).abs()}");*/
-
-    num val = trad - hrad;
-    dbgtxt.text = "${val * 180/math.PI}";
-    hrad = val > math.PI/2? hrad - math.PI: hrad;
-    // TODO: incorrect. fix.
-
-    hip.rotation = hrad - trad;
+    num val = peg180(hrad - trad);
+    val = val.abs() > math.PI/2? val - math.PI: val;
+    hip.rotation = peg180(val);
+    displayAngles();
   }
 
-  void hipRotate(num r) { hip.rotation += r; }
   void torsoRotate(num r) {
     if (r == 0) return;
-    num trad = this.rotation + r;
-    trad = trad > math.PI? trad - math.PI*2: trad;
-    trad = trad < -math.PI? trad + math.PI*2: trad;
+    num trad = peg180(this.rotation + r);
 
     this.rotation = trad;
-
     fixHipRotation(this.x, this.y);
+  }
+
+  /** there's probably easier ways to do this. */
+  num peg180(num val) {
+    num max = math.PI;
+    num min = -math.PI;
+    val -= min;
+    max -= min;
+    if (max == 0) return min;
+    val = val % max;
+    val += min;
+    while (val < min) val += max;
+    return val;
+  }
+
+  void displayAngles() {
+    dbgtxt.rotation = -this.rotation;
+    dbgtxt.text = "all: ${(this.rotation * 180/math.PI).toStringAsFixed(2)}\n"
+      + "hip: ${(hip.rotation * 180/math.PI).toStringAsFixed(2)}";
   }
 }
