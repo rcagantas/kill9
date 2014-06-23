@@ -2,29 +2,38 @@ part of giggl;
 
 class Actor extends DisplayObjectContainer {
   Bitmap torso;
+  List<Bitmap> weaponBmps = [];
+  List<String> weaponNames = ['pistol','rifle','grenade','rocket'];
   FlipBook hip;
-  num adjustment;
+  num adjustment = 48.5;
   TextField dbgtxt;
 
   Actor() {
-    torso = new Bitmap(resMgr.getBitmapData("ac_rifle"));
-    adjustment = torso.height/2;
-
     hip = new FlipBook(ResourceHandler.ac_stride, 10)
       ..addTo(this)
+      ..x = -7
+      ..y = 8
+      ..pivotX = adjustment -7
+      ..pivotY = adjustment + 8
       ..play();
+    stage.juggler.add(hip);
+
+    torso = new Bitmap(resMgr.getBitmapData("ac_torso"))
+      ..pivotX = adjustment
+      ..pivotY = adjustment
+      ..addTo(this);
+
+    for (String weaponName in weaponNames) {
+      Bitmap bmp = new Bitmap(resMgr.getBitmapData("ac_${weaponName}"))
+        ..visible = weaponName == "pistol"? true: false
+        ..pivotX = adjustment
+        ..pivotY = adjustment
+        ..addTo(this);
+      weaponBmps.add(bmp);
+    }
 
     x = stage.stageWidth/2;
     y = stage.stageHeight/2;
-    torso.pivotX =
-    torso.pivotY = adjustment;
-    hip.x = -7;
-    hip.y = 8;
-    hip.pivotX = adjustment - 7; //offset of hips
-    hip.pivotY = adjustment + 8;
-
-    this.addChild(torso);
-    stage.juggler.add(hip);
 
     TextFormat tf = new TextFormat('Helvetica', 10, Color.Red);
     dbgtxt = new TextField()
@@ -86,5 +95,19 @@ class Actor extends DisplayObjectContainer {
     dbgtxt.rotation = -this.rotation;
     dbgtxt.text = "all: ${(this.rotation * 180/math.PI).toStringAsFixed(2)}\n"
       + "hip: ${(hip.rotation * 180/math.PI).toStringAsFixed(2)}";
+  }
+
+  String cycleWeapon() {
+    num index = 0;
+    for (Bitmap weapon in weaponBmps) {
+      if (weapon.visible == true) {
+        index = weaponBmps.indexOf(weapon);
+        weapon.visible = false;
+        index = index + 1 >= weaponBmps.length? 0: index + 1;
+        weaponBmps[index].visible = true;
+        break;
+      }
+    }
+    return weaponNames[index];
   }
 }
