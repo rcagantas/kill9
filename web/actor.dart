@@ -6,7 +6,7 @@ class Actor extends DisplayObjectContainer {
   List<String> weaponNames = ['pistol','rifle','grenade','rocket'];
   FlipBook hip;
   num adjustment = 48.5;
-  TextField dbgtxt;
+  TextField dbg;
 
   Actor() {
     hip = new FlipBook(ResourceHandler.ac_stride, 10)
@@ -36,7 +36,7 @@ class Actor extends DisplayObjectContainer {
     y = stage.stageHeight/2;
 
     TextFormat tf = new TextFormat('Helvetica', 10, Color.Red);
-    dbgtxt = new TextField()
+    dbg = new TextField()
       ..defaultTextFormat = tf
       ..x = 30
       ..y = 30
@@ -92,8 +92,8 @@ class Actor extends DisplayObjectContainer {
   }
 
   void displayAngles() {
-    dbgtxt.rotation = -this.rotation;
-    dbgtxt.text = "all: ${(this.rotation * 180/math.PI).toStringAsFixed(2)}\n"
+    dbg.rotation = -this.rotation;
+    dbg.text = "all: ${(this.rotation * 180/math.PI).toStringAsFixed(2)}\n"
       + "hip: ${(hip.rotation * 180/math.PI).toStringAsFixed(2)}";
   }
 

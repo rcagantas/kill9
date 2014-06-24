@@ -8,6 +8,8 @@ part of giggl;
  */
 class Client extends DisplayObjectContainer {
   Actor p1, p2;
+  InputHandler kb = new InputHandler()
+    ..propagate = false;
 
   Client() {
     ResourceHandler.init();
@@ -23,12 +25,11 @@ class Client extends DisplayObjectContainer {
 
       stage.addChild(this);
       renderLoop.addStage(stage);
-      stage.onEnterFrame.listen(onFrameInput);
+      stage.onEnterFrame.listen(onFrame);
     });
   }
 
-  InputHandler kb = new InputHandler();
-  void onFrameInput(Event event) {
+  void onFrame(Event e) {
     if (p1 == null) return;
     num ix = 0, iy = 0, ih = 0, it = 0, inc = 2, rinc = 0.1;
     if (kb.keyState[87]) { iy = inc; }
