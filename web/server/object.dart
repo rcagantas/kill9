@@ -50,6 +50,9 @@ class WorldActor extends WorldObject
 {
 
   Weapon weapon;
+  
+  num _xVelocityHolder = 0;
+  num _yVelocityHolder = 0;
 
   WorldActor(num radius,num speed, num turnRate):super(radius, speed, turnRate)
   {
@@ -96,10 +99,73 @@ class WorldActor extends WorldObject
   void stopTurn() {
     angleVelocity = 0;
   }
+  
+  void _pauseLeftRightMove() {
+    _xVelocityHolder = xVelocity;
+    xVelocity = 0;
+  }
+
+  void _resumeLeftRightMove() {
+    if (_xVelocityHolder == 0) return;
+
+    xVelocity = _xVelocityHolder;
+    _xVelocityHolder = 0;
+  }
+
+  void _pauseTopDownMove() {
+    _yVelocityHolder = yVelocity;
+    yVelocity = 0;
+  }
+
+  void _resumeTopDownMove() {
+    if (_yVelocityHolder == 0) return;
+      
+    yVelocity = _yVelocityHolder;
+    _yVelocityHolder = 0;
+  }
+
+  
+  math.Point projectLocation(elapsedTime)
+  {
+    return new math.Point(x + xVelocity * elapsedTime, y + yVelocity * elapsedTime);
+  }
 
   void update(num elapsedTime) {
     // do some funky stuff here
+
+    var newLoc = projectLocation(elapsedTime);
+
+    if(newLoc.x < x) {
+      if (myWorld.grid.bumpLeft(newLoc.x, y, radius)) {
+        _pauseLeftRightMove();
+        print ("bumpedLeft");
+      }
+    }
+    else if (newLoc.x > x) {
+      if (myWorld.grid.bumpRight(newLoc.x, y, radius)) {
+        _pauseLeftRightMove();
+        print ("bumpedRight");
+
+      }
+    }
+    
+    if(newLoc.y < y) {
+      if (myWorld.grid.bumpTop(x, newLoc.y, radius)) {
+        _pauseTopDownMove();
+        print ("bumpedTop");
+      }
+    }
+    else if(newLoc.y > y) {
+      if (myWorld.grid.bumpBottom(x, newLoc.y, radius)) {
+        _pauseTopDownMove();
+        print ("bumpedBottom");
+      }
+    }
+    
     super.update(elapsedTime);
+    
+    _resumeTopDownMove();
+    _resumeLeftRightMove();
   }
 
 }
