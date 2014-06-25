@@ -1,7 +1,7 @@
 import 'dart:html' as html;
 import 'package:stagexl/stagexl.dart';
-import 'giggl_server.dart';
-import '../web/giggl.dart';
+import 'giggl.dart';
+
 void main() {
 
   ResourceHandler.init();

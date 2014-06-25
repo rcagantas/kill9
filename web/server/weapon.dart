@@ -1,13 +1,13 @@
-part of giggl_server;
+part of giggl;
 
 // base classes
 
 class Weapon {
-  
-  WorldActor owner;  
-  
+
+  WorldActor owner;
+
   Weapon(this.owner);
-  
+
   WorldObject fire() {
     print("firing some generic weapon");
     return null;
@@ -15,18 +15,18 @@ class Weapon {
 }
 
 class Bullet extends WorldObject {
-  
+
   num maxDistance;
   num startX, startY;
-  
+
   Bullet(radius, speed, orientation, maxDistance):super(radius,speed,0) {
     this.orientation = orientation;
     this.maxDistance = maxDistance;
-    
-    xVelocity = speed * sin(orientation);
-    yVelocity = -speed * cos(orientation);
+
+    xVelocity = speed * math.sin(orientation);
+    yVelocity = -speed * math.cos(orientation);
   }
-  
+
   void update(elapsedTime) {
     var p1 = new Point(x,y);
     var p2 = new Point(startX,startY);
@@ -34,7 +34,7 @@ class Bullet extends WorldObject {
       super.update(elapsedTime);
     }
     else {
-      myWorld.removeObject(this); 
+      myWorld.removeObject(this);
     }
   }
 }
@@ -44,7 +44,7 @@ class Bullet extends WorldObject {
 class Pistol extends Weapon {
 
   var name = "Pistol";
-  
+
   Pistol(owner):super(owner);
 
   WorldObject fire() {
@@ -54,11 +54,11 @@ class Pistol extends Weapon {
         ..y = owner.y
         ..startX = owner.x
         ..startY = owner.y;
-    
+
     owner.myWorld.addObject(bullet);
-    
+
     return bullet;
-    
+
   }
 }
 

@@ -3,11 +3,20 @@ library giggl;
 import 'package:stagexl/stagexl.dart';
 import 'dart:html' as html;
 import 'dart:math' as math;
+import 'dart:async';
 
-part 'client.dart';
-part 'actor.dart';
-part 'input_handler.dart';
-part 'resource_handler.dart';
+
+part 'client/client.dart';
+part 'client/actor.dart';
+part 'client/input_handler.dart';
+part 'client/resource_handler.dart';
+
+part 'server/constants.dart';
+part 'server/grid.dart';
+part 'server/world.dart';
+part 'server/object.dart';
+part 'server/utility.dart';
+part 'server/weapon.dart';
 
 /**
  * global variables

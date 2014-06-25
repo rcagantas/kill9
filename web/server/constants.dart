@@ -1,4 +1,4 @@
-part of giggl_server;
+part of giggl;
 
 class Surface
 {
@@ -6,7 +6,7 @@ class Surface
   static const int NotPassable = 1;
 }
 
-class GglEvent 
+class GglEvent
 {
   static const int ObjectMoved = 1;
 }
