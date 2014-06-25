@@ -30,6 +30,6 @@ void onKeyUp(KeyboardEvent event) {
   Actor p1 = client.p1;
   if (p1 == null) return;
   if (event.keyCode == 40) { p1.cycleWeapon(); }
-  if (event.keyCode == 39 || event.keyCode == 40)
+  if (event.keyCode == 38 || event.keyCode == 40)
     event.stopImmediatePropagation();
 }

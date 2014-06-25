@@ -5,7 +5,7 @@ class Actor extends DisplayObjectContainer {
   List<Bitmap> weaponBmps = [];
   List<String> weaponNames = ['pistol','rifle','grenade','rocket'];
   FlipBook hip;
-  num adjustment = 48.5;
+  static const num CENTER = 48.5; //center of player tile
   TextField dbg;
 
   Actor() {
@@ -13,21 +13,21 @@ class Actor extends DisplayObjectContainer {
       ..addTo(this)
       ..x = -7
       ..y = 8
-      ..pivotX = adjustment -7
-      ..pivotY = adjustment + 8
+      ..pivotX = CENTER -7
+      ..pivotY = CENTER + 8
       ..play();
     stage.juggler.add(hip);
 
     torso = new Bitmap(resMgr.getBitmapData("ac_torso"))
-      ..pivotX = adjustment
-      ..pivotY = adjustment
+      ..pivotX = CENTER
+      ..pivotY = CENTER
       ..addTo(this);
 
     for (String weaponName in weaponNames) {
       Bitmap bmp = new Bitmap(resMgr.getBitmapData("ac_${weaponName}"))
         ..visible = weaponName == "pistol"? true: false
-        ..pivotX = adjustment
-        ..pivotY = adjustment
+        ..pivotX = CENTER
+        ..pivotY = CENTER
         ..addTo(this);
       weaponBmps.add(bmp);
     }
