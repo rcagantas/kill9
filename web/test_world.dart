@@ -66,8 +66,8 @@ void main() {
       if (io.keyState[83]) { object1.moveDown(); }
       if (io.keyState[65]) { object1.moveLeft(); }
       if (io.keyState[68]) { object1.moveRight(); }
-      if (io.keyState[37]) { object1.orientation += rinc; }
-      if (io.keyState[39]) { object1.orientation -= rinc; }
+      if (io.keyState[37]) { object1.orientation -= rinc; }
+      if (io.keyState[39]) { object1.orientation += rinc; }
       html.querySelector('#detail').innerHtml = 
           'orientation: ${object1.orientation} xV: ${object1.xVelocity} yV: ${object1.yVelocity}';
     });
