@@ -108,7 +108,7 @@ class Actor extends DisplayObjectContainer {
   String cycleWeapon() {
     num index = weaponNames.indexOf(currentWeapon);
     weaponBmps[currentWeapon].visible = false;
-    currentWeapon = weaponNames[index + 1 > weaponNames.length? 0 : index + 1];
+    currentWeapon = weaponNames[index + 1 >= weaponNames.length? 0 : index + 1];
     weaponBmps[currentWeapon].visible = true;
     return weaponNames[index];
   }
