@@ -1,15 +1,17 @@
 part of giggl;
 
 class Actor extends DisplayObjectContainer {
+  Bitmap head;
   Bitmap torso;
   List<Bitmap> weaponBmps = [];
   List<String> weaponNames = ['pistol','rifle','grenade','rocket'];
   FlipBook hip;
   static const num CENTER = 48.5; //center of player tile
   TextField dbg;
+  String pre = "ac0";
 
   Actor() {
-    hip = new FlipBook(ResourceHandler.ac_stride, 10)
+    hip = new FlipBook(ResourceHandler.ac0_stride, 10)
       ..addTo(this)
       ..x = -7
       ..y = 8
@@ -18,19 +20,24 @@ class Actor extends DisplayObjectContainer {
       ..play();
     stage.juggler.add(hip);
 
-    torso = new Bitmap(resMgr.getBitmapData("ac_torso"))
+    torso = new Bitmap(resMgr.getBitmapData("${pre}_torso"))
       ..pivotX = CENTER
       ..pivotY = CENTER
       ..addTo(this);
 
     for (String weaponName in weaponNames) {
-      Bitmap bmp = new Bitmap(resMgr.getBitmapData("ac_${weaponName}"))
+      Bitmap bmp = new Bitmap(resMgr.getBitmapData("${pre}_${weaponName}"))
         ..visible = weaponName == "pistol"? true: false
         ..pivotX = CENTER
         ..pivotY = CENTER
         ..addTo(this);
       weaponBmps.add(bmp);
     }
+    
+    head = new Bitmap(resMgr.getBitmapData("${pre}_head"))
+      ..pivotX = CENTER
+      ..pivotY = CENTER
+      ..addTo(this);
 
     x = stage.stageWidth/2;
     y = stage.stageHeight/2;
