@@ -39,6 +39,53 @@ class Bullet extends WorldObject {
   }
 }
 
+class Grenade extends WorldObject {
+
+  num maxDistance;
+  num expireTime;
+  num startX, startY;
+
+  Subject expires = new Subject();
+  
+  Grenade(radius, speed, orientation, expireTime):super(radius,speed,0) {
+    this.orientation = orientation;
+    this.maxDistance = 0;
+    this.expireTime = expireTime;
+
+    xVelocity = speed * math.sin(orientation);
+    yVelocity = -speed * math.cos(orientation);
+  }
+
+  void update(elapsedTime) {
+    
+    var p1 = new Point(x,y);
+    var p2 = new Point(startX,startY);
+    
+    if (expireTime < 0) {
+      myWorld.removeObject(this);
+      expires.notify(this, GglEvent.GrenadeExpires);
+      
+      return;
+    }
+    
+    var newLoc = projectLocation(elapsedTime);
+
+    if (myWorld.grid.bumpLeft(newLoc.x, y, radius) ||
+        myWorld.grid.bumpRight(newLoc.x, y, radius)) {
+      xVelocity = -xVelocity;
+    }
+    
+    if (myWorld.grid.bumpTop(x, newLoc.y, radius) ||
+        myWorld.grid.bumpBottom(x, newLoc.y, radius)) {
+      yVelocity = -yVelocity;
+    }
+    
+    super.update(elapsedTime);
+    
+    expireTime = expireTime - elapsedTime;
+  }
+}
+
 // specifics
 
 class Pistol extends Weapon {
@@ -58,6 +105,27 @@ class Pistol extends Weapon {
     owner.myWorld.addObject(bullet);
 
     return bullet;
+
+  }
+}
+
+class GrenadeLauncher extends Weapon {
+
+  var name = "Grenade Launcher";
+
+  GrenadeLauncher(owner):super(owner);
+
+  WorldObject fire() {
+    print ("firing $name");
+    var grenade = new Grenade(10,300,owner.orientation,5)
+        ..x = owner.x
+        ..y = owner.y
+        ..startX = owner.x
+        ..startY = owner.y;
+
+    owner.myWorld.addObject(grenade);
+
+    return grenade;
 
   }
 }

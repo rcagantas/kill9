@@ -43,7 +43,7 @@ void main() {
     
     var world = new World(grid);
     
-    var object1 = new WorldActor(40,200,2)
+    var object1 = new WorldActor(25,200,2)
       ..x = 100
       ..y = 250;
     
@@ -87,14 +87,15 @@ void main() {
     });
     
     stage.onMouseClick.listen ((e) { 
-       WorldObject bullet = object1.weapon.fire();
+       Grenade bullet = object1.weapon.fire();
        
-       var realbullet = new RealBullet()
+       var realbullet = new RealGrenade()
         ..x = bullet.x
         ..y = bullet.y;
        
        stage.addChild(realbullet);
        bullet.movementEvent.addObserver(realbullet);
+       bullet.expires.addObserver(realbullet);
      });
         
     
@@ -125,6 +126,29 @@ class RealBullet extends Shape implements Observer
   }
 }
 
+class RealGrenade extends Shape implements Observer
+{
+  RealGrenade() {
+    this.graphics.circle(0, 0, 10);
+    this.graphics.fillColor(Color.Brown);
+   }
+  
+  void onNotify (Object data, int event ) {
+    if (event == GglEvent.ObjectMoved) {
+      var object = data as WorldObject;
+      
+      this.x = object.x;
+      this.y = object.y;
+      this.rotation = object.orientation;
+    } else if (event == GglEvent.GrenadeExpires) {
+      var object = data as Grenade;
+      object.expires.removeObserver(this);
+      object.movementEvent.removeObserver(this);
+      stage.removeChild(this);
+    }
+  }
+}
+
 class ListeningActor extends Actor implements Observer
 {
   
@@ -143,7 +167,7 @@ class ListeningActor extends Actor implements Observer
 class Circler extends Shape implements Observer
 {
   Circler() {
-    this.graphics.circle(0, 0, 40);
+    this.graphics.circle(0, 0, 25);
     this.graphics.strokeColor(Color.Black);
    }
   

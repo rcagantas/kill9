@@ -9,4 +9,5 @@ class Surface
 class GglEvent
 {
   static const int ObjectMoved = 1;
+  static const int GrenadeExpires = 2;
 }

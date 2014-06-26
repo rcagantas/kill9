@@ -27,6 +27,11 @@ class WorldObject {
 
   WorldObject (this.radius,this.speed, this.turnRate);
 
+  math.Point projectLocation(elapsedTime)
+  {
+    return new math.Point(x + xVelocity * elapsedTime, y + yVelocity * elapsedTime);
+  }
+  
   void update(num elapsedTime) {
 
     x = x + xVelocity * elapsedTime;
@@ -56,7 +61,7 @@ class WorldActor extends WorldObject
 
   WorldActor(num radius,num speed, num turnRate):super(radius, speed, turnRate)
   {
-    weapon = new Pistol(this);
+    weapon = new GrenadeLauncher(this);
   }
 
   void moveLeft() {
@@ -122,12 +127,6 @@ class WorldActor extends WorldObject
       
     yVelocity = _yVelocityHolder;
     _yVelocityHolder = 0;
-  }
-
-  
-  math.Point projectLocation(elapsedTime)
-  {
-    return new math.Point(x + xVelocity * elapsedTime, y + yVelocity * elapsedTime);
   }
 
   void update(num elapsedTime) {

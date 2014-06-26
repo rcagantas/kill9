@@ -17,6 +17,7 @@ class Subject {
   }
 
   void notify(Object data, int event) {
-    _observers.forEach((observer)=>observer.onNotify(data, event));
+    var templist = _observers.toList();
+    templist.forEach((object)=>object.onNotify(data, event));
   }
 }
