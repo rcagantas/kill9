@@ -9,6 +9,7 @@ void main() {
   resMgr.load().then((_) {
 
     var ball = new ListeningActor()
+      ..setWeapon("grenade")
       ..move(100, 250);
     var circle = new Circler()
       ..x=100
@@ -56,54 +57,38 @@ void main() {
    
     // .. and presto!
     world.start();
-    stage.focus = stage;
-    stage.onKeyDown.listen((e) {
-      if (e.keyCode == 65) {
-        object1.moveLeft();
-      }
-      else if (e.keyCode == 87) {
-        object1.moveUp();
-      }
-      else if (e.keyCode == 68) {
-        object1.moveRight();
-      }
-      else if (e.keyCode == 83) {
-        object1.moveDown();
-      }
-      
+    InputHandler io = new InputHandler();
+    stage.onEnterFrame.listen((e) {
+      num ix = 0, iy = 0, ih = 0, it = 0, inc = 2, rinc = 0.1;
+      object1.stopLefRightMove();
+      object1.stopTopDownMove();
+      if (io.keyState[87]) { object1.moveUp(); }
+      if (io.keyState[83]) { object1.moveDown(); }
+      if (io.keyState[65]) { object1.moveLeft(); }
+      if (io.keyState[68]) { object1.moveRight(); }
+      if (io.keyState[37]) { object1.orientation += rinc; }
+      if (io.keyState[39]) { object1.orientation -= rinc; }
+      html.querySelector('#detail').innerHtml = 
+          'orientation: ${object1.orientation} xV: ${object1.xVelocity} yV: ${object1.yVelocity}';
     });
-    
-    stage.onKeyUp.listen((e) { 
-        if (e.keyCode == 65 || e.keyCode == 68) {
-          object1.stopLefRightMove();
-        }
-        else if (e.keyCode == 83 || e.keyCode == 87) {
-          object1.stopTopDownMove();
-        }
-      ;});
     
     stage.onMouseMove.listen((e) { 
-       object1.turnToPoint(e.stageX, e.stageY);
+      object1.turnToPoint(e.stageX, e.stageY);
     });
     
-    stage.onMouseClick.listen ((e) { 
-       Grenade bullet = object1.weapon.fire();
+    stage.onMouseDown.listen ((e) { 
+      Grenade bullet = object1.weapon.fire();
        
-       var realbullet = new RealGrenade()
+      var realbullet = new RealGrenade()
         ..x = bullet.x
         ..y = bullet.y;
        
-       stage.addChild(realbullet);
-       bullet.movementEvent.addObserver(realbullet);
-       bullet.expires.addObserver(realbullet);
-     });
-        
-    
-    stage.onEnterFrame.listen((EnterFrameEvent e) {
-      html.querySelector('#detail').innerHtml = 'orientation: ${object1.orientation} xV: ${object1.xVelocity} yV: ${object1.yVelocity}';
+      stage.addChild(realbullet);
+      bullet.movementEvent.addObserver(realbullet);
+      bullet.expires.addObserver(realbullet);
     });
-    });
- }
+  });
+}
 
 
 
@@ -111,7 +96,7 @@ void main() {
 class RealBullet extends Shape implements Observer
 {
   RealBullet() {
-    this.graphics.ellipse(0, 0, 3,10);
+    this.graphics.ellipse(0, 0, 3, 10);
     this.graphics.fillColor(Color.Blue);
    }
   
@@ -129,7 +114,7 @@ class RealBullet extends Shape implements Observer
 class RealGrenade extends Shape implements Observer
 {
   RealGrenade() {
-    this.graphics.circle(0, 0, 10);
+    this.graphics.circle(0, 0, 5);
     this.graphics.fillColor(Color.Brown);
    }
   
@@ -159,7 +144,7 @@ class ListeningActor extends Actor implements Observer
       var object = data as WorldObject;
       
       this.move(object.x, object.y);
-      this.rotation = object.orientation;
+      this.turn(object.orientation);
     }
   }
  }

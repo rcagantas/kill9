@@ -2,6 +2,8 @@ part of giggl;
 
 class InputHandler {
   Map<num, bool> keyState = new Map<num, bool>();
+  num mouseX, mouseY;
+  bool mouseL, mouseR;
   TextField dbg;
   bool propagate = true;
 
@@ -9,6 +11,9 @@ class InputHandler {
     stage.focus = stage;
     stage.onKeyDown.listen(_keyHandler);
     stage.onKeyUp.listen(_keyHandler);
+    stage.onMouseMove.listen((e) {mouseX = e.stageX; mouseY = e.stageY;});
+    stage.onMouseDown.listen((e) => mouseL = true);
+    stage.onMouseUp.listen((e) => mouseL = false);
 
     for(num i = 0; i < 255; i++) keyState[i] = false;
 

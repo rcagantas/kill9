@@ -3,8 +3,9 @@ part of giggl;
 class Actor extends DisplayObjectContainer {
   Bitmap head;
   Bitmap torso;
-  List<Bitmap> weaponBmps = [];
+  Map<String, Bitmap> weaponBmps = new Map<String, Bitmap>();
   List<String> weaponNames = ['pistol','rifle','grenade','rocket'];
+  String currentWeapon = "pistol";
   FlipBook hip;
   static const num CENTER = 48.5; //center of player tile
   TextField dbg;
@@ -31,7 +32,7 @@ class Actor extends DisplayObjectContainer {
         ..pivotX = CENTER
         ..pivotY = CENTER
         ..addTo(this);
-      weaponBmps.add(bmp);
+      weaponBmps[weaponName] = bmp;
     }
     
     head = new Bitmap(resMgr.getBitmapData("${pre}_head"))
@@ -105,16 +106,24 @@ class Actor extends DisplayObjectContainer {
   }
 
   String cycleWeapon() {
-    num index = 0;
-    for (Bitmap weapon in weaponBmps) {
-      if (weapon.visible == true) {
-        index = weaponBmps.indexOf(weapon);
-        weapon.visible = false;
-        index = index + 1 >= weaponBmps.length? 0: index + 1;
-        weaponBmps[index].visible = true;
-        break;
-      }
-    }
+    num index = weaponNames.indexOf(currentWeapon);
+    weaponBmps[currentWeapon].visible = false;
+    currentWeapon = weaponNames[index + 1 > weaponNames.length? 0 : index + 1];
+    weaponBmps[currentWeapon].visible = true;
     return weaponNames[index];
+  }
+  
+  bool setWeapon(String weapon) {
+    if (weaponNames.contains(weapon)) {
+      weaponBmps[currentWeapon].visible = false;
+      currentWeapon = weapon;
+      weaponBmps[currentWeapon].visible = true;
+      return true;
+    }
+    return false;
+  }
+  
+  void turnToPoint(num dx, num dy) {
+    turn(math.PI - math.atan2(dx - x, dy - y));
   }
 }
