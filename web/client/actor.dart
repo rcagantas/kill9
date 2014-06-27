@@ -4,9 +4,9 @@ class Actor extends DisplayObjectContainer {
   Bitmap head;
   Bitmap torso;
   String pre = "ac0";
-  Map<String, Bitmap> weaponBmps = new Map<String, Bitmap>();
+  Map<String, Bitmap> weapons = new Map<String, Bitmap>();
   List<String> weaponNames = ['pistol','rifle','grenade','rocket'];
-  String currentWeapon = "pistol";
+  String weapon = "pistol";
   FlipBook hip;
   static const num CENTER = 48.5; //center of player tile
   static const num OFFSET = 8;
@@ -21,7 +21,7 @@ class Actor extends DisplayObjectContainer {
       ..graphics.arc(CENTER, CENTER, 33, math.PI/4, 3/4 * math.PI, false)
       ..graphics.strokeColor(Color.YellowGreen, 4)
       ..addTo(this);
-    
+
     hip = new FlipBook(ResourceHandler.ac0_stride, 10)
       ..addTo(this)
       ..x = - OFFSET
@@ -42,9 +42,9 @@ class Actor extends DisplayObjectContainer {
         ..pivotX = CENTER
         ..pivotY = CENTER
         ..addTo(this);
-      weaponBmps[weaponName] = bmp;
+      weapons[weaponName] = bmp;
     }
-    
+
     head = new Bitmap(resMgr.getBitmapData("${pre}_head"))
       ..pivotX = CENTER
       ..pivotY = CENTER
@@ -94,7 +94,7 @@ class Actor extends DisplayObjectContainer {
     dbg.rotation = -this.rotation;
     fixHipRotation(this.x, this.y);
   }
-  
+
   void turnToPoint(num dx, num dy) {
     turn(math.PI - math.atan2(dx - x, dy - y));
   }
@@ -121,19 +121,33 @@ class Actor extends DisplayObjectContainer {
   }
 
   String cycleWeapon() {
-    num index = weaponNames.indexOf(currentWeapon);
-    String weapon = weaponNames[index + 1 >= weaponNames.length? 0 : index + 1];    
-    setWeapon(weapon);
-    return weaponNames[index];
+    num index = weaponNames.indexOf(weapon);
+    String newWeapon = weaponNames[index + 1 >= weaponNames.length? 0 : index + 1];
+    setWeapon(newWeapon);
+    return newWeapon;
   }
-  
-  bool setWeapon(String weapon) {
-    if (weaponNames.contains(weapon)) {
-      weaponBmps[currentWeapon].visible = false;
-      currentWeapon = weapon;
-      weaponBmps[currentWeapon].visible = true;
+
+  bool setWeapon(String newWeapon) {
+    if (weaponNames.contains(newWeapon)) {
+      weapons[weapon].visible = false;
+      weapon = newWeapon;
+      weapons[weapon].visible = true;
       return true;
     }
     return false;
+  }
+
+  num frameskip = 0;
+  void fire() {
+    frameskip++;
+    if (frameskip != 4) return;
+    frameskip = 0;
+    torso.y =
+    weapons[weapon].y = torso.y == 3? 0 : 3;;
+  }
+
+  void resetTorso() {
+    torso.y =
+    weapons[weapon].y = 0;
   }
 }

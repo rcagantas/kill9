@@ -30,6 +30,7 @@ void onFrame(Event e) {
   if (io.keyState[68]) { ix = inc; }
   if (io.keyState[37]) { it = -rinc; }
   if (io.keyState[39]) { it = rinc; }
+  if (io.keyState[38]) { p1.fire(); }
   p1.move(p1.x + ix, p1.y + iy);
   p1.torsoRotate(it);
 }
@@ -37,8 +38,10 @@ void onFrame(Event e) {
 void onKeyUp(KeyboardEvent e) {
   if (p1 == null) return;
   if (e.keyCode == 40) { p1.cycleWeapon(); }
-  if (e.keyCode == 38 || e.keyCode == 40)
+  if (e.keyCode == 38 || e.keyCode == 40) {
+    p1.resetTorso();
     e.stopImmediatePropagation();
+  }
 }
 
 
