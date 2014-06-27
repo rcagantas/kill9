@@ -3,21 +3,31 @@ part of giggl;
 class Actor extends DisplayObjectContainer {
   Bitmap head;
   Bitmap torso;
+  String pre = "ac0";
   Map<String, Bitmap> weaponBmps = new Map<String, Bitmap>();
   List<String> weaponNames = ['pistol','rifle','grenade','rocket'];
   String currentWeapon = "pistol";
   FlipBook hip;
   static const num CENTER = 48.5; //center of player tile
+  static const num OFFSET = 8;
+  Shape arcHealth;
   TextField dbg;
-  String pre = "ac0";
+  bool dbgmode = false;
 
   Actor() {
+    arcHealth = new Shape()
+      ..pivotX = CENTER
+      ..pivotY = CENTER
+      ..graphics.arc(CENTER, CENTER, 33, math.PI/4, 3/4 * math.PI, false)
+      ..graphics.strokeColor(Color.YellowGreen, 4)
+      ..addTo(this);
+    
     hip = new FlipBook(ResourceHandler.ac0_stride, 10)
       ..addTo(this)
-      ..x = -7
-      ..y = 8
-      ..pivotX = CENTER -7
-      ..pivotY = CENTER + 8
+      ..x = - OFFSET
+      ..y = OFFSET
+      ..pivotX = CENTER - OFFSET
+      ..pivotY = CENTER + OFFSET
       ..play();
     stage.juggler.add(hip);
 
@@ -54,7 +64,6 @@ class Actor extends DisplayObjectContainer {
       ..addTo(this);
   }
 
-
   void move(num x, num y) {
     if (this.x == x && this.y == y) {
       hip.gotoAndStop(0);
@@ -85,6 +94,10 @@ class Actor extends DisplayObjectContainer {
     dbg.rotation = -this.rotation;
     fixHipRotation(this.x, this.y);
   }
+  
+  void turnToPoint(num dx, num dy) {
+    turn(math.PI - math.atan2(dx - x, dy - y));
+  }
 
   void torsoRotate(num r) { turn(this.rotation + r); }
 
@@ -102,15 +115,15 @@ class Actor extends DisplayObjectContainer {
   }
 
   void displayAngles() {
+    if (!dbgmode) return;
     dbg.text = "all: ${(this.rotation * 180/math.PI).toStringAsFixed(2)}\n"
       + "hip: ${(hip.rotation * 180/math.PI).toStringAsFixed(2)}";
   }
 
   String cycleWeapon() {
     num index = weaponNames.indexOf(currentWeapon);
-    weaponBmps[currentWeapon].visible = false;
-    currentWeapon = weaponNames[index + 1 >= weaponNames.length? 0 : index + 1];
-    weaponBmps[currentWeapon].visible = true;
+    String weapon = weaponNames[index + 1 >= weaponNames.length? 0 : index + 1];    
+    setWeapon(weapon);
     return weaponNames[index];
   }
   
@@ -122,9 +135,5 @@ class Actor extends DisplayObjectContainer {
       return true;
     }
     return false;
-  }
-  
-  void turnToPoint(num dx, num dy) {
-    turn(math.PI - math.atan2(dx - x, dy - y));
   }
 }
