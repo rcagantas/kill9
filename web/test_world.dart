@@ -60,12 +60,12 @@ void main() {
     InputHandler io = new InputHandler();
     stage.onEnterFrame.listen((e) {
       num ix = 0, iy = 0, ih = 0, it = 0, inc = 2, rinc = 0.1;
-      object1.stopLefRightMove();
-      object1.stopTopDownMove();
       if (io.keyState[87]) { object1.moveUp(); }
       if (io.keyState[83]) { object1.moveDown(); }
       if (io.keyState[65]) { object1.moveLeft(); }
       if (io.keyState[68]) { object1.moveRight(); }
+      if (!io.keyState[87] && !io.keyState[83]) { object1.stopTopDownMove() ;}
+      if (!io.keyState[65] && !io.keyState[68]) { object1.stopLeftRightMove(); }
       if (io.keyState[37]) { object1.orientation -= rinc; }
       if (io.keyState[39]) { object1.orientation += rinc; }
       html.querySelector('#detail').innerHtml = 
@@ -76,18 +76,23 @@ void main() {
       object1.turnToPoint(e.stageX, e.stageY);
     });
     
-    stage.onMouseDown.listen ((e) { 
-      Grenade bullet = object1.weapon.fire();
-       
-      var realbullet = new RealGrenade()
-        ..x = bullet.x
-        ..y = bullet.y;
-       
-      stage.addChild(realbullet);
-      bullet.movementEvent.addObserver(realbullet);
-      bullet.expires.addObserver(realbullet);
+    stage.onKeyUp.listen((e) {
+      if (e.keyCode == 38) fireGrenade(object1);
     });
+    stage.onMouseDown.listen ((e) { fireGrenade(object1); });
   });
+}
+
+void fireGrenade(WorldActor object1) {
+  Grenade bullet = object1.weapon.fire();
+   
+  var realbullet = new RealGrenade()
+    ..x = bullet.x
+    ..y = bullet.y;
+   
+  stage.addChild(realbullet);
+  bullet.movementEvent.addObserver(realbullet);
+  bullet.expires.addObserver(realbullet);
 }
 
 

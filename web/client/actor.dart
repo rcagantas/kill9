@@ -69,6 +69,7 @@ class Actor extends DisplayObjectContainer {
   void fixHipRotation(num x, num y) {
     num dx = x - this.x;
     num dy = y - this.y;
+    if (dx == 0 && dy == 0) return;
     num hrad = math.atan2(dy, dx) + math.PI/2;
     num trad = this.rotation;
 
@@ -81,6 +82,7 @@ class Actor extends DisplayObjectContainer {
   void turn(num r) {
     if (this.rotation == r) return;
     this.rotation = peg180(r);
+    dbg.rotation = -this.rotation;
     fixHipRotation(this.x, this.y);
   }
 
@@ -100,7 +102,6 @@ class Actor extends DisplayObjectContainer {
   }
 
   void displayAngles() {
-    dbg.rotation = -this.rotation;
     dbg.text = "all: ${(this.rotation * 180/math.PI).toStringAsFixed(2)}\n"
       + "hip: ${(hip.rotation * 180/math.PI).toStringAsFixed(2)}";
   }

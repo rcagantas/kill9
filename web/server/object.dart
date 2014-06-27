@@ -80,7 +80,7 @@ class WorldActor extends WorldObject
     yVelocity = speed;
   }
 
-  void stopLefRightMove () {
+  void stopLeftRightMove () {
     xVelocity = 0;
   }
 
