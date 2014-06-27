@@ -31,7 +31,7 @@ class InputHandler {
           keyPressed;
     });
 
-    TextFormat tf = new TextFormat('Helvetica', 10, Color.Azure);
+    TextFormat tf = new TextFormat('Helvetica', 10, Color.CornflowerBlue);
     dbg = new TextField()
       ..defaultTextFormat = tf
       ..x = 30
