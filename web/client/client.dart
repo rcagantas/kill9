@@ -7,8 +7,8 @@ part of giggl;
  *
  */
 class Client extends DisplayObjectContainer {
-  List<Actor> actors = [];
-  Actor p1;
+  List<Player> actors = [];
+  Player p1;
 
   Client() {
     ResourceHandler.init();
@@ -18,7 +18,7 @@ class Client extends DisplayObjectContainer {
   void _setupResource() {
     resMgr.load().then((_) {
 
-      p1 = new Actor()
+      p1 = new Player()
         ..move(stage.stageWidth/2, stage.stageHeight/2)
         ..addTo(this);
 

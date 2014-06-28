@@ -1,6 +1,10 @@
 part of giggl;
 
-class Actor extends DisplayObjectContainer {
+class Player extends DisplayObjectContainer {
+  static const num CENTER = 48.5; //center of player tile
+  static const num OFFSET = 8;
+  static const num HPRADIUS = 33;
+
   Bitmap head;
   Bitmap torso;
   String pre = "ac0";
@@ -8,17 +12,17 @@ class Actor extends DisplayObjectContainer {
   List<String> weaponNames = ['pistol','rifle','grenade','rocket'];
   String weapon = "pistol";
   FlipBook hip;
-  static const num CENTER = 48.5; //center of player tile
-  static const num OFFSET = 8;
-  Shape arcHealth;
+  Shape arcHP;
   TextField dbg;
   bool dbgmode = false;
+  num hp = 100;
 
-  Actor() {
-    arcHealth = new Shape()
+  Player() {
+    arcHP = new Shape()
       ..pivotX = CENTER
       ..pivotY = CENTER
-      ..graphics.arc(CENTER, CENTER, 33, math.PI/4, 3/4 * math.PI, false)
+      ..rotation = math.PI/2
+      ..graphics.arc(CENTER, CENTER, HPRADIUS, -math.PI/4, math.PI/4, false)
       ..graphics.strokeColor(Color.YellowGreen, 4)
       ..addTo(this);
 
@@ -75,6 +79,16 @@ class Actor extends DisplayObjectContainer {
     this.y = y;
   }
 
+  void takeDamage(num dmg) {
+    hp = hp - dmg < 0? 0 : hp - dmg;
+    num angle = math.PI/4 * hp/100;
+    num color = hp/100 < .4? Color.Red : Color.YellowGreen;
+    arcHP.graphics.clear();
+    arcHP
+      ..graphics.arc(CENTER, CENTER, HPRADIUS, -angle, angle, false)
+      ..graphics.strokeColor(color, 4);
+  }
+
   void fixHipRotation(num x, num y) {
     num dx = x - this.x;
     num dy = y - this.y;
@@ -99,7 +113,7 @@ class Actor extends DisplayObjectContainer {
     turn(math.PI - math.atan2(dx - x, dy - y));
   }
 
-  void torsoRotate(num r) { turn(this.rotation + r); }
+  void turnAdd(num r) { turn(this.rotation + r); }
 
   /** there's probably easier ways to do this. */
   num peg180(num val) {

@@ -2,10 +2,9 @@ part of giggl;
 
 class InputHandler {
   Map<num, bool> keyState = new Map<num, bool>();
-  num mouseX, mouseY;
-  bool mouseL, mouseR;
+  num mouseX = 0, mouseY = 0;
+  bool mouseL = false, mouseR = false;
   TextField dbg;
-  bool propagate = true;
 
   InputHandler() {
     stage.focus = stage;
@@ -44,7 +43,6 @@ class InputHandler {
 
   void _keyHandler(KeyboardEvent e) {
     keyState[e.keyCode] = e.type == KeyboardEvent.KEY_DOWN? true: false;
-    if (!propagate) e.stopImmediatePropagation();
   }
 }
 

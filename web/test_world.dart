@@ -139,7 +139,7 @@ class RealGrenade extends Shape implements Observer
   }
 }
 
-class ListeningActor extends Actor implements Observer
+class ListeningActor extends Player implements Observer
 {
   
   ListeningActor():super();

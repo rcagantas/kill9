@@ -12,7 +12,7 @@ class ResourceHandler {
   static init() {
     if (initialized) return; // protect against multiple inits
     String pre = "ac0";
-    
+
     for (int i = 0; i < strideCount; i++) {
        resMgr.addBitmapData("${pre}_stride$i", "./assets/sprites/${pre}_stride$i.png");
     }
@@ -32,9 +32,8 @@ class ResourceHandler {
     resMgr.load().then((_) {
       for (int i = 0; i < strideCount; i++) {
         ac0_stride.add(resMgr.getBitmapData("${pre}_stride$i"));
+        initialized = true;
       }
     });
-
-    initialized = true;
   }
 }

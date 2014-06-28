@@ -7,7 +7,7 @@ import 'dart:async';
 
 
 part 'client/client.dart';
-part 'client/actor.dart';
+part 'client/player.dart';
 part 'client/input_handler.dart';
 part 'client/resource_handler.dart';
 
