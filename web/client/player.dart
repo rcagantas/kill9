@@ -16,8 +16,14 @@ class Player extends DisplayObjectContainer {
   TextField dbg;
   bool dbgmode = false;
   num hp = 100;
+  ParticleEmitter splatter;
 
   Player() {
+    splatter = new ParticleEmitter(ResourceHandler.jsonBloodSplat)
+      ..stop(true)
+      ..addTo(this);
+    stage.juggler.add(splatter);
+
     arcHealth = new Shape()
       ..pivotX = CENTER
       ..pivotY = CENTER
@@ -87,6 +93,7 @@ class Player extends DisplayObjectContainer {
     arcHealth
       ..graphics.arc(CENTER, CENTER, HPRADIUS, -angle, angle, false)
       ..graphics.strokeColor(color, 4);
+    splatter.start(.2);
   }
 
   void fixHipRotation(num x, num y) {

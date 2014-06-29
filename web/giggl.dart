@@ -4,6 +4,7 @@ import 'package:stagexl/stagexl.dart';
 import 'dart:html' as html;
 import 'dart:math' as math;
 import 'dart:async';
+import 'package:stagexl_particle/stagexl_particle.dart';
 
 
 part 'client/client.dart';

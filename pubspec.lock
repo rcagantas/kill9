@@ -9,3 +9,7 @@ packages:
     description: stagexl
     source: hosted
     version: "0.9.3+2"
+  stagexl_particle:
+    description: stagexl_particle
+    source: hosted
+    version: "0.3.2"
