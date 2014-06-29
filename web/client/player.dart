@@ -12,13 +12,13 @@ class Player extends DisplayObjectContainer {
   List<String> weaponNames = ['pistol','rifle','grenade','rocket'];
   String weapon = "pistol";
   FlipBook hip;
-  Shape arcHP;
+  Shape arcHealth;
   TextField dbg;
   bool dbgmode = false;
   num hp = 100;
 
   Player() {
-    arcHP = new Shape()
+    arcHealth = new Shape()
       ..pivotX = CENTER
       ..pivotY = CENTER
       ..rotation = math.PI/2
@@ -83,8 +83,8 @@ class Player extends DisplayObjectContainer {
     hp = hp - dmg < 0? 0 : hp - dmg;
     num angle = math.PI/4 * hp/100;
     num color = hp/100 < .4? Color.Red : Color.YellowGreen;
-    arcHP.graphics.clear();
-    arcHP
+    arcHealth.graphics.clear();
+    arcHealth
       ..graphics.arc(CENTER, CENTER, HPRADIUS, -angle, angle, false)
       ..graphics.strokeColor(color, 4);
   }
