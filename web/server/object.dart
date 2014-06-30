@@ -79,7 +79,15 @@ class WorldActor extends WorldObject
   }
 
   void moveUp () {
-    yVelocity = -speed;
+    if (xVelocity > 0) {
+      xVelocity = _45degreeSpeed;
+      yVelocity = -_45degreeSpeed;
+    } else if (xVelocity < 0) {
+      xVelocity = -_45degreeSpeed;
+      yVelocity = -_45degreeSpeed;
+    } else {
+      yVelocity = -speed;
+    }
   }
 
   void moveRight() {
@@ -95,7 +103,15 @@ class WorldActor extends WorldObject
   }
 
   void moveDown () {
-    yVelocity = speed;
+    if (xVelocity > 0) {
+      xVelocity = _45degreeSpeed;
+      yVelocity = _45degreeSpeed;
+    } else if (xVelocity < 0) {
+      xVelocity = -_45degreeSpeed;
+      yVelocity = _45degreeSpeed;
+    } else {
+      yVelocity = speed;
+    }
   }
 
   void stopLeftRightMove () {
