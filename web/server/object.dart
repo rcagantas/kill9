@@ -31,7 +31,7 @@ class WorldObject {
   {
     return new math.Point(x + xVelocity * elapsedTime, y + yVelocity * elapsedTime);
   }
-  
+
   void update(num elapsedTime) {
 
     x = x + xVelocity * elapsedTime;
@@ -55,17 +55,27 @@ class WorldActor extends WorldObject
 {
 
   Weapon weapon;
-  
+
   num _xVelocityHolder = 0;
   num _yVelocityHolder = 0;
+  num _45degreeSpeed = 0;
 
   WorldActor(num radius,num speed, num turnRate):super(radius, speed, turnRate)
   {
     weapon = new GrenadeLauncher(this);
+    _45degreeSpeed = speed * math.sin(math.PI/4);
   }
 
   void moveLeft() {
-    xVelocity = -speed;
+    if (yVelocity > 0) {
+      xVelocity = -_45degreeSpeed;
+      yVelocity = _45degreeSpeed;
+    } else if (yVelocity < 0) {
+      xVelocity = -_45degreeSpeed;
+      yVelocity = - _45degreeSpeed;
+    } else {
+      xVelocity = -speed;
+    }
   }
 
   void moveUp () {
@@ -73,7 +83,15 @@ class WorldActor extends WorldObject
   }
 
   void moveRight() {
-    xVelocity = speed;
+    if (yVelocity > 0) {
+      xVelocity = -_45degreeSpeed;
+      yVelocity = _45degreeSpeed;
+    } else if (yVelocity < 0) {
+      xVelocity = _45degreeSpeed;
+      yVelocity = - _45degreeSpeed;
+    } else {
+      xVelocity = speed;
+    }
   }
 
   void moveDown () {
@@ -104,7 +122,7 @@ class WorldActor extends WorldObject
   void stopTurn() {
     angleVelocity = 0;
   }
-  
+
   void _pauseLeftRightMove() {
     _xVelocityHolder = xVelocity;
     xVelocity = 0;
@@ -124,7 +142,7 @@ class WorldActor extends WorldObject
 
   void _resumeTopDownMove() {
     if (_yVelocityHolder == 0) return;
-      
+
     yVelocity = _yVelocityHolder;
     _yVelocityHolder = 0;
   }
@@ -147,7 +165,7 @@ class WorldActor extends WorldObject
 
       }
     }
-    
+
     if(newLoc.y < y) {
       if (myWorld.grid.bumpTop(x, newLoc.y, radius)) {
         _pauseTopDownMove();
@@ -160,9 +178,9 @@ class WorldActor extends WorldObject
         print ("bumpedBottom");
       }
     }
-    
+
     super.update(elapsedTime);
-    
+
     _resumeTopDownMove();
     _resumeLeftRightMove();
   }
