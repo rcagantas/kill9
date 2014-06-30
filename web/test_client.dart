@@ -1,26 +1,25 @@
 import 'giggl.dart';
 import 'package:stagexl/stagexl.dart';
 
+Client client;
 InputHandler io;
 Player p1;
 
 void main() {
   ResourceHandler.init();
   resMgr.load().then((_) {
-    io = new InputHandler();
-
-    p1 = new Player()
-      ..x = stage.stageWidth/2
-      ..y = stage.stageHeight/2
-      ..addTo(stage);
     renderLoop.addStage(stage);
+    client = new Client();
+    client.createRandomMap(20, 20);
+    p1 = client.p1;
+
     stage.onKeyUp.listen(onKeyUp);
     stage.onEnterFrame.listen(onFrame);
     stage.onMouseMove.listen(onMouseMove);
     stage.onMouseRightClick.listen((e) => p1 != null? p1.cycleWeapon() : 0);
+    io = new InputHandler();
   });
 }
-
 
 void onFrame(Event e) {
   if (p1 == null) return;
@@ -37,6 +36,8 @@ void handleInput() {
   if (io.keyState[39]) { it = rinc; }
   if (io.keyState[38] || io.mouseL) { p1.fire(); }
   if (io.keyState[69]) { p1.takeDamage(1); }
+  client.x -= ix;
+  client.y -= iy;
   p1.move(p1.x + ix, p1.y + iy);
   p1.turnAdd(it);
 }
@@ -48,6 +49,7 @@ void onKeyUp(KeyboardEvent e) {
     p1.resetTorso();
   }
 }
+
 
 void onMouseMove(MouseEvent e) {
   if (p1 == null) return;

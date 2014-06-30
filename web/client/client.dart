@@ -1,29 +1,39 @@
 part of giggl;
 
-/**
- * examples: https://github.com/bp74/StageXL_Samples/
- * forums: http://www.stagexl.org/forum.html
- * http://www.stagexl.org/demos/performance.html
- *
- */
+class LayerAbove extends DisplayObjectContainer {
+
+}
+
 class Client extends DisplayObjectContainer {
-  List<Player> actors = [];
+  List<Player> players = [];
+  List<TileSheet> tiles = [];
   Player p1;
+  LayerAbove above = new LayerAbove();
 
   Client() {
     ResourceHandler.init();
-    _setupResource();
+    this.addTo(stage);
   }
 
-  void _setupResource() {
-    resMgr.load().then((_) {
+  void createRandomMap(num x, num y) {
+    num count = 0;
+    for (int i = 0; i < x; i++) {
+      for (int j = 0; j < y; j++) {
+        math.Random rand = new math.Random();
+        num type = rand.nextInt(3);
+        TileSheet tile = new TileSheet(type)
+          ..index = count++
+          ..x = j * TileSheet.SIZE
+          ..y = i * TileSheet.SIZE
+          ..addTo(type == 2? above : this);
+        if (tile.type == 2) tile.alpha = 0;
+      }
+    }
 
-      p1 = new Player()
-        ..move(stage.stageWidth/2, stage.stageHeight/2)
-        ..addTo(this);
+    p1 = new Player()
+      ..move(stage.stageWidth/2, stage.stageHeight/2)
+      ..addTo(this);
 
-      stage.addChild(this);
-      renderLoop.addStage(stage);
-    });
+    above.addTo(this);
   }
 }
