@@ -10,7 +10,7 @@ void main() {
   resMgr.load().then((_) {
     renderLoop.addStage(stage);
     client = new Client();
-    client.createRandomMap(20, 20);
+    client.createRandomMap(10, 10);
     p1 = client.p1;
 
     stage.onKeyUp.listen(onKeyUp);
@@ -36,8 +36,7 @@ void handleInput() {
   if (io.keyState[39]) { it = rinc; }
   if (io.keyState[38] || io.mouseL) { p1.fire(); }
   if (io.keyState[69]) { p1.takeDamage(1); }
-  client.x -= ix;
-  client.y -= iy;
+  client.move(client.x - ix, client.y - iy);
   p1.move(p1.x + ix, p1.y + iy);
   p1.turnAdd(it);
 }
@@ -49,7 +48,6 @@ void onKeyUp(KeyboardEvent e) {
     p1.resetTorso();
   }
 }
-
 
 void onMouseMove(MouseEvent e) {
   if (p1 == null) return;

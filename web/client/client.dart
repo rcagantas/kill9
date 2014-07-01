@@ -1,14 +1,16 @@
 part of giggl;
 
-class LayerAbove extends DisplayObjectContainer {
-
+class ParallaxPanel extends DisplayObjectContainer {
+  num slide = 1;
+  ParallaxPanel(this.slide);
 }
 
 class Client extends DisplayObjectContainer {
   List<Player> players = [];
   List<TileSheet> tiles = [];
   Player p1;
-  LayerAbove above = new LayerAbove();
+  ParallaxPanel trees = new ParallaxPanel(0.005);
+  ParallaxPanel walls = new ParallaxPanel(0.01);
 
   Client() {
     ResourceHandler.init();
@@ -16,19 +18,27 @@ class Client extends DisplayObjectContainer {
     this.addTo(stage);
   }
 
-  void createRandomMap(num x, num y) {
+  void createRandomMap(num width, num height) {
+    num baseX = width * TileSheet.SIZE;
+    num baseY = height * TileSheet.SIZE;
+
+    num startx = stage.stageWidth/2 - baseX/2;
+    num starty = stage.stageHeight/2 - baseY/2;
     num count = 0;
-    for (int i = 0; i < x; i++) {
-      for (int j = 0; j < y; j++) {
+    for (num i = 0; i < width; i++) {
+      for (num j = 0; j < height; j++) {
         math.Random rand = new math.Random();
         num chance = rand.nextDouble();
         num type = (chance * 10).toInt();
         TileSheet tile = new TileSheet(type)
           ..index = count++
-          ..x = j * TileSheet.SIZE
-          ..y = i * TileSheet.SIZE
-          ..addTo(type == 2? above : this);
-        if (tile.type == 2) tile.alpha = 0;
+          ..x = startx + (j * TileSheet.SIZE)
+          ..y = starty + (i * TileSheet.SIZE);
+        switch(type) {
+          case 2: trees.addChild(tile); break;
+          case 1: walls.addChild(tile); break;
+          default: this.addChild(tile);
+        }
       }
     }
 
@@ -36,6 +46,25 @@ class Client extends DisplayObjectContainer {
       ..move(stage.stageWidth/2, stage.stageHeight/2)
       ..addTo(this);
 
-    above.addTo(this);
+    walls.addTo(this);
+    trees.addTo(this);
+    trees.scaleX = trees.scaleY = 1 + trees.slide;
+    walls.scaleX = walls.scaleY = 1 + walls.slide;
+
+    trees.x = baseX - (baseX * trees.scaleX);
+    trees.y = baseY - (baseY * trees.scaleY);
+    walls.x = baseX - (baseX * walls.scaleX);
+    walls.y = baseY - (baseY * walls.scaleY);
+    print(walls.x);
+  }
+
+  void move(num x, num y) {
+    this.x = x;
+    this.y = y;
+    walls.x = x * walls.slide - 5;
+    walls.y = y * walls.slide - 5;
+    trees.x = x * trees.slide - 3;
+    trees.y = y * trees.slide - 3;
+
   }
 }

@@ -4,7 +4,6 @@ part of giggl;
  * 0: concrete
  * 1: wall
  * 2: shrubbery
- * 3: oil
  */
 class TileSheet extends DisplayObjectContainer {
   num type = 0;
@@ -18,7 +17,6 @@ class TileSheet extends DisplayObjectContainer {
     switch(type) {
       case 1: color = Color.DarkGray; break;
       case 2: color = Color.LightGreen; break;
-      case 3: color = Color.DarkTurquoise; break;
     }
 
     shape = new Shape()
