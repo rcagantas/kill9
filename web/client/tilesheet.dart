@@ -14,13 +14,11 @@ class TileSheet extends DisplayObjectContainer {
   num _index;
 
   TileSheet(num type) {
-    num color;
+    num color = Color.LightGray;
     switch(type) {
       case 1: color = Color.DarkGray; break;
       case 2: color = Color.LightGreen; break;
-      case 3: color = Color.Black; break;
-      case 0:
-      default: color = Color.Gray;
+      case 3: color = Color.DarkTurquoise; break;
     }
 
     shape = new Shape()
@@ -29,7 +27,7 @@ class TileSheet extends DisplayObjectContainer {
       ..graphics.fillColor(color)
       ..addTo(this);
 
-    TextFormat tf = new TextFormat('Helvetica', 10, color + 3);
+    TextFormat tf = new TextFormat('Helvetica', 10, Color.White);
     dbg = new TextField()
       ..x = 5
       ..y = 5

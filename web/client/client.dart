@@ -12,6 +12,7 @@ class Client extends DisplayObjectContainer {
 
   Client() {
     ResourceHandler.init();
+    stage.backgroundColor = Color.Black;
     this.addTo(stage);
   }
 
@@ -20,7 +21,8 @@ class Client extends DisplayObjectContainer {
     for (int i = 0; i < x; i++) {
       for (int j = 0; j < y; j++) {
         math.Random rand = new math.Random();
-        num type = rand.nextInt(3);
+        num chance = rand.nextDouble();
+        num type = (chance * 10).toInt();
         TileSheet tile = new TileSheet(type)
           ..index = count++
           ..x = j * TileSheet.SIZE
