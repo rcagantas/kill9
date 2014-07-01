@@ -60,7 +60,7 @@ class WorldActor extends WorldObject
   num _yVelocityHolder = 0;
   num _45degreeSpeed = 0;
 
-  WorldActor(num radius,num speed, num turnRate):super(radius, speed, turnRate)
+  WorldActor():super(ActorProps.radius, ActorProps.speed, ActorProps.turnRate)
   {
     weapon = new GrenadeLauncher(this);
     _45degreeSpeed = speed * math.sin(math.PI/4);

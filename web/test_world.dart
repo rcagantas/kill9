@@ -1,39 +1,32 @@
 import 'dart:html' as html;
 import 'package:stagexl/stagexl.dart';
 import 'giggl.dart';
-import 'dart:async';
-import 'dart:math';
 
 void main() {
 
   ResourceHandler.init();
+
   resMgr.load().then((_) {
 
-    var actor1 = new ListeningActor()
+    var actor1 = new Player()
       ..setWeapon("grenade")
-      ..move(100, 250);
-    var actor2 = new ListeningActor()
-      ..setWeapon("grenade")
-      ..move(250, 250);
-    var actor3 = new ListeningActor()
-      ..setWeapon("grenade")
-      ..move(300, 300);
-    var circle = new Circler()
-      ..x=100
-      ..y=250;
+      ..move(-100, -100);
+
     var renderLoop = new RenderLoop();
     var juggler = renderLoop.juggler;
     stage.addChild(actor1);
-    stage.addChild(actor2);
-    stage.addChild(actor3);
-    stage.addChild(circle);
     renderLoop.addStage(stage);
 
 
-    var grid = new Grid(5,5,100);
+    var grid = new Grid(20,20,100);
     var tile = new Tile(Surface.NotPassable);
     grid.set(0, 0, tile);
     grid.set(4, 4, tile);
+    grid.set(10, 0, tile);
+    grid.set(10, 1, tile);
+    grid.set(10, 2, tile);
+    grid.set(10, 3, tile);
+    grid.set(19, 19, tile);
 
     for (int i = 0; i < grid.width(); i++) {
       for  (int j =0; j < grid.height(); j++) {
@@ -52,180 +45,38 @@ void main() {
 
     var world = new World(grid);
 
-    var object1 = new WorldActor(25,200,2)
+    var object1 = world.addPlayer()
       ..x = 100
       ..y = 250;
-    var object2 = new WorldActor(25,200,2)
-      ..x = 250
-      ..y = 250;
-    var object3 = new WorldActor(25,200,2)
-      ..x = 300
-      ..y = 300;
 
     world.addObject(object1);
-    world.addObject(object2);
-    world.addObject(object3);
 
+    world.addPlayerFrameListener(object1.hashCode, (pf){
+      actor1.move(pf.player.x, pf.player.y);
+      actor1.turn(pf.player.orientation);
+    });
 
-    // connect real world with ggl
-    object1.movementEvent.addObserver(actor1);
-    object1.movementEvent.addObserver(circle);
-    object2.movementEvent.addObserver(actor2);
-    object3.movementEvent.addObserver(actor3);
-    // .. and presto!
     world.start();
+
     InputHandler io = new InputHandler();
+
     stage.onEnterFrame.listen((e) {
-      num ix = 0, iy = 0, ih = 0, it = 0, inc = 2, rinc = 0.1;
-      if (io.keyState[87]) { object1.moveUp(); }
-      if (io.keyState[83]) { object1.moveDown(); }
-      if (io.keyState[65]) { object1.moveLeft(); }
-      if (io.keyState[68]) { object1.moveRight(); }
-      if (!io.keyState[87] && !io.keyState[83]) { object1.stopTopDownMove() ;}
-      if (!io.keyState[65] && !io.keyState[68]) { object1.stopLeftRightMove(); }
-      if (io.keyState[37]) { object1.orientation -= rinc; }
-      if (io.keyState[39]) { object1.orientation += rinc; }
-      html.querySelector('#detail').innerHtml =
-          'orientation: ${object1.orientation} xV: ${object1.xVelocity} yV: ${object1.yVelocity}';
-    });
+        num ix = 0, iy = 0, ih = 0, it = 0, inc = 2, rinc = 0.1;
+        if (io.keyState[87]) { object1.moveUp(); }
+        if (io.keyState[83]) { object1.moveDown(); }
+        if (io.keyState[65]) { object1.moveLeft(); }
+        if (io.keyState[68]) { object1.moveRight(); }
+        if (!io.keyState[87] && !io.keyState[83]) { object1.stopTopDownMove() ;}
+        if (!io.keyState[65] && !io.keyState[68]) { object1.stopLeftRightMove(); }
+        if (io.keyState[37]) { object1.orientation -= rinc; }
+        if (io.keyState[39]) { object1.orientation += rinc; }
+        html.querySelector('#detail').innerHtml =
+            'orientation: ${object1.orientation} xV: ${object1.xVelocity} yV: ${object1.yVelocity}';
+      });
 
-    stage.onMouseMove.listen((e) {
-      object1.turnToPoint(e.stageX, e.stageY);
-    });
-
-    stage.onKeyUp.listen((e) {
-      if (e.keyCode == 38) fireGrenade(object1);
-    });
-    stage.onMouseDown.listen ((e) { fireGrenade(object1); });
-
-    var random = new Random();
-
-   var timer = new Timer.periodic(new Duration(milliseconds: 1000), (elapsedTime) {
-    object2.stopLeftRightMove();
-    object2.stopTopDownMove();
-    object2.stopTurn();
-
-    var move = random.nextInt(3);
-
-    if (move == 0) {
-      object2.moveLeft();
-      object3.moveRight();
-    } else if (move == 1) {
-      object2.moveRight();
-      object3.moveLeft();
-    }
-
-    move = random.nextInt(3);
-
-    if (move == 0) {
-      object2.moveUp();
-      object3.moveDown();
-    } else if (move == 1) {
-      object2.moveDown();
-      object3.moveUp();
-    }
-
-    move = random.nextInt(3);
-
-    if (move == 0) {
-      object2.turnClockwise();
-      object3.turnCounterClockise();
-    } else if (move == 1) {
-      object2.turnCounterClockise();
-      object3.turnClockwise();
-    }
-
-   });
+      stage.onMouseMove.listen((e) {
+        object1.turnToPoint(e.stageX, e.stageY);
+      });
   });
-
-
-}
-
-void fireGrenade(WorldActor object1) {
-  Grenade bullet = object1.weapon.fire();
-
-  var realbullet = new RealGrenade()
-    ..x = bullet.x
-    ..y = bullet.y;
-
-  stage.addChild(realbullet);
-  bullet.movementEvent.addObserver(realbullet);
-  bullet.expires.addObserver(realbullet);
-}
-
-
-
-
-class RealBullet extends Shape implements Observer
-{
-  RealBullet() {
-    this.graphics.ellipse(0, 0, 3, 10);
-    this.graphics.fillColor(Color.Blue);
-   }
-
-  void onNotify (Object data, int event ) {
-    if (event == GglEvent.ObjectMoved) {
-      var object = data as WorldObject;
-
-      this.x = object.x;
-      this.y = object.y;
-      this.rotation = object.orientation;
-    }
-  }
-}
-
-class RealGrenade extends Shape implements Observer
-{
-  RealGrenade() {
-    this.graphics.circle(0, 0, 5);
-    this.graphics.fillColor(Color.Brown);
-   }
-
-  void onNotify (Object data, int event ) {
-    if (event == GglEvent.ObjectMoved) {
-      var object = data as WorldObject;
-
-      this.x = object.x;
-      this.y = object.y;
-      this.rotation = object.orientation;
-    } else if (event == GglEvent.GrenadeExpires) {
-      var object = data as Grenade;
-      object.expires.removeObserver(this);
-      object.movementEvent.removeObserver(this);
-      stage.removeChild(this);
-    }
-  }
-}
-
-class ListeningActor extends Player implements Observer
-{
-
-  ListeningActor():super();
-
-  void onNotify (Object data, int event ) {
-    if (event == GglEvent.ObjectMoved) {
-      var object = data as WorldObject;
-
-      this.move(object.x, object.y);
-      this.turn(object.orientation);
-    }
-  }
- }
-
-class Circler extends Shape implements Observer
-{
-  Circler() {
-    this.graphics.circle(0, 0, 25);
-    this.graphics.strokeColor(Color.Black);
-   }
-
-  void onNotify (Object data, int event ) {
-    if (event == GglEvent.ObjectMoved) {
-      var object = data as WorldObject;
-
-      this.x = object.x;
-      this.y = object.y;
-    }
-  }
 }
 
