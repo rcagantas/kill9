@@ -20,7 +20,7 @@ class ResourceHandler {
       "location": {"x": 0, "y": 0},
       "locationVariance": {"x": 0, "y": 0},
       "speed": 200, "speedVariance": 10,
-      "angle": 0, "angleVariance": 45,
+      "angle": -90, "angleVariance": 45,
       "gravity": {"x": 0, "y": 0},
       "radialAcceleration": 20, "radialAccelerationVariance": 0,
       "tangentialAcceleration": 10, "tangentialAccelerationVariance": 0,

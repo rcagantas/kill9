@@ -11,6 +11,7 @@ part 'client/client.dart';
 part 'client/player.dart';
 part 'client/input_handler.dart';
 part 'client/resource_handler.dart';
+part 'client/tilesheet.dart';
 
 part 'server/constants.dart';
 part 'server/grid.dart';
