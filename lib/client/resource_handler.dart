@@ -34,7 +34,7 @@ class ResourceHandler {
   static init() {
     if (initialized) return; // protect against multiple inits
     String pre = "ac0";
-    String assets = "../assets";
+    String assets = "assets";
 
     for (int i = 0; i < strideCount; i++) {
        resMgr.addBitmapData("${pre}_stride$i", "${assets}/sprites/${pre}_stride$i.png");
