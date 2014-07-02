@@ -2,15 +2,15 @@ import 'package:stagexl/stagexl.dart';
 import 'package:giggl/gglclient.dart';
 
 
-Client client;
+Arena client;
 InputHandler io;
-Player p1;
+PlayerSprite p1;
 
 void main() {
   ResourceHandler.init();
   resMgr.load().then((_) {
     renderLoop.addStage(stage);
-    client = new Client();
+    client = new Arena();
     client.createRandomMap(10, 10);
     p1 = client.p1;
 

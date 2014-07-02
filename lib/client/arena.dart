@@ -5,16 +5,15 @@ class ParallaxPanel extends DisplayObjectContainer {
   ParallaxPanel(this.slide);
 }
 
-class Client extends DisplayObjectContainer {
-  List<Player> players = [];
+class Arena extends DisplayObjectContainer {
+  List<PlayerSprite> players = [];
   List<TileSheet> tiles = [];
-  Player p1;
+  PlayerSprite p1;
   ParallaxPanel trees = new ParallaxPanel(0.005);
   ParallaxPanel walls = new ParallaxPanel(0.01);
 
-  Client() {
+  Arena() {
     ResourceHandler.init();
-    stage.backgroundColor = Color.Black;
     this.addTo(stage);
   }
 
@@ -42,7 +41,7 @@ class Client extends DisplayObjectContainer {
       }
     }
 
-    p1 = new Player()
+    p1 = new PlayerSprite()
       ..move(stage.stageWidth/2, stage.stageHeight/2)
       ..addTo(this);
 
@@ -65,6 +64,5 @@ class Client extends DisplayObjectContainer {
     walls.y = y * walls.slide - 5;
     trees.x = x * trees.slide - 3;
     trees.y = y * trees.slide - 3;
-
   }
 }

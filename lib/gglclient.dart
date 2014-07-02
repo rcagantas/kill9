@@ -5,11 +5,11 @@ import 'dart:html' as html;
 import 'dart:math' as math;
 import 'package:stagexl_particle/stagexl_particle.dart';
 
-part './client/client.dart';
-part './client/player.dart';
+part './client/arena.dart';
+part './client/player_sprite.dart';
 part './client/input_handler.dart';
 part './client/resource_handler.dart';
-part './client/tilesheet.dart';
+part './client/tile_sheet.dart';
 
 /**
  * global variables

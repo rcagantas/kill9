@@ -1,6 +1,6 @@
 part of gglclient;
 
-class Player extends DisplayObjectContainer {
+class PlayerSprite extends DisplayObjectContainer {
   static const num CENTER = 48.5; //center of player tile
   static const num OFFSET = 8;
   static const num HPRADIUS = 33;
@@ -18,7 +18,7 @@ class Player extends DisplayObjectContainer {
   num hp = 100;
   ParticleEmitter splatter;
 
-  Player() {
+  PlayerSprite() {
     splatter = new ParticleEmitter(ResourceHandler.jsonBloodSplat)
       ..stop(true)
       ..addTo(this);

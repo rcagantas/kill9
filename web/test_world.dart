@@ -9,7 +9,7 @@ void main() {
 
   resMgr.load().then((_) {
 
-    var actor1 = new Player()
+    var actor1 = new PlayerSprite()
       ..setWeapon("grenade")
       ..move(-100, -100);
 

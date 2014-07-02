@@ -3,14 +3,14 @@ import 'package:stagexl/stagexl.dart';
 import 'package:giggl/gglclient.dart';
 
 InputHandler io;
-Player p1;
+PlayerSprite p1;
 
 void main() {
   ResourceHandler.init();
   resMgr.load().then((_) {
     io = new InputHandler();
 
-    p1 = new Player()
+    p1 = new PlayerSprite()
       ..x = stage.stageWidth/2
       ..y = stage.stageHeight/2
       ..addTo(stage);
