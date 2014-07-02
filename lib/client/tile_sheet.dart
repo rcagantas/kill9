@@ -37,6 +37,6 @@ class TileSheet extends DisplayObjectContainer {
   num get index { return _index; }
   void set index(num i) {
     _index = i;
-    dbg.text = "$i";
+    //dbg.text = "$i";
   }
 }

@@ -11,7 +11,7 @@ void main() {
   resMgr.load().then((_) {
     renderLoop.addStage(stage);
     client = new Arena();
-    client.createRandomMap(10, 10);
+    client.createRandomMap(20, 20);
     p1 = client.p1;
 
     stage.onKeyUp.listen(onKeyUp);
