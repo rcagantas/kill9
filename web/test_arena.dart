@@ -37,9 +37,9 @@ void handleInput() {
   if (io.keyState[39]) { it = rinc; }
   if (io.keyState[38] || io.mouseL) { p1.fire(); }
   if (io.keyState[69]) { p1.takeDamage(1); }
-  client.move(client.x - ix, client.y - iy);
   p1.move(p1.x + ix, p1.y + iy);
   p1.turnAdd(it);
+  client.move(client.x - ix, client.y - iy);
 }
 
 void onKeyUp(KeyboardEvent e) {
@@ -52,5 +52,5 @@ void onKeyUp(KeyboardEvent e) {
 
 void onMouseMove(MouseEvent e) {
   if (p1 == null) return;
-  p1.turnToPoint(e.stageX, e.stageY);
+  p1.turnFromCenter(e.stageX, e.stageY);
 }

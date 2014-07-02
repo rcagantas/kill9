@@ -120,6 +120,10 @@ class PlayerSprite extends DisplayObjectContainer {
     turn(math.PI - math.atan2(dx - x, dy - y));
   }
 
+  void turnFromCenter(num dx, num dy) {
+    turn(math.PI - math.atan2(dx - stage.stageWidth/2, dy - stage.stageHeight/2));
+  }
+
   void turnAdd(num r) { turn(this.rotation + r); }
 
   /** there's probably easier ways to do this. */
