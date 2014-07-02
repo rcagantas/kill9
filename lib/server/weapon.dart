@@ -1,4 +1,4 @@
-part of giggl;
+part of gglserver;
 
 // base classes
 
@@ -46,7 +46,7 @@ class Grenade extends WorldObject {
   num startX, startY;
 
   Subject expires = new Subject();
-  
+
   Grenade(radius, speed, orientation, expireTime):super(radius,speed,0) {
     this.orientation = orientation;
     this.maxDistance = 0;
@@ -57,31 +57,31 @@ class Grenade extends WorldObject {
   }
 
   void update(elapsedTime) {
-    
+
     var p1 = new Point(x,y);
     var p2 = new Point(startX,startY);
-    
+
     if (expireTime < 0) {
       myWorld.removeObject(this);
       expires.notify(this, GglEvent.GrenadeExpires);
-      
+
       return;
     }
-    
+
     var newLoc = projectLocation(elapsedTime);
 
     if (myWorld.grid.bumpLeft(newLoc.x, y, radius) ||
         myWorld.grid.bumpRight(newLoc.x, y, radius)) {
       xVelocity = -xVelocity;
     }
-    
+
     if (myWorld.grid.bumpTop(x, newLoc.y, radius) ||
         myWorld.grid.bumpBottom(x, newLoc.y, radius)) {
       yVelocity = -yVelocity;
     }
-    
+
     super.update(elapsedTime);
-    
+
     expireTime = expireTime - elapsedTime;
   }
 }

@@ -1,4 +1,4 @@
-part of giggl;
+part of gglclient;
 
 class Player extends DisplayObjectContainer {
   static const num CENTER = 48.5; //center of player tile

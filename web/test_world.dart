@@ -1,6 +1,7 @@
 import 'dart:html' as html;
 import 'package:stagexl/stagexl.dart';
-import 'giggl.dart';
+import 'package:giggl/gglclient.dart';
+import 'package:giggl/gglserver.dart';
 
 void main() {
 

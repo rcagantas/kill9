@@ -1,4 +1,4 @@
-part of giggl;
+part of gglclient;
 
 class InputHandler {
   Map<num, bool> keyState = new Map<num, bool>();

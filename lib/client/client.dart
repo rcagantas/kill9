@@ -1,4 +1,4 @@
-part of giggl;
+part of gglclient;
 
 class ParallaxPanel extends DisplayObjectContainer {
   num slide = 1;

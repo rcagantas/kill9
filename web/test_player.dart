@@ -1,5 +1,6 @@
-import 'giggl.dart';
+
 import 'package:stagexl/stagexl.dart';
+import 'package:giggl/gglclient.dart';
 
 InputHandler io;
 Player p1;

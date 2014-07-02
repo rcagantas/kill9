@@ -1,24 +1,15 @@
-library giggl;
+library gglclient;
 
 import 'package:stagexl/stagexl.dart';
 import 'dart:html' as html;
 import 'dart:math' as math;
-import 'dart:async';
 import 'package:stagexl_particle/stagexl_particle.dart';
 
-
-part 'client/client.dart';
-part 'client/player.dart';
-part 'client/input_handler.dart';
-part 'client/resource_handler.dart';
-part 'client/tilesheet.dart';
-
-part 'server/constants.dart';
-part 'server/grid.dart';
-part 'server/world.dart';
-part 'server/object.dart';
-part 'server/utility.dart';
-part 'server/weapon.dart';
+part './client/client.dart';
+part './client/player.dart';
+part './client/input_handler.dart';
+part './client/resource_handler.dart';
+part './client/tilesheet.dart';
 
 /**
  * global variables

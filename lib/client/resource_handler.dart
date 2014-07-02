@@ -1,4 +1,4 @@
-part of giggl;
+part of gglclient;
 
 /**
  * Initialize all resources here.
@@ -34,21 +34,22 @@ class ResourceHandler {
   static init() {
     if (initialized) return; // protect against multiple inits
     String pre = "ac0";
+    String assets = "../assets";
 
     for (int i = 0; i < strideCount; i++) {
-       resMgr.addBitmapData("${pre}_stride$i", "./assets/sprites/${pre}_stride$i.png");
+       resMgr.addBitmapData("${pre}_stride$i", "${assets}/sprites/${pre}_stride$i.png");
     }
     /** deprecate soon */
-    resMgr.addBitmapData("ac_center", "./assets/sprites/ac_center.png");
-    resMgr.addBitmapData("ac_corner1", "./assets/sprites/ac_corner1.png");
-    resMgr.addBitmapData("ac_corner2", "./assets/sprites/ac_corner2.png");
+    resMgr.addBitmapData("ac_center", "${assets}/sprites/ac_center.png");
+    resMgr.addBitmapData("ac_corner1", "${assets}/sprites/ac_corner1.png");
+    resMgr.addBitmapData("ac_corner2", "${assets}/sprites/ac_corner2.png");
 
-    resMgr.addBitmapData("${pre}_head", "./assets/sprites/${pre}_head.png");
-    resMgr.addBitmapData("${pre}_torso", "./assets/sprites/${pre}_torso.png");
-    resMgr.addBitmapData("${pre}_pistol", "./assets/sprites/${pre}_pistol.png");
-    resMgr.addBitmapData("${pre}_rifle", "./assets/sprites/${pre}_rifle.png");
-    resMgr.addBitmapData("${pre}_grenade", "./assets/sprites/${pre}_grenade.png");
-    resMgr.addBitmapData("${pre}_rocket", "./assets/sprites/${pre}_rocket.png");
+    resMgr.addBitmapData("${pre}_head", "${assets}/sprites/${pre}_head.png");
+    resMgr.addBitmapData("${pre}_torso", "${assets}/sprites/${pre}_torso.png");
+    resMgr.addBitmapData("${pre}_pistol", "${assets}/sprites/${pre}_pistol.png");
+    resMgr.addBitmapData("${pre}_rifle", "${assets}/sprites/${pre}_rifle.png");
+    resMgr.addBitmapData("${pre}_grenade", "${assets}/sprites/${pre}_grenade.png");
+    resMgr.addBitmapData("${pre}_rocket", "${assets}/sprites/${pre}_rocket.png");
 
 
     resMgr.load().then((_) {

@@ -1,4 +1,4 @@
-part of giggl;
+part of gglserver;
 
 abstract class Observer {
   void onNotify(Object data, int event);

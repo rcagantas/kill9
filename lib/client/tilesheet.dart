@@ -1,4 +1,4 @@
-part of giggl;
+part of gglclient;
 
 /**
  * 0: concrete

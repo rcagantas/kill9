@@ -1,4 +1,4 @@
-part of giggl;
+part of gglserver;
 
 class Surface
 {
