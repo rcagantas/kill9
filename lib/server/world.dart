@@ -5,7 +5,7 @@ class World {
   Map _objects = new Map();
   List _removals = new List();
   Map _listeners = new Map();
-  Map<int, PlayerFrame> _playerFrames = new Map();
+  Map<int, Frame> _playerFrames = new Map();
 
   int _tileWidth;
   int _worldWidth;
@@ -36,13 +36,11 @@ class World {
     object.myWorld = this;
   }
 
-  void addPlayerFrameListener(int playerId, void listener(PlayerFrame pf)) {
+  void addPlayerFrameListener(int playerId, void listener(Frame pf)) {
     if (_objects.containsKey(playerId)) {
       _listeners[playerId] = listener;
     }
   }
-
-
 
   WorldActor addPlayer() {
     var newPlayer = new WorldActor();
@@ -56,23 +54,45 @@ class World {
     object.myWorld = null;
   }
 
-  PlayerFrame getFrameDetail(int playerId) {
+  Frame getFrameDetail(int playerId) {
     if (!_playerFrames.containsKey(playerId)) {
-      _playerFrames[playerId] = new PlayerFrame();
+      _playerFrames[playerId] = new Frame();
     }
 
     var frame = _playerFrames[playerId];
-    var player = _objects[playerId];
-    updatePlayerFrame(player,frame);
+    WorldActor player = _objects[playerId];
+
+    frame.playerId = playerId;
+    frame.playerOrientation = player.orientation;
+    frame.playerLife = 100;
+    frame.x = player.x;
+    frame.y = player.y;
+
+    frame.topX = player.x - (WorldConst.viewPortWidth/2);
+    frame.topY = player.y - (WorldConst.viewPortHeight/2);
+
+    _objects.forEach((id,object) {
+      WorldObject obj = object;
+      if (id != playerId  && obj.isInView(frame.topX, frame.topY,
+          frame.topX + WorldConst.viewPortWidth, frame.topY + WorldConst.viewPortHeight)) {
+        var visibleObject = new ObjectInFrame();
+        visibleObject.x = obj.x;
+        visibleObject.y = obj.y;
+        visibleObject.orientation = obj.orientation;
+        visibleObject.id = obj.hashCode;
+        if (frame.visibleObjects.length > 0) {
+          frame.visibleObjects.removeRange(0,frame.visibleObjects.length-1);
+        }
+        frame.visibleObjects.add(visibleObject);
+      }
+
+    });
+
 
     return frame;
   }
 
-  void updatePlayerFrame(WorldActor player, PlayerFrame frame) {
-    frame.player = player;
-    frame.topX = player.x;
-    frame.topY = player.y;
-  }
+
 
 
   void _processInput() {
@@ -108,20 +128,34 @@ class World {
   }
 }
 
-class PlayerFrame {
+class ObjectInFrame {
+  int id;
+  int objectType;
+  int objectState;
+  num x,y,orientation;
+}
+
+class Frame {
 
   // Player detail;
-  WorldActor player;
+  int playerId;
+  num playerOrientation;
+  num x,y;
+  num playerLife;
+
+  // Weapon detail:
+  int weaponType;
+  int weaponAmmo;
 
   // Viewport
   num topX,topY;
 
   // Objects visible in the world
-  List<WorldObject> objectsInView;
+  List<ObjectInFrame> visibleObjects = new List();
 
   String toString() {
     var stringBuffer = new StringBuffer()
-    ..write("PlayerId: ${player.hashCode} topX: $topX topY $topY");
+    ..write("PlayerId: $playerId topX: $topX topY $topY");
     return stringBuffer.toString();
   }
 }

@@ -1,83 +1,139 @@
-import 'dart:html' as html;
 import 'package:stagexl/stagexl.dart';
 import 'package:giggl/gglclient.dart';
 import 'package:giggl/gglserver.dart';
+import 'dart:async';
+import 'dart:math';
+
+Arena client;
+InputHandler io;
+PlayerSprite p1;
+PlayerSprite p2;
+WorldActor player1;
+WorldActor player2;
+
 
 void main() {
-
   ResourceHandler.init();
-
   resMgr.load().then((_) {
-
-    var actor1 = new PlayerSprite()
-      ..setWeapon("grenade")
-      ..move(-100, -100);
-
-    var renderLoop = new RenderLoop();
-    var juggler = renderLoop.juggler;
-    stage.addChild(actor1);
     renderLoop.addStage(stage);
-
+    client = new Arena();
+    client.createRandomMap(20, 20);
+    p1 = client.p1;
+    p1.x = 1000;
+    p1.y = 1000;
+    p2 =  new PlayerSprite()
+    ..move(1000, 1000)
+    ..addTo(client);
 
     var grid = new Grid(20,20,100);
-    var tile = new Tile(Surface.NotPassable);
-    grid.set(0, 0, tile);
-    grid.set(4, 4, tile);
-    grid.set(10, 0, tile);
-    grid.set(10, 1, tile);
-    grid.set(10, 2, tile);
-    grid.set(10, 3, tile);
-    grid.set(19, 19, tile);
-
-    for (int i = 0; i < grid.width(); i++) {
-      for  (int j =0; j < grid.height(); j++) {
-        var curTile = grid.get(i, j);
-
-        if (curTile != null) {
-          var block = new Shape()
-            ..graphics.rect(0,0, 100, 100)
-            ..graphics.fillColor(Color.Red)
-            ..x = i * 100
-            ..y = j * 100;
-          stage.addChild(block);
-        }
-      }
-    }
-
     var world = new World(grid);
+    player1 = world.addPlayer();
+    player2 = world.addPlayer();
+    player1.x = 1000;
+    player1.y = 1000;
+    player2.x = 1000;
+    player2.y = 1000;
 
-    var object1 = world.addPlayer()
-      ..x = 100
-      ..y = 250;
-
-    world.addObject(object1);
-
-    world.addPlayerFrameListener(object1.hashCode, (pf){
-      actor1.move(pf.player.x, pf.player.y);
-      actor1.turn(pf.player.orientation);
-    });
-
+    world.addPlayerFrameListener(player1.hashCode, updateFrame);
     world.start();
 
-    InputHandler io = new InputHandler();
+    stage.onKeyUp.listen(onKeyUp);
+    stage.onEnterFrame.listen(onFrame);
+    stage.onMouseMove.listen(onMouseMove);
+    stage.onMouseRightClick.listen((e) => p1 != null? p1.cycleWeapon() : 0);
+    io = new InputHandler();
 
-    stage.onEnterFrame.listen((e) {
-        num ix = 0, iy = 0, ih = 0, it = 0, inc = 2, rinc = 0.1;
-        if (io.keyState[87]) { object1.moveUp(); }
-        if (io.keyState[83]) { object1.moveDown(); }
-        if (io.keyState[65]) { object1.moveLeft(); }
-        if (io.keyState[68]) { object1.moveRight(); }
-        if (!io.keyState[87] && !io.keyState[83]) { object1.stopTopDownMove() ;}
-        if (!io.keyState[65] && !io.keyState[68]) { object1.stopLeftRightMove(); }
-        if (io.keyState[37]) { object1.orientation -= rinc; }
-        if (io.keyState[39]) { object1.orientation += rinc; }
-        html.querySelector('#detail').innerHtml =
-            'orientation: ${object1.orientation} xV: ${object1.xVelocity} yV: ${object1.yVelocity}';
-      });
+    var random = new Random();
 
-      stage.onMouseMove.listen((e) {
-        object1.turnToPoint(e.stageX, e.stageY);
-      });
+    var timer = new Timer.periodic(new Duration(milliseconds: 2000), (elapsedTime) {
+      player2.stopLeftRightMove();
+      player2.stopTopDownMove();
+      player2.stopTurn();
+
+      var move = random.nextInt(3);
+
+      if (move == 0) {
+        player2.moveLeft();
+      } else if (move == 1) {
+        player2.moveRight();
+      }
+
+      move = random.nextInt(3);
+
+      if (move == 0) {
+        player2.moveUp();
+      } else if (move == 1) {
+        player2.moveDown();
+      }
+
+      move = random.nextInt(3);
+
+      if (move == 0) {
+        player2.turnClockwise();
+      } else if (move == 1) {
+        player2.turnCounterClockise();
+      }
+     });
   });
 }
 
+void onFrame(Event e) {
+  if (p1 == null) return;
+  handleInput();
+}
+
+void handleInput() {
+  num ix = 0, iy = 0, ih = 0, it = 0, inc = 4, rinc = 0.1;
+
+  if (io.keyState[87]) {
+    player1.moveUp();
+  }
+  else if (io.keyState[83]) {
+    player1.moveDown();
+  }
+  else {
+    player1.stopTopDownMove();
+  }
+
+  if (io.keyState[65]) {
+    player1.moveLeft();
+  }
+  else if (io.keyState[68]) {
+    player1.moveRight();
+  }
+  else {
+    player1.stopLeftRightMove();
+  }
+
+  if (io.keyState[37]) { player1.turnCounterClockise(); }
+  if (io.keyState[39]) { player1.turnCounterClockise(); }
+  if (io.keyState[38] || io.mouseL) { p1.fire(); }
+  if (io.keyState[69]) { p1.takeDamage(1); }
+}
+
+void onKeyUp(KeyboardEvent e) {
+  if (p1 == null) return;
+  if (e.keyCode == 40) { p1.cycleWeapon(); }
+  if (e.keyCode == 38 || e.keyCode == 40) {
+    p1.resetTorso();
+  }
+}
+
+void onMouseMove(MouseEvent e) {
+  if (p1 == null) return;
+  player1.turnToPoint(e.stageX + player1.x - stage.stageWidth/2,
+      e.stageY + player1.y - stage.stageHeight/2);
+}
+
+void updateFrame (Frame p) {
+  p1.move(p.x, p.y);
+  p1.turn(p.playerOrientation);
+  client.move(-p.topX, -p.topY);
+
+  p.visibleObjects.forEach((object) {
+    if (object.id == player2.hashCode) {
+      p2.move(object.x, object.y);
+      p2.turn(object.orientation);
+    }
+  });
+}

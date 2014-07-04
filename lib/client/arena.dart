@@ -18,8 +18,6 @@ class Arena extends DisplayObjectContainer {
     num baseX = width * TileSheet.SIZE;
     num baseY = height * TileSheet.SIZE;
 
-    num startx = stage.stageWidth/2 - baseX/2;
-    num starty = stage.stageHeight/2 - baseY/2;
     num count = 0;
     for (num i = 0; i < width; i++) {
       for (num j = 0; j < height; j++) {
@@ -28,8 +26,8 @@ class Arena extends DisplayObjectContainer {
         num type = (chance * 10).toInt();
         TileSheet tile = new TileSheet(type)
           ..index = count++
-          ..x = startx + (j * TileSheet.SIZE)
-          ..y = starty + (i * TileSheet.SIZE);
+          ..x =  (j * TileSheet.SIZE)
+          ..y =  (i * TileSheet.SIZE);
         switch(type) {
           case 2: trees.addChild(tile); break;
           case 1: walls.addChild(tile); break;

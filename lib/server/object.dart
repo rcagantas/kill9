@@ -5,6 +5,8 @@ class WorldObject {
   // reference to the world
   World myWorld;
 
+  int objectType;
+
   // velocity
   num xVelocity = 0;
   num yVelocity = 0;
@@ -49,6 +51,13 @@ class WorldObject {
       movementEvent.notify(this, GglEvent.ObjectMoved);
     //}
   }
+
+  bool isInView(num topX, num topY, num bottomX, num bottomY) {
+    return ( (x > topX - 100) &&
+         (x < bottomX + 100) &&
+         (y > topY - 100) &&
+         (y < bottomY + 100));
+  }
 }
 
 class WorldActor extends WorldObject
@@ -92,7 +101,7 @@ class WorldActor extends WorldObject
 
   void moveRight() {
     if (yVelocity > 0) {
-      xVelocity = -_45degreeSpeed;
+      xVelocity = _45degreeSpeed;
       yVelocity = _45degreeSpeed;
     } else if (yVelocity < 0) {
       xVelocity = _45degreeSpeed;
