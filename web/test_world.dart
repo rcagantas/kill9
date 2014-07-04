@@ -126,6 +126,8 @@ void onMouseMove(MouseEvent e) {
 }
 
 void updateFrame (Frame p) {
+  bool found = false;
+
   p1.move(p.x, p.y);
   p1.turn(p.playerOrientation);
   client.move(-p.topX, -p.topY);
@@ -134,6 +136,10 @@ void updateFrame (Frame p) {
     if (object.id == player2.hashCode) {
       p2.move(object.x, object.y);
       p2.turn(object.orientation);
+      found = true;
     }
   });
+
+  p2.visible = found;
+
 }

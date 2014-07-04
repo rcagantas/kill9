@@ -13,7 +13,7 @@ class GglEvent
 }
 
 class ActorProps {
-  static const num speed = 200;
+  static const num speed = 250;
   static const num turnRate = 2;
   static const num radius = 20;
 }

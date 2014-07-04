@@ -11,6 +11,7 @@ class World {
   int _worldWidth;
   int _worldHeight;
   Timer _timer = null;
+  Stopwatch watch = new Stopwatch();
 
   World (grid) {
     this.grid = grid;
@@ -71,6 +72,10 @@ class World {
     frame.topX = player.x - (WorldConst.viewPortWidth/2);
     frame.topY = player.y - (WorldConst.viewPortHeight/2);
 
+    if (frame.visibleObjects.length > 0) {
+      frame.visibleObjects.removeRange(0,frame.visibleObjects.length);
+    }
+
     _objects.forEach((id,object) {
       WorldObject obj = object;
       if (id != playerId  && obj.isInView(frame.topX, frame.topY,
@@ -80,11 +85,6 @@ class World {
         visibleObject.y = obj.y;
         visibleObject.orientation = obj.orientation;
         visibleObject.id = obj.hashCode;
-        if (frame.visibleObjects.length > 0) {
-          print(frame.visibleObjects.length);
-          frame.visibleObjects.removeRange(0,frame.visibleObjects.length);
-          print(frame.visibleObjects.length);
-        }
         frame.visibleObjects.add(visibleObject);
       }
 
@@ -122,8 +122,12 @@ class World {
 
   void _goRound(Timer timer) {
 
-    // redo this for actual time elapsed calculation
-    num elapsed = 0.01;
+    watch.stop();
+
+    num elapsed = watch.elapsedMilliseconds/1000;
+
+    watch.reset();
+    watch.start();
 
     _processInput();
     _update(elapsed);
