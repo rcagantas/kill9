@@ -38,7 +38,7 @@ class PlayerSprite extends DisplayObjectContainer {
       ..y = OFFSET
       ..pivotX = CENTER - OFFSET
       ..pivotY = CENTER + OFFSET
-      ..play();
+      ..gotoAndStop(0);
     stage.juggler.add(hip);
 
     torso = new Bitmap(resMgr.getBitmapData("${pre}_torso"))

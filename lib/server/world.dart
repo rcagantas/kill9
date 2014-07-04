@@ -81,7 +81,9 @@ class World {
         visibleObject.orientation = obj.orientation;
         visibleObject.id = obj.hashCode;
         if (frame.visibleObjects.length > 0) {
-          frame.visibleObjects.removeRange(0,frame.visibleObjects.length-1);
+          print(frame.visibleObjects.length);
+          frame.visibleObjects.removeRange(0,frame.visibleObjects.length);
+          print(frame.visibleObjects.length);
         }
         frame.visibleObjects.add(visibleObject);
       }
