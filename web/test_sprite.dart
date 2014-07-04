@@ -14,6 +14,11 @@ void main() {
       ..x = stage.stageWidth/2
       ..y = stage.stageHeight/2
       ..addTo(stage);
+    
+    PlayerSprite p2 = new PlayerSprite()
+      ..x = stage.stageWidth/2
+      ..y = stage.stageHeight/2
+      ..addTo(stage);
     renderLoop.addStage(stage);
     stage.onKeyUp.listen(onKeyUp);
     stage.onEnterFrame.listen(onFrame);

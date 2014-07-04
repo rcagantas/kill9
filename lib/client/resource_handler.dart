@@ -6,8 +6,9 @@ part of gglclient;
 class ResourceHandler {
   static final int strideCount = 6;
   static final List<BitmapData> ac_stride = [];
-  static final List<BitmapData> ac0_stride = [];
+  static const num MAX_PLAYERS = 1;
   static bool initialized = false;
+  static String pre = "ac";
   static Map jsonBloodSplat =
     {
       "maxParticles": 50,
@@ -33,7 +34,6 @@ class ResourceHandler {
 
   static init() {
     if (initialized) return; // protect against multiple inits
-    String pre = "ac0";
     String assets = "assets";
 
     for (int i = 0; i < strideCount; i++) {
@@ -44,19 +44,30 @@ class ResourceHandler {
     resMgr.addBitmapData("ac_corner1", "${assets}/sprites/ac_corner1.png");
     resMgr.addBitmapData("ac_corner2", "${assets}/sprites/ac_corner2.png");
 
+    for (num i = 0; i <= MAX_PLAYERS; i++) {
+      resMgr.addBitmapData("${pre}${i}_torso", "${assets}/sprites/${pre}${i}_torso.png");
+      resMgr.addBitmapData("${pre}${i}_death0", "${assets}/sprites/${pre}${i}_death0.png");
+      resMgr.addBitmapData("${pre}${i}_death1", "${assets}/sprites/${pre}${i}_death1.png");
+    }
+    
     resMgr.addBitmapData("${pre}_head", "${assets}/sprites/${pre}_head.png");
-    resMgr.addBitmapData("${pre}_torso", "${assets}/sprites/${pre}_torso.png");
     resMgr.addBitmapData("${pre}_pistol", "${assets}/sprites/${pre}_pistol.png");
     resMgr.addBitmapData("${pre}_rifle", "${assets}/sprites/${pre}_rifle.png");
     resMgr.addBitmapData("${pre}_grenade", "${assets}/sprites/${pre}_grenade.png");
     resMgr.addBitmapData("${pre}_rocket", "${assets}/sprites/${pre}_rocket.png");
-
-
+    
     resMgr.load().then((_) {
       for (int i = 0; i < strideCount; i++) {
-        ac0_stride.add(resMgr.getBitmapData("${pre}_stride$i"));
+        ac_stride.add(resMgr.getBitmapData("${pre}_stride$i"));
         initialized = true;
       }
     });
+  }
+  
+  static FlipBook flipbookDeath(num playerNo, num frameRate) {
+    List<BitmapData> death = [];
+    death.add(resMgr.getBitmapData("${pre}${playerNo}_death0"));
+    death.add(resMgr.getBitmapData("${pre}${playerNo}_death1"));
+    return new FlipBook(death, frameRate);
   }
 }
