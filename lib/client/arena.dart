@@ -48,7 +48,6 @@ class Arena extends DisplayObjectContainer {
             case 1: walls.addChild(layerTile);
                     nonPassable.add(new Point(j,i));
                     break;
-
           }
         }
       }
@@ -58,9 +57,9 @@ class Arena extends DisplayObjectContainer {
       ..move(stage.stageWidth/2, stage.stageHeight/2)
       ..addTo(playerPanel);
 
+    walls.addTo(this);
     playerPanel.addTo(this);
     trees.addTo(this);
-    walls.addTo(this);
 
     return nonPassable;
   }

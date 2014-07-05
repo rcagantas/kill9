@@ -50,18 +50,18 @@ class ResourceHandler {
       resMgr.addBitmapData("${pre}${i}_death0", "${sprites}/${pre}${i}_death0.png");
       resMgr.addBitmapData("${pre}${i}_death1", "${sprites}/${pre}${i}_death1.png");
     }
-    
+
     resMgr.addBitmapData("${pre}_head", "${sprites}/${pre}_head.png");
     resMgr.addBitmapData("${pre}_pistol", "${sprites}/${pre}_pistol.png");
     resMgr.addBitmapData("${pre}_rifle", "${sprites}/${pre}_rifle.png");
     resMgr.addBitmapData("${pre}_grenade", "${sprites}/${pre}_grenade.png");
     resMgr.addBitmapData("${pre}_rocket", "${sprites}/${pre}_rocket.png");
-    
+
     resMgr.addBitmapData("crate", "${tiles}/crate.png");
-    resMgr.addBitmapData("tree", "${tiles}/tree.png");
+    resMgr.addBitmapData("tree", "${tiles}/tree2.png");
     resMgr.addBitmapData("floor", "${tiles}/floor2.png");
-    
-    
+
+
     resMgr.load().then((_) {
       for (int i = 0; i < strideCount; i++) {
         ac_stride.add(resMgr.getBitmapData("${pre}_stride$i"));
@@ -69,7 +69,7 @@ class ResourceHandler {
       }
     });
   }
-  
+
   static FlipBook flipbookDeath(num playerNo, num frameRate) {
     List<BitmapData> death = [];
     death.add(resMgr.getBitmapData("${pre}${playerNo}_death0"));
