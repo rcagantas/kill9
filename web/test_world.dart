@@ -7,10 +7,13 @@ import 'dart:math' as math;
 Arena client;
 InputHandler io;
 PlayerSprite p1;
-PlayerSprite p2;
 WorldActor player1;
-WorldActor player2;
 
+Map<int, PlayerSprite> otherPs = new Map();
+Map<int, WorldActor> otherAs = new Map();
+
+List<int> visible = new List();
+List<RandomWalker> walkers = new List();
 
 void main() {
   ResourceHandler.init();
@@ -20,9 +23,8 @@ void main() {
     var nonPassableList = client.createRandomMap(20, 20);
     p1 = client.p1;
     p1.move(1000, 1000);
-    p2 =  new PlayerSprite()
-    ..move(900, 900)
-    ..addTo(client.playerPanel);
+
+
 
     var grid = new Grid(20,20,100);
     nonPassableList.forEach((p) {
@@ -32,12 +34,37 @@ void main() {
 
 
     var world = new World(grid);
-    player1 = world.addPlayer();
-    player2 = world.addPlayer();
-    player1.x = 1000;
-    player1.y = 1000;
-    player2.x = 900;
-    player2.y = 900;
+
+    player1 = world.addPlayer()
+      ..x = 850
+      ..y = 900;
+
+
+    for (int i=1; i<5; i++) {
+      var p = new PlayerSprite()
+      ..move(850 + (i*50) , 900 )
+      ..addTo(client.playerPanel);
+
+      var actor = world.addPlayer()
+          ..x = 850 + (i*50)
+          ..y = 900;
+
+      otherPs[actor.hashCode] = p;
+      otherAs[actor.hashCode] = actor;
+    }
+
+    for (int i=1; i<6; i++) {
+      var p = new PlayerSprite()
+      ..move(800 + (i*50) , 1000 )
+      ..addTo(client.playerPanel);
+
+      var actor = world.addPlayer()
+          ..x = 800 + (i*50)
+          ..y = 1000;
+
+      otherPs[actor.hashCode] = p;
+      otherAs[actor.hashCode] = actor;
+    }
 
     world.addPlayerFrameListener(player1.hashCode, updateFrame);
     world.start();
@@ -48,37 +75,11 @@ void main() {
     stage.onMouseRightClick.listen((e) => p1 != null? p1.cycleWeapon() : 0);
     io = new InputHandler();
 
-    var random = new math.Random();
 
-    var timer = new Timer.periodic(new Duration(milliseconds: 2000), (elapsedTime) {
-      player2.stopLeftRightMove();
-      player2.stopTopDownMove();
-      player2.stopTurn();
-
-      var move = random.nextInt(3);
-
-      if (move == 0) {
-        player2.moveLeft();
-      } else if (move == 1) {
-        player2.moveRight();
-      }
-
-      move = random.nextInt(3);
-
-      if (move == 0) {
-        player2.moveUp();
-      } else if (move == 1) {
-        player2.moveDown();
-      }
-
-      move = random.nextInt(3);
-
-      if (move == 0) {
-        player2.turnClockwise();
-      } else if (move == 1) {
-        player2.turnCounterClockise();
-      }
-     });
+    otherAs.forEach((k,v) {
+       new RandomWalker(v)
+        ..start();
+    });
   });
 }
 
@@ -131,20 +132,68 @@ void onMouseMove(MouseEvent e) {
 }
 
 void updateFrame (Frame p) {
-  bool found = false;
+
 
   p1.move(p.x, p.y);
   p1.turn(p.playerOrientation);
   client.move(-p.topX, -p.topY);
 
+  visible.removeRange(0, visible.length);
+
   p.visibleObjects.forEach((object) {
-    if (object.id == player2.hashCode) {
-      p2.move(object.x, object.y);
-      p2.turn(object.orientation);
-      found = true;
-    }
+    otherPs[object.id].move(object.x, object.y);
+    otherPs[object.id].turn(object.orientation);
+    visible.add(object.id);
   });
 
-  p2.visible = found;
+  otherPs.forEach((x,v) {
+    v.visible = visible.contains(x);
+  });
+}
+
+class RandomWalker {
+
+  WorldActor player;
+  RandomWalker (this.player);
+  math.Random random = new math.Random();
+  Timer _timer;
+
+  void start() {
+    _timer = new Timer.periodic(new Duration(milliseconds: 2000), _walkRandomly);
+  }
+
+  void stop() {
+    _timer.cancel();
+  }
+
+  void _walkRandomly(Timer timer)  {
+    player.stopLeftRightMove();
+    player.stopTopDownMove();
+    player.stopTurn();
+
+    var move = random.nextInt(3);
+
+    if (move == 0) {
+      player.moveLeft();
+    } else if (move == 1) {
+      player.moveRight();
+    }
+
+    move = random.nextInt(3);
+
+    if (move == 0) {
+      player.moveUp();
+    } else if (move == 1) {
+      player.moveDown();
+    }
+
+    move = random.nextInt(3);
+
+    if (move == 0) {
+      player.turnClockwise();
+    } else if (move == 1) {
+      player.turnCounterClockise();
+    }
+  }
 
 }

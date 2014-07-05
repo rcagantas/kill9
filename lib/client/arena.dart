@@ -34,8 +34,8 @@ class Arena extends DisplayObjectContainer {
         num type = (chance * 10).toInt();
 
         // make the middle part passable
-        if ((i == 9 || i == 10 ) &&
-           (j == 9 || j == 10 )){
+        if ((i > 7 && i < 12 ) &&
+           (j > 7 && j < 12 )){
           type = 0;
         }
 
