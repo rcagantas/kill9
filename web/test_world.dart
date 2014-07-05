@@ -19,10 +19,9 @@ void main() {
     client = new Arena();
     client.createRandomMap(20, 20);
     p1 = client.p1;
-    p1.x = 1000;
-    p1.y = 1000;
+    p1.move(1000, 1000);
     p2 =  new PlayerSprite()
-    ..move(1000, 1000)
+    ..move(900, 900)
     ..addTo(client);
 
     var grid = new Grid(20,20,100);
@@ -31,8 +30,8 @@ void main() {
     player2 = world.addPlayer();
     player1.x = 1000;
     player1.y = 1000;
-    player2.x = 1000;
-    player2.y = 1000;
+    player2.x = 900;
+    player2.y = 900;
 
     world.addPlayerFrameListener(player1.hashCode, updateFrame);
     world.start();

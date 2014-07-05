@@ -106,7 +106,7 @@ class World {
     // AI stuff
 
     // physics stuff (collision etc.)
-
+    _objects.forEach((k,v)=>v.doPhysics(elapsed,_objects));
     // individal object updates
     _objects.forEach((k,v)=>v.update(elapsed));
 

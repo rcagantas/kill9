@@ -34,6 +34,10 @@ class WorldObject {
     return new math.Point(x + xVelocity * elapsedTime, y + yVelocity * elapsedTime);
   }
 
+  void doPhysics(num elapsedTime, Map objects) {
+
+  }
+
   void update(num elapsedTime) {
 
     x = x + xVelocity * elapsedTime;
@@ -57,6 +61,13 @@ class WorldObject {
          (x < bottomX + 100) &&
          (y > topY - 100) &&
          (y < bottomY + 100));
+  }
+
+  bool willBump(WorldObject object, num elapsedTime) {
+    math.Point p1 = this.projectLocation(elapsedTime);
+    math.Point p2 = new Point(object.x, object.y);
+
+    return (p1.distanceTo(p2) < (radius + object.radius));
   }
 }
 
@@ -172,9 +183,18 @@ class WorldActor extends WorldObject
     _yVelocityHolder = 0;
   }
 
-  void update(num elapsedTime) {
-    // do some funky stuff here
+  void doPhysics(num elapsedTime, Map objects) {
 
+    objects.forEach((key,object) {
+      if (key != this.hashCode) {
+        if (willBump(object, elapsedTime)) {
+          _pauseLeftRightMove();
+          _pauseTopDownMove();
+        }
+      }
+    });
+
+    // wall collision
     var newLoc = projectLocation(elapsedTime);
 
     if(newLoc.x < x) {
@@ -204,6 +224,10 @@ class WorldActor extends WorldObject
       }
     }
 
+    super.doPhysics(elapsedTime, objects);
+  }
+
+  void update(num elapsedTime) {
     super.update(elapsedTime);
 
     _resumeTopDownMove();
