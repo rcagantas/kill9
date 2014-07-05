@@ -8,7 +8,7 @@ class PlayerSprite extends DisplayObjectContainer {
 
   Bitmap head;
   Bitmap torso;
-  String pre = "ac";
+  String pre = ResourceHandler.pre;
   Map<String, Bitmap> weapons = new Map<String, Bitmap>();
   List<String> weaponNames = ['pistol','rifle','grenade','rocket'];
   String weapon = "pistol";

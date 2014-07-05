@@ -6,7 +6,7 @@ part of gglclient;
 class ResourceHandler {
   static final int strideCount = 6;
   static final List<BitmapData> ac_stride = [];
-  static const num MAX_PLAYERS = 1;
+  static const num MAX_PLAYERS = 9;
   static bool initialized = false;
   static String pre = "ac";
   static Map jsonBloodSplat =
