@@ -23,7 +23,7 @@ void main() {
     p1.y = 1000;
     p2 =  new PlayerSprite()
     ..move(1000, 1000)
-    ..addTo(client);
+    ..addTo(client.playerPanel);
 
     var grid = new Grid(20,20,100);
     var world = new World(grid);

@@ -6,6 +6,7 @@ class Arena extends DisplayObjectContainer {
   List<PlayerSprite> players = [];
   List<TileSheet> tiles = [];
   PlayerSprite p1;
+  LayerPanel playerPanel = new LayerPanel();
   LayerPanel trees = new LayerPanel();
   LayerPanel walls = new LayerPanel();
 
@@ -38,8 +39,9 @@ class Arena extends DisplayObjectContainer {
 
     p1 = new PlayerSprite()
       ..move(stage.stageWidth/2, stage.stageHeight/2)
-      ..addTo(this);
+      ..addTo(playerPanel);
 
+    playerPanel.addTo(this);
     trees.addTo(this);
     walls.addTo(this);
   }
