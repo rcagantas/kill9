@@ -2,7 +2,7 @@ import 'package:stagexl/stagexl.dart';
 import 'package:giggl/gglclient.dart';
 import 'package:giggl/gglserver.dart';
 import 'dart:async';
-import 'dart:math';
+import 'dart:math' as math;
 
 Arena client;
 InputHandler io;
@@ -17,14 +17,20 @@ void main() {
   resMgr.load().then((_) {
     renderLoop.addStage(stage);
     client = new Arena();
-    client.createRandomMap(20, 20);
+    var nonPassableList = client.createRandomMap(20, 20);
     p1 = client.p1;
     p1.move(1000, 1000);
     p2 =  new PlayerSprite()
     ..move(900, 900)
-    ..addTo(client);
+    ..addTo(client.playerPanel);
 
     var grid = new Grid(20,20,100);
+    nonPassableList.forEach((p) {
+      math.Point point = p;
+      grid.set(point.x, point.y, new Tile(Surface.NotPassable));
+    });
+
+
     var world = new World(grid);
     player1 = world.addPlayer();
     player2 = world.addPlayer();
@@ -42,7 +48,7 @@ void main() {
     stage.onMouseRightClick.listen((e) => p1 != null? p1.cycleWeapon() : 0);
     io = new InputHandler();
 
-    var random = new Random();
+    var random = new math.Random();
 
     var timer = new Timer.periodic(new Duration(milliseconds: 2000), (elapsedTime) {
       player2.stopLeftRightMove();

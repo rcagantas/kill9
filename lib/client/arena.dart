@@ -15,8 +15,12 @@ class Arena extends DisplayObjectContainer {
     this.addTo(stage);
   }
 
-  void createRandomMap(num width, num height) {
+  List createRandomMap(num width, num height) {
     num count = 0;
+
+    List<math.Point> nonPassable = new List();
+
+
     for (num i = 0; i < width; i++) {
       for (num j = 0; j < height; j++) {
         math.Random rand = new math.Random();
@@ -28,13 +32,23 @@ class Arena extends DisplayObjectContainer {
 
         num chance = rand.nextDouble();
         num type = (chance * 10).toInt();
+
+        // make the middle part passable
+        if ((i == 9 || i == 10 ) &&
+           (j == 9 || j == 10 )){
+          type = 0;
+        }
+
         if (type > 0) {
           TileSheet layerTile = new TileSheet(type)
               ..x =  (j * TileSheet.SIZE) + TileSheet.SIZE/2
               ..y =  (i * TileSheet.SIZE) + TileSheet.SIZE/2;
           switch(type) {
             case 2: trees.addChild(layerTile); break;
-            case 1: walls.addChild(layerTile); break;
+            case 1: walls.addChild(layerTile);
+                    nonPassable.add(new Point(j,i));
+                    break;
+
           }
         }
       }
@@ -47,6 +61,8 @@ class Arena extends DisplayObjectContainer {
     playerPanel.addTo(this);
     trees.addTo(this);
     walls.addTo(this);
+
+    return nonPassable;
   }
 
   void move(num x, num y) {
