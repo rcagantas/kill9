@@ -44,10 +44,16 @@ class World {
     }
   }
 
-  WorldActor addPlayer() {
+  WorldActor addPlayerandGetReference() {
     var newPlayer = new WorldActor();
     addObject(newPlayer);
     return newPlayer;
+  }
+
+  int addPlayer() {
+    var newPlayer = new WorldActor();
+    addObject(newPlayer);
+    return newPlayer.hashCode;
   }
 
 

@@ -37,7 +37,7 @@ void main() {
 
     var world = new World(grid);
 
-    player1 = world.addPlayer()
+    player1 = world.addPlayerandGetReference()
       ..x = 850
       ..y = 900;
 
@@ -47,7 +47,7 @@ void main() {
       ..move(850 + (i*50) , 900 )
       ..addTo(client.playerPanel);
 
-      var actor = world.addPlayer()
+      var actor = world.addPlayerandGetReference()
           ..x = 850 + (i*50)
           ..y = 900;
 
@@ -60,7 +60,7 @@ void main() {
       ..move(800 + (i*50) , 1000 )
       ..addTo(client.playerPanel);
 
-      var actor = world.addPlayer()
+      var actor = world.addPlayerandGetReference()
           ..x = 800 + (i*50)
           ..y = 1000;
 
