@@ -30,7 +30,7 @@ class WorldConst {
   static const int gridHeight = 20;
   static const num tileSize = 100;
   static const num viewPortWidth = 640;
-  static const num viewPortHeight = 400;
+  static const num viewPortHeight = 480;
 }
 
 class BulletProps {
