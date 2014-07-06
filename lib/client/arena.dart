@@ -61,8 +61,8 @@ class Arena extends DisplayObjectContainer {
       ..move(stage.stageWidth/2, stage.stageHeight/2)
       ..addTo(playerPanel);
 
-    walls.addTo(this);
     playerPanel.addTo(this);
+    walls.addTo(this);
     trees.addTo(this);
 
     return nonPassable;
