@@ -49,6 +49,9 @@ class Grid
     int gridYBot = ((y + radius)/ _tileWidth).floor();
     int gridYTop = ((y - radius)/ _tileWidth).floor();
 
+    if (!passable(gridX,gridY))
+      return true;
+
     if (!passable(gridX-1,gridY) && ( (x - radius) - (gridX * _tileWidth) < 0))
       return true;
 
@@ -70,6 +73,9 @@ class Grid
 
       int gridYBot = ((y + radius)/ _tileWidth).floor();
       int gridYTop = ((y - radius)/ _tileWidth).floor();
+
+      if (!passable(gridX,gridY))
+        return true;
 
       if (!passable(gridX+1,gridY) && ( ((gridX + 1) * _tileWidth) - (x + radius) <= 0))
         return true;
@@ -94,6 +100,9 @@ class Grid
       int gridXRight = ((x + radius)/ _tileWidth).floor();
       int gridXLeft = ((x - radius)/ _tileWidth).floor();
 
+      if (!passable(gridX,gridY))
+        return true;
+
       if (!passable(gridX,gridY-1) && ( (y - radius) - (gridY * _tileWidth) <= 0))
         return true;
 
@@ -115,6 +124,9 @@ class Grid
 
       int gridXRight = ((x + radius)/ _tileWidth).floor();
       int gridXLeft = ((x - radius)/ _tileWidth).floor();
+
+      if (!passable(gridX,gridY))
+        return true;
 
       if (!passable(gridX,gridY+1) && ( ((gridY + 1) * _tileWidth) - (y + radius) <= 0))
         return true;

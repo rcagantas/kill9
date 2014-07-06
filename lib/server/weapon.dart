@@ -37,10 +37,11 @@ class Bullet extends WorldObject {
 
     //hit walls?
     if (!_expired) {
-      _expired =  (myWorld.grid.bumpLeft(x, y, radius) ||
-          myWorld.grid.bumpRight(x, y, radius)||
-          myWorld.grid.bumpTop(x, y, radius) ||
-          myWorld.grid.bumpBottom(x, y, radius));
+      math.Point newPos = projectLocation(elapsedTime);
+      _expired =  (myWorld.grid.bumpLeft(newPos.x, newPos.y, radius) ||
+          myWorld.grid.bumpRight(newPos.x, newPos.y, radius)||
+          myWorld.grid.bumpTop(newPos.x, newPos.y, radius) ||
+          myWorld.grid.bumpBottom(newPos.x, newPos.y, radius));
 
     }
     //reached max distance?
