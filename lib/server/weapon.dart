@@ -27,7 +27,8 @@ class Bullet extends WorldObject {
     //hit someone?
     objects.forEach((key,object) {
       if (key != this.hashCode && object is WorldActor) {
-        if (willBump(object, elapsedTime)) {
+        if (object is WorldActor && object.life == 0) {}
+        else if (willBump(object, elapsedTime)) {
           print ("Player $key is hit");
           (object as WorldActor).takeDamage(BulletProps.damage);
           _expired = true;
@@ -78,7 +79,8 @@ class BulletFactory {
   }
 
   void putBullet(Bullet bullet) {
-    _bullets.add(bullet);
+    print(_bullets.length);
+    _bullets.addLast(bullet);
   }
 
   Iterable getBulletList()
