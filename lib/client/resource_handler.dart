@@ -58,8 +58,8 @@ class ResourceHandler {
     resMgr.addBitmapData("${pre}_rocket", "${sprites}/${pre}_rocket.png");
 
     resMgr.addBitmapData("crate", "${tiles}/crate.png");
-    resMgr.addBitmapData("tree", "${tiles}/tree2.png");
-    resMgr.addBitmapData("floor", "${tiles}/floor2.png");
+    resMgr.addBitmapData("tree", "${tiles}/tree.png");
+    resMgr.addBitmapData("floor", "${tiles}/floor.png");
 
 
     resMgr.load().then((_) {
