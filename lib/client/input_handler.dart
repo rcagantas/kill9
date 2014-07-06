@@ -16,12 +16,12 @@ class InputHandler {
 
     for(num i = 0; i < 255; i++) keyState[i] = false;
 
+    var fps = null;
     stage.onEnterFrame.listen((EnterFrameEvent e) {
       String keyPressed = "keypressed: ";
       for (num i = 0; i < 255; i++)
         if (keyState[i]) keyPressed += "$i ";
 
-      var fps = null;
       fps = fps == null
           ? 1.00 / e.passedTime
           : 0.05 / e.passedTime + 0.95 * fps;

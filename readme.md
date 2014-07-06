@@ -3,7 +3,7 @@ giggl
 Giggl is our attempt at making a multiplayer arena shooter. 
 
 ## Game Overview
-* Game is to be hosted and playable over LAN only (could change in the future). 
+* Game is to be hosted and playable over internet only (might change if we ever implement bots). 
 * The game size is static and set on creation by the game server.
 * Players could join any server through a link/identifier.
 * Players could shoot while moving.
