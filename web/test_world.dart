@@ -114,7 +114,8 @@ void handleInput() {
   if (io.keyState[37]) { player1.turnCounterClockise(); }
   if (io.keyState[39]) { player1.turnCounterClockise(); }
   if (io.keyState[38] || io.mouseL) { p1.fire(); }
-  if (io.keyState[69]) { p1.takeDamage(1); }
+  if (io.keyState[69]) { p1.takeDamage(1, false); }
+  if (io.keyState[82]) { p1.takeDamage(1, true); }
 }
 
 void onKeyUp(KeyboardEvent e) {

@@ -14,7 +14,7 @@ class ResourceHandler {
       "maxParticles": 50,
       "duration": .2,
       "lifeSpan": 0.2, "lifespanVariance": 0.1,
-      "startSize": .1, "startSizeVariance": .2,
+      "startSize": 1, "startSizeVariance": 1,
       "finishSize": 20, "finishSizeVariance": 5,
       "shape": "circle",
       "emitterType": 0,
@@ -29,8 +29,31 @@ class ResourceHandler {
       "rotatePerSecond": 0, "rotatePerSecondVariance": 0,
       "compositeOperation": "source-over",
       "startColor": {"red": 1, "green": 0, "blue": 0, "alpha": 1},
-      "finishColor": {"red": 1, "green": 0, "blue": 0, "alpha": 0}
+      "finishColor": {"red": 1, "green": 0, "blue": 0, "alpha": .25}
     };
+  static Map jsonBloodSplatAoe =
+    {
+      "maxParticles": 50,
+      "duration": .2,
+      "lifeSpan": 0.2, "lifespanVariance": 0.1,
+      "startSize": 1, "startSizeVariance": 1,
+      "finishSize": 30, "finishSizeVariance": 5,
+      "shape": "circle",
+      "emitterType": 0,
+      "location": {"x": 0, "y": 0},
+      "locationVariance": {"x": 0, "y": 0},
+      "speed": 200, "speedVariance": 10,
+      "angle": 0, "angleVariance": 360,
+      "gravity": {"x": 0, "y": 0},
+      "radialAcceleration": 20, "radialAccelerationVariance": 0,
+      "tangentialAcceleration": 10, "tangentialAccelerationVariance": 0,
+      "minRadius": 0, "maxRadius": 100, "maxRadiusVariance": 0,
+      "rotatePerSecond": 0, "rotatePerSecondVariance": 0,
+      "compositeOperation": "source-over",
+      "startColor": {"red": 1, "green": 0, "blue": 0, "alpha": 1},
+      "finishColor": {"red": 1, "green": 0, "blue": 0, "alpha": .25}
+    };
+
 
   static init() {
     if (initialized) return; // protect against multiple inits
@@ -60,7 +83,6 @@ class ResourceHandler {
     resMgr.addBitmapData("crate", "${tiles}/crate.png");
     resMgr.addBitmapData("tree", "${tiles}/tree.png");
     resMgr.addBitmapData("floor", "${tiles}/floor.png");
-
 
     resMgr.load().then((_) {
       for (int i = 0; i < strideCount; i++) {

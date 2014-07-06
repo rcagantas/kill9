@@ -14,7 +14,7 @@ void main() {
       ..x = stage.stageWidth/2
       ..y = stage.stageHeight/2
       ..addTo(stage);
-    
+
     PlayerSprite p2 = new PlayerSprite()
       ..x = stage.stageWidth/2
       ..y = stage.stageHeight/2
@@ -42,7 +42,7 @@ void handleInput() {
   if (io.keyState[37]) { it = -rinc; }
   if (io.keyState[39]) { it = rinc; }
   if (io.keyState[38] || io.mouseL) { p1.fire(); }
-  if (io.keyState[69]) { p1.takeDamage(1); }
+  if (io.keyState[69]) { p1.takeDamage(1, false); }
   p1.move(p1.x + ix, p1.y + iy);
   p1.turnAdd(it);
 }

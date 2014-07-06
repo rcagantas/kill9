@@ -36,7 +36,8 @@ void handleInput() {
   if (io.keyState[37]) { it = -rinc; }
   if (io.keyState[39]) { it = rinc; }
   if (io.keyState[38] || io.mouseL) { p1.fire(); }
-  if (io.keyState[69]) { p1.takeDamage(1); }
+  if (io.keyState[69]) { p1.takeDamage(1, false); }
+  if (io.keyState[82]) { p1.takeDamage(1, true); }
   p1.move(p1.x + ix, p1.y + iy);
   p1.turnAdd(it);
   client.move(client.x - ix, client.y - iy);

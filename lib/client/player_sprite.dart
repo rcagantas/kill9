@@ -18,7 +18,7 @@ class PlayerSprite extends DisplayObjectContainer {
   TextField dbg;
   bool dbgmode = false;
   num hp = 100;
-  ParticleEmitter splatter;
+  ParticleEmitter splatter, splatterAoe;
   num playerNo = -1;
 
   PlayerSprite() {
@@ -28,6 +28,11 @@ class PlayerSprite extends DisplayObjectContainer {
       ..stop(true)
       ..addTo(this);
     stage.juggler.add(splatter);
+
+    splatterAoe = new ParticleEmitter(ResourceHandler.jsonBloodSplatAoe)
+      ..stop(true)
+      ..addTo(this);
+    stage.juggler.add(splatterAoe);
 
     arcHealth = new Shape()
       ..pivotX = CENTER
@@ -64,7 +69,7 @@ class PlayerSprite extends DisplayObjectContainer {
       ..pivotX = CENTER
       ..pivotY = CENTER
       ..addTo(this);
-    
+
     death = ResourceHandler.flipbookDeath(playerNo, 10)
       ..x = -OFFSET
       ..y = OFFSET
@@ -101,9 +106,9 @@ class PlayerSprite extends DisplayObjectContainer {
     this.y = y;
   }
 
-  void takeDamage(num dmg) {
+  void takeDamage(num dmg, bool aoe) {
     hp = hp - dmg < 0? 0 : hp - dmg;
-    if (hp == 0) { 
+    if (hp == 0) {
       alive = false;
       return;
     }
@@ -113,20 +118,21 @@ class PlayerSprite extends DisplayObjectContainer {
     arcHealth
       ..graphics.arc(CENTER, CENTER, HPRADIUS, -angle, angle, false)
       ..graphics.strokeColor(color, 4);
-    splatter.start(.2);
+    if (!aoe) splatter.start(.2);
+    else splatterAoe.start(.5);
   }
-  
+
   void set alive(bool b) {
     if (head.visible == b) return; // same state. don't animate anything.
-    weapons[weapon].visible = 
-    head.visible = 
+    weapons[weapon].visible =
+    head.visible =
     torso.visible =
-    hip.visible = 
+    hip.visible =
     arcHealth.visible = b;
     death.visible = !b;
     if (death.visible) death.gotoAndPlay(0);
   }
-  
+
   bool get alive { return head.visible; }
 
   void fixHipRotation(num x, num y) {
