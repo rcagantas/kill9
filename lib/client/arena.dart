@@ -9,6 +9,7 @@ class Arena extends DisplayObjectContainer {
   LayerPanel playerPanel = new LayerPanel();
   LayerPanel trees = new LayerPanel();
   LayerPanel walls = new LayerPanel();
+  num treeScale = 1.5;
 
   Arena() {
     ResourceHandler.init();
@@ -44,10 +45,13 @@ class Arena extends DisplayObjectContainer {
               ..x =  (j * TileSheet.SIZE) + TileSheet.SIZE/2
               ..y =  (i * TileSheet.SIZE) + TileSheet.SIZE/2;
           switch(type) {
-            case 2: trees.addChild(layerTile); break;
-            case 1: walls.addChild(layerTile);
-                    nonPassable.add(new Point(j,i));
-                    break;
+            case 2:
+              layerTile.scaleX = layerTile.scaleY = treeScale;
+              trees.addChild(layerTile); break;
+            case 1:
+              walls.addChild(layerTile);
+              nonPassable.add(new Point(j,i));
+              break;
           }
         }
       }
