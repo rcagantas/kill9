@@ -79,9 +79,7 @@ class World {
     frame.topX = player.x - (WorldConst.viewPortWidth/2);
     frame.topY = player.y - (WorldConst.viewPortHeight/2);
 
-    if (frame.visibleObjects.length > 0) {
-      frame.visibleObjects.removeRange(0,frame.visibleObjects.length);
-    }
+    frame.visibleObjects.clear();
 
     _objects.forEach((id,object) {
       WorldObject obj = object;
@@ -122,6 +120,7 @@ class World {
 
     // objects for removal
     _removals.forEach((obj)=>_objects.remove(obj.hashCode));
+    _removals.clear();
 
     //generate frame for each player
     _listeners.forEach((playerId,listener){

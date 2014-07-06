@@ -20,6 +20,7 @@ class Bullet extends WorldObject {
     this.y = y - (radius * math.cos(orientation));
     this.startX = this.x;
     this.startY = this.y;
+    _expired = false;
   }
 
   void doPhysics(num elapsedTime, Map objects) {
@@ -66,6 +67,7 @@ class Bullet extends WorldObject {
 class BulletFactory {
 
   Queue<Bullet> _bullets = new Queue();
+  int counter = 0;
 
   BulletFactory(int bulletCount) {
     for (int i = 0; i < bulletCount; i++) {
@@ -75,12 +77,20 @@ class BulletFactory {
   }
 
   Bullet getBullet() {
-    return _bullets.removeFirst();
+    var bullet = _bullets.removeFirst();
+    counter = counter + 1;
+
+    print("Borrowed ${_bullets.length}: Total fire: $counter");
+
+    return bullet;
   }
 
   void putBullet(Bullet bullet) {
-    print(_bullets.length);
+    if (bullet == null) {
+      print ("this should not happen");
+    }
     _bullets.addLast(bullet);
+    print("Returned: ${_bullets.length}");
   }
 
   Iterable getBulletList()
