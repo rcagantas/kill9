@@ -13,7 +13,7 @@ class GglEvent
 }
 
 class ActorProps {
-  static const num speed = 250;
+  static const num speed = 300;
   static const num turnRate = 2;
   static const num radius = 20;
 }
@@ -32,5 +32,13 @@ class WorldConst {
   static const num viewPortWidth = 640;
   static const num viewPortHeight = 400;
 }
+
+class BulletProps {
+  static const num radius = 2;
+  static const num speed = 1500;
+  static const num distance = 1000;
+  static const num damage = 10;
+}
+
 
 

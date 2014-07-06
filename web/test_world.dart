@@ -3,6 +3,7 @@ import 'package:giggl/gglclient.dart';
 import 'package:giggl/gglserver.dart';
 import 'dart:async';
 import 'dart:math' as math;
+import 'dart:html' as html;
 
 Arena client;
 InputHandler io;
@@ -11,6 +12,7 @@ WorldActor player1;
 
 Map<int, PlayerSprite> otherPs = new Map();
 Map<int, WorldActor> otherAs = new Map();
+Map<int, RealBullet> realBullets = new Map();
 
 List<int> visible = new List();
 List<RandomWalker> walkers = new List();
@@ -66,6 +68,15 @@ void main() {
       otherAs[actor.hashCode] = actor;
     }
 
+    world.bullets.getBulletList().forEach((id) {
+      realBullets[id] = new RealBullet()
+      ..addTo(client.playerPanel)
+      ..visible = false;
+    });
+
+    p1.removeFromParent();
+    p1.addTo(client.playerPanel);
+
     world.addPlayerFrameListener(player1.hashCode, updateFrame);
     world.start();
 
@@ -79,6 +90,23 @@ void main() {
     otherAs.forEach((k,v) {
        new RandomWalker(v)
         ..start();
+    });
+
+    stage.onEnterFrame.listen((EnterFrameEvent e) {
+      int count = 0;
+
+
+      otherPs.values.forEach((p) {
+        if (p.hp == 0) count = count + 1;
+      });
+      if (count < 9) {
+        html.querySelector('#detail').innerHtml = 'Killed: $count';
+      }
+      else {
+        html.querySelector('#detail').innerHtml = 'You WIN!!';
+
+      }
+
     });
   });
 }
@@ -113,9 +141,8 @@ void handleInput() {
 
   if (io.keyState[37]) { player1.turnCounterClockise(); }
   if (io.keyState[39]) { player1.turnCounterClockise(); }
-  if (io.keyState[38] || io.mouseL) { p1.fire(); }
-  if (io.keyState[69]) { p1.takeDamage(1, false); }
-  if (io.keyState[82]) { p1.takeDamage(1, true); }
+  if (io.keyState[38] || io.mouseL) { p1.fire(); player1.weapon.fire();}
+  if (!io.keyState[38] && !io.mouseL){ player1.weapon.stop(); }
 }
 
 void onKeyUp(KeyboardEvent e) {
@@ -142,12 +169,30 @@ void updateFrame (Frame p) {
   visible.removeRange(0, visible.length);
 
   p.visibleObjects.forEach((object) {
-    otherPs[object.id].move(object.x, object.y);
-    otherPs[object.id].turn(object.orientation);
-    visible.add(object.id);
+    if (otherPs.containsKey(object.id)) {
+      var player = otherPs[object.id]
+        ..move(object.x, object.y)
+        ..turn(object.orientation);
+
+      var damage = player.hp - object.life;
+
+      if (damage>0) {
+        player.takeDamage(damage,false);
+      }
+      visible.add(object.id);
+    }
+    else if (realBullets.containsKey(object.id)) {
+      realBullets[object.id].x = object.x;
+      realBullets[object.id].y = object.y;
+      visible.add(object.id);
+    }
   });
 
   otherPs.forEach((x,v) {
+    v.visible = visible.contains(x);
+  });
+
+  realBullets.forEach((x,v) {
     v.visible = visible.contains(x);
   });
 }
@@ -198,3 +243,14 @@ class RandomWalker {
   }
 
 }
+
+
+class RealBullet extends Shape
+{
+  RealBullet() {
+    this.graphics.circle(0, 0, 2);
+    this.graphics.fillColor(Color.Black);
+  }
+}
+
+

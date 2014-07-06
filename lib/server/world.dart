@@ -6,6 +6,7 @@ class World {
   List _removals = new List();
   Map _listeners = new Map();
   Map<int, Frame> _playerFrames = new Map();
+  BulletFactory bullets = new BulletFactory(200);
 
   int _tileWidth;
   int _worldWidth;
@@ -65,7 +66,7 @@ class World {
 
     frame.playerId = playerId;
     frame.playerOrientation = player.orientation;
-    frame.playerLife = 100;
+    frame.playerLife = player.life;
     frame.x = player.x;
     frame.y = player.y;
 
@@ -85,6 +86,9 @@ class World {
         visibleObject.y = obj.y;
         visibleObject.orientation = obj.orientation;
         visibleObject.id = obj.hashCode;
+        if (obj is WorldActor) {
+          visibleObject.life = obj.life;
+        }
         frame.visibleObjects.add(visibleObject);
       }
 
@@ -138,6 +142,7 @@ class ObjectInFrame {
   int id;
   int objectType;
   int objectState;
+  int life;
   num x,y,orientation;
 }
 

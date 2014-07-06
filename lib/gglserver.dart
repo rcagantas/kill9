@@ -3,6 +3,7 @@ library gglserver;
 import 'package:stagexl/stagexl.dart';
 import 'dart:math' as math;
 import 'dart:async';
+import 'dart:collection';
 
 part 'server/constants.dart';
 part 'server/grid.dart';

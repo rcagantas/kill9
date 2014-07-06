@@ -80,9 +80,11 @@ class WorldActor extends WorldObject
   num _yVelocityHolder = 0;
   num _45degreeSpeed = 0;
 
+  int life = 100;
+
   WorldActor():super(ActorProps.radius, ActorProps.speed, ActorProps.turnRate)
   {
-    weapon = new GrenadeLauncher(this);
+    weapon = new Pistol(this);
     _45degreeSpeed = speed * math.sin(math.PI/4);
   }
 
@@ -183,11 +185,19 @@ class WorldActor extends WorldObject
     _yVelocityHolder = 0;
   }
 
+  void takeDamage(int damage) {
+    life = life - damage;
+    if (life < 0) life = 0;
+  }
+
   void doPhysics(num elapsedTime, Map objects) {
+
+    if (life == 0) return;
 
     objects.forEach((key,object) {
       if (key != this.hashCode) {
-        if (willBump(object, elapsedTime)) {
+        if (object is WorldActor && object.life == 0) {}
+        else if (willBump(object, elapsedTime) ) {
           _pauseLeftRightMove();
           _pauseTopDownMove();
         }
@@ -200,27 +210,22 @@ class WorldActor extends WorldObject
     if(newLoc.x < x) {
       if (myWorld.grid.bumpLeft(newLoc.x, y, radius)) {
         _pauseLeftRightMove();
-        print ("bumpedLeft");
       }
     }
     else if (newLoc.x > x) {
       if (myWorld.grid.bumpRight(newLoc.x, y, radius)) {
         _pauseLeftRightMove();
-        print ("bumpedRight");
-
       }
     }
 
     if(newLoc.y < y) {
       if (myWorld.grid.bumpTop(x, newLoc.y, radius)) {
         _pauseTopDownMove();
-        print ("bumpedTop");
       }
     }
     else if(newLoc.y > y) {
       if (myWorld.grid.bumpBottom(x, newLoc.y, radius)) {
         _pauseTopDownMove();
-        print ("bumpedBottom");
       }
     }
 
@@ -228,6 +233,7 @@ class WorldActor extends WorldObject
   }
 
   void update(num elapsedTime) {
+    if (life == 0) return;
     super.update(elapsedTime);
 
     _resumeTopDownMove();
@@ -236,10 +242,3 @@ class WorldActor extends WorldObject
 
 }
 
-
-class Projectile extends WorldObject {
-  Projectile(num radius,num speed, num direction):super(radius, speed, 0) {
-    xVelocity = speed * math.sin(direction);
-    yVelocity = speed * math.cos(direction);
-  }
-}
