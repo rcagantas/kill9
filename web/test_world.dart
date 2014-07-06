@@ -139,8 +139,8 @@ void handleInput() {
     player1.stopLeftRightMove();
   }
 
-  if (io.keyState[37]) { player1.turnCounterClockise(); }
-  if (io.keyState[39]) { player1.turnCounterClockise(); }
+  if (io.keyState[37]) { player1.turnIncrement(-.1); }
+  if (io.keyState[39]) { player1.turnIncrement(.1); }
   if (io.keyState[38] || io.mouseL) { p1.fire(); player1.weapon.fire();}
   if (!io.keyState[38] && !io.mouseL){ player1.weapon.stop(); }
 }
@@ -160,8 +160,6 @@ void onMouseMove(MouseEvent e) {
 }
 
 void updateFrame (Frame p) {
-
-
   p1.move(p.x, p.y);
   p1.turn(p.playerOrientation);
   client.move(-p.topX, -p.topY);
@@ -238,10 +236,9 @@ class RandomWalker {
     if (move == 0) {
       player.turnClockwise();
     } else if (move == 1) {
-      player.turnCounterClockise();
+      player.turnCounterClockwise();
     }
   }
-
 }
 
 

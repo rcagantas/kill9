@@ -148,8 +148,12 @@ class WorldActor extends WorldObject
     angleVelocity = turnRate;
   }
 
-  void turnCounterClockise() {
+  void turnCounterClockwise() {
     angleVelocity = -turnRate;
+  }
+
+  void turnIncrement(num increment) {
+    orientation += increment;
   }
 
   void turnToPoint(num xPt,num yPt)
