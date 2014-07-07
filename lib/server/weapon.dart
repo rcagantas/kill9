@@ -11,7 +11,7 @@ class Bullet extends WorldObject {
   bool _expired = false;
   int damage;
 
-  Bullet():super(BulletProps.radius,BulletProps.speed,0);
+  Bullet():super(BulletProps.RADIUS,BulletProps.SPEED,0);
 
   void init(num x, num y, num orientation, num radius) {
     xVelocity = speed * math.sin(orientation);
@@ -31,7 +31,7 @@ class Bullet extends WorldObject {
         if (object is WorldActor && object.life == 0) {}
         else if (willBump(object, elapsedTime)) {
           print ("Player $key is hit");
-          (object as WorldActor).takeDamage(BulletProps.damage);
+          (object as WorldActor).takeDamage(BulletProps.DAMAGE);
           _expired = true;
         }
       }
@@ -48,8 +48,8 @@ class Bullet extends WorldObject {
     }
     //reached max distance?
     if (!_expired) {
-      var p2 = new Point(startX,startY);
-      _expired = (new Point(x,y).distanceTo(p2) > BulletProps.distance);
+      var p2 = new math.Point(startX,startY);
+      _expired = (new math.Point(x,y).distanceTo(p2) > BulletProps.DISTANCE);
     }
   }
 
@@ -118,12 +118,12 @@ class Grenade extends WorldObject {
 
   void update(elapsedTime) {
 
-    var p1 = new Point(x,y);
-    var p2 = new Point(startX,startY);
+    var p1 = new math.Point(x,y);
+    var p2 = new math.Point(startX,startY);
 
     if (expireTime < 0) {
       myWorld.removeObject(this);
-      expires.notify(this, GglEvent.GrenadeExpires);
+      expires.notify(this, GglEvent.GRENADE_EXPIRES);
 
       return;
     }

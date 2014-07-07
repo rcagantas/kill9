@@ -52,7 +52,7 @@ class WorldObject {
       orientation = _fullCircle + orientation;
     }
     //if (xVelocity !=0  || yVelocity !=0 || angleVelocity != 0) {
-      movementEvent.notify(this, GglEvent.ObjectMoved);
+      movementEvent.notify(this, GglEvent.OBJECT_MOVED);
     //}
   }
 
@@ -65,7 +65,7 @@ class WorldObject {
 
   bool willBump(WorldObject object, num elapsedTime) {
     math.Point p1 = this.projectLocation(elapsedTime);
-    math.Point p2 = new Point(object.x, object.y);
+    math.Point p2 = new math.Point(object.x, object.y);
 
     return (p1.distanceTo(p2) < (radius + object.radius));
   }
@@ -82,7 +82,7 @@ class WorldActor extends WorldObject
 
   int life = 100;
 
-  WorldActor():super(ActorProps.radius, ActorProps.speed, ActorProps.turnRate)
+  WorldActor():super(ActorProps.RADIUS, ActorProps.SPEED, ActorProps.TURN_RATE)
   {
     weapon = new Pistol(this);
     _45degreeSpeed = speed * math.sin(math.PI/4);

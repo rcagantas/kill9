@@ -38,7 +38,7 @@ class Grid
     if (tile == null)
       return true;
 
-    return tile.surfaceType == Surface.Passable;
+    return tile.surfaceType != Surface.NON_PASSABLE;
   }
 
 

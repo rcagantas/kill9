@@ -4,7 +4,6 @@ class LayerPanel extends DisplayObjectContainer {}
 
 class Arena extends DisplayObjectContainer {
   List<PlayerSprite> players = [];
-  List<TileSheet> tiles = [];
   PlayerSprite p1;
   LayerPanel playerPanel = new LayerPanel();
   LayerPanel trees = new LayerPanel();
@@ -16,41 +15,28 @@ class Arena extends DisplayObjectContainer {
     this.addTo(stage);
   }
 
-  List createRandomMap(num width, num height) {
+  void createMap(num width, num height, List<num> surface) {
     num count = 0;
-
-    List<math.Point> nonPassable = new List();
-
-
     for (num i = 0; i < width; i++) {
       for (num j = 0; j < height; j++) {
-        math.Random rand = new math.Random();
+        num type = surface[count];
         TileSheet tile = new TileSheet(0)
           ..index = count++
           ..x =  (j * TileSheet.SIZE) + TileSheet.SIZE/2
           ..y =  (i * TileSheet.SIZE) + TileSheet.SIZE/2
           ..addTo(this);
 
-        num chance = rand.nextDouble();
-        num type = (chance * 10).toInt();
-
-        // make the middle part passable
-        if ((i > 7 && i < 12 ) &&
-           (j > 7 && j < 12 )){
-          type = 0;
-        }
-
-        if (type > 0) {
+        if (type != Surface.PASSABLE) {
           TileSheet layerTile = new TileSheet(type)
               ..x =  (j * TileSheet.SIZE) + TileSheet.SIZE/2
               ..y =  (i * TileSheet.SIZE) + TileSheet.SIZE/2;
           switch(type) {
-            case 2:
+            case Surface.OBSCURING:
               layerTile.scaleX = layerTile.scaleY = treeScale;
-              trees.addChild(layerTile); break;
-            case 1:
+              trees.addChild(layerTile);
+              break;
+            case Surface.NON_PASSABLE:
               walls.addChild(layerTile);
-              nonPassable.add(new Point(j,i));
               break;
           }
         }
@@ -64,8 +50,6 @@ class Arena extends DisplayObjectContainer {
     playerPanel.addTo(this);
     walls.addTo(this);
     trees.addTo(this);
-
-    return nonPassable;
   }
 
   void move(num x, num y) {

@@ -6,7 +6,7 @@ part of gglclient;
  * 2: shrubbery
  */
 class TileSheet extends DisplayObjectContainer {
-  num type = 0;
+  num type = Surface.PASSABLE;
   static final num SIZE = 100;
   Shape shape;
   TextField dbg;
@@ -21,18 +21,18 @@ class TileSheet extends DisplayObjectContainer {
     }
 
     math.Random ran = new math.Random();
-    if (type == 0) {
+    if (type == Surface.PASSABLE) {
       floor = new Bitmap(resMgr.getBitmapData("floor"))
         ..pivotX = SIZE/2
         ..pivotY = SIZE/2
         ..addTo(this);
-    } else if (type == 1) {
+    } else if (type == Surface.NON_PASSABLE) {
       crate = new Bitmap(resMgr.getBitmapData("crate"))
         ..pivotX = SIZE/2
         ..pivotY = SIZE/2
         ..rotation = (math.PI/2) * ran.nextInt(4)
         ..addTo(this);
-    } else if (type == 2) {
+    } else if (type == Surface.OBSCURING) {
       tree = new Bitmap(resMgr.getBitmapData("tree"))
         ..pivotX = SIZE/2
         ..pivotY = SIZE/2

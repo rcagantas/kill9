@@ -1,9 +1,10 @@
 library gglclient;
 
-import 'package:stagexl/stagexl.dart';
 import 'dart:html' as html;
 import 'dart:math' as math;
+import 'package:stagexl/stagexl.dart';
 import 'package:stagexl_particle/stagexl_particle.dart';
+import 'package:giggl/gglcommon.dart';
 
 part './client/arena.dart';
 part './client/player_sprite.dart';

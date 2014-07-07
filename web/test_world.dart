@@ -1,9 +1,10 @@
-import 'package:stagexl/stagexl.dart';
-import 'package:giggl/gglclient.dart';
-import 'package:giggl/gglserver.dart';
 import 'dart:async';
 import 'dart:math' as math;
 import 'dart:html' as html;
+import 'package:stagexl/stagexl.dart';
+import 'package:giggl/gglclient.dart';
+import 'package:giggl/gglserver.dart';
+import 'package:giggl/gglcommon.dart';
 
 Arena client;
 InputHandler io;
@@ -22,18 +23,24 @@ void main() {
   resMgr.load().then((_) {
     renderLoop.addStage(stage);
     client = new Arena();
-    var nonPassableList = client.createRandomMap(20, 20);
+    num width = 20;
+    num height = 20;
+    var surfaceList = MapGenerator.createSimpleRandom(width, height, 7, 12);
+    client.createMap(width, height, surfaceList);
     p1 = client.p1;
     p1.move(1000, 1000);
 
-
-
-    var grid = new Grid(20,20,100);
-    nonPassableList.forEach((p) {
-      math.Point point = p;
-      grid.set(point.x, point.y, new Tile(Surface.NotPassable));
-    });
-
+    var grid = new Grid(width, height, 100);
+    // there's probably a better way to compute this
+    num count = 0;
+    for (num i = 0; i < width; i++) {
+      for (num j = 0; j < width; j++) {
+        if (surfaceList[count] == Surface.NON_PASSABLE) {
+          grid.set(j, i, new Tile(Surface.NON_PASSABLE));
+        }
+        count++;
+      }
+    }
 
     var world = new World(grid);
 

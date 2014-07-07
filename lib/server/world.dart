@@ -76,15 +76,15 @@ class World {
     frame.x = player.x;
     frame.y = player.y;
 
-    frame.topX = player.x - (WorldConst.viewPortWidth/2);
-    frame.topY = player.y - (WorldConst.viewPortHeight/2);
+    frame.topX = player.x - (WorldConst.VIEWPORT_WIDTH/2);
+    frame.topY = player.y - (WorldConst.VIEWPORT_HEIGHT/2);
 
     frame.visibleObjects.clear();
 
     _objects.forEach((id,object) {
       WorldObject obj = object;
       if (id != playerId  && obj.isInView(frame.topX, frame.topY,
-          frame.topX + WorldConst.viewPortWidth, frame.topY + WorldConst.viewPortHeight)) {
+          frame.topX + WorldConst.VIEWPORT_WIDTH, frame.topY + WorldConst.VIEWPORT_HEIGHT)) {
         var visibleObject = new ObjectInFrame();
         visibleObject.x = obj.x;
         visibleObject.y = obj.y;
