@@ -88,8 +88,9 @@ class ResourceHandler {
     //sounds
     resMgr.addSound("snd_pistol", "${sounds}/pistol.ogg");
     resMgr.addSound("snd_rifle", "${sounds}/rifle.ogg");
-    resMgr.addSound("snd_grenade", "${sounds}/pistol.ogg");
+    resMgr.addSound("snd_grenade", "${sounds}/grenade.ogg");
     resMgr.addSound("snd_rocket", "${sounds}/rocket.ogg");
+    resMgr.addSound("snd_reload", "${sounds}/reload.ogg");
 
     resMgr.load().then((_) {
       for (int i = 0; i < strideCount; i++) {

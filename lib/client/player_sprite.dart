@@ -67,6 +67,8 @@ class PlayerSprite extends DisplayObjectContainer {
       weaponSound[weaponName] = resMgr.getSound("snd_${weaponName}");
     }
 
+    weaponSound['reload'] = resMgr.getSound('snd_reload');
+     
     head = new Bitmap(resMgr.getBitmapData("${pre}_head"))
       ..pivotX = CENTER
       ..pivotY = CENTER
@@ -198,6 +200,7 @@ class PlayerSprite extends DisplayObjectContainer {
       weapons[weapon].visible = false;
       weapon = newWeapon;
       weapons[weapon].visible = true;
+      weaponSound['reload'].play(false);
       return true;
     }
     return false;
@@ -210,6 +213,7 @@ class PlayerSprite extends DisplayObjectContainer {
     frameskip = 0;
     torso.y =
     weapons[weapon].y = torso.y == 3? 0 : 3;;
+    weaponSound[weapon].play(false);
   }
 
   void resetTorso() {
