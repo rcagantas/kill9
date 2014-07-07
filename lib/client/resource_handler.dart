@@ -59,6 +59,7 @@ class ResourceHandler {
     if (initialized) return; // protect against multiple inits
     String sprites = "assets/sprites";
     String tiles = "assets/tiles";
+    String sounds = "assets/sounds";
 
     for (int i = 0; i < strideCount; i++) {
        resMgr.addBitmapData("${pre}_stride$i", "${sprites}/${pre}_stride$i.png");
@@ -83,6 +84,12 @@ class ResourceHandler {
     resMgr.addBitmapData("crate", "${tiles}/crate.png");
     resMgr.addBitmapData("tree", "${tiles}/tree.png");
     resMgr.addBitmapData("floor", "${tiles}/floor.png");
+    
+    //sounds
+    resMgr.addSound("snd_pistol", "${sounds}/pistol.ogg");
+    resMgr.addSound("snd_rifle", "${sounds}/rifle.ogg");
+    resMgr.addSound("snd_grenade", "${sounds}/pistol.ogg");
+    resMgr.addSound("snd_rocket", "${sounds}/rocket.ogg");
 
     resMgr.load().then((_) {
       for (int i = 0; i < strideCount; i++) {

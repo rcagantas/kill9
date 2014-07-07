@@ -10,6 +10,7 @@ class PlayerSprite extends DisplayObjectContainer {
   Bitmap torso;
   String pre = ResourceHandler.pre;
   Map<String, Bitmap> weapons = new Map<String, Bitmap>();
+  Map<String, Sound> weaponSound = new Map<String, Sound>();
   List<String> weaponNames = ['pistol','rifle','grenade','rocket'];
   String weapon = "pistol";
   FlipBook hip;
@@ -63,6 +64,7 @@ class PlayerSprite extends DisplayObjectContainer {
         ..pivotY = CENTER
         ..addTo(this);
       weapons[weaponName] = bmp;
+      weaponSound[weaponName] = resMgr.getSound("snd_${weaponName}");
     }
 
     head = new Bitmap(resMgr.getBitmapData("${pre}_head"))
