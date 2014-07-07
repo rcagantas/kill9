@@ -11,6 +11,7 @@ part './client/player_sprite.dart';
 part './client/input_handler.dart';
 part './client/resource_handler.dart';
 part './client/tile_sheet.dart';
+part './client/bullet_sprite.dart';
 
 /**
  * global variables

@@ -1,14 +1,12 @@
 part of gglcommon;
 
-class Surface
-{
+class Surface {
   static const int PASSABLE = 0;
   static const int NON_PASSABLE = 1;
   static const int OBSCURING = 2;
 }
 
-class GglEvent
-{
+class GglEvent {
   static const int OBJECT_MOVED = 1;
   static const int GRENADE_EXPIRES = 2;
 }

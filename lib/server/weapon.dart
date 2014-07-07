@@ -18,6 +18,7 @@ class Bullet extends WorldObject {
     yVelocity = -speed * math.cos(orientation);
     this.x = x + (radius * math.sin(orientation));
     this.y = y - (radius * math.cos(orientation));
+    this.orientation = orientation;
     this.startX = this.x;
     this.startY = this.y;
     _expired = false;

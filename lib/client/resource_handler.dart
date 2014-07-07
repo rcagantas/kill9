@@ -83,7 +83,7 @@ class ResourceHandler {
 
     resMgr.addBitmapData("crate", "${tiles}/crate.png");
     resMgr.addBitmapData("tree", "${tiles}/tree.png");
-    resMgr.addBitmapData("floor", "${tiles}/floor.png");
+    resMgr.addBitmapData("floor", "${tiles}/floor5.png");
     
     //sounds
     resMgr.addSound("snd_pistol", "${sounds}/pistol.ogg");

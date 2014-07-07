@@ -20,7 +20,7 @@ class Arena extends DisplayObjectContainer {
     for (num i = 0; i < width; i++) {
       for (num j = 0; j < height; j++) {
         num type = surface[count];
-        TileSheet tile = new TileSheet(0)
+        TileSheet tile = new TileSheet(Surface.PASSABLE)
           ..index = count++
           ..x =  (j * TileSheet.SIZE) + TileSheet.SIZE/2
           ..y =  (i * TileSheet.SIZE) + TileSheet.SIZE/2

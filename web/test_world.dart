@@ -13,7 +13,7 @@ WorldActor player1;
 
 Map<int, PlayerSprite> otherPs = new Map();
 Map<int, WorldActor> otherAs = new Map();
-Map<int, RealBullet> realBullets = new Map();
+Map<int, BulletSprite> realBullets = new Map();
 
 List<int> visible = new List();
 List<RandomWalker> walkers = new List();
@@ -76,7 +76,7 @@ void main() {
     }
 
     world.bullets.getBulletList().forEach((id) {
-      realBullets[id] = new RealBullet()
+      realBullets[id] = new BulletSprite()
       ..addTo(client.playerPanel)
       ..visible = false;
     });
@@ -189,6 +189,7 @@ void updateFrame (Frame p) {
     else if (realBullets.containsKey(object.id)) {
       realBullets[object.id].x = object.x;
       realBullets[object.id].y = object.y;
+      realBullets[object.id].rotation = object.orientation;
       visible.add(object.id);
     }
   });
@@ -247,14 +248,4 @@ class RandomWalker {
     }
   }
 }
-
-
-class RealBullet extends Shape
-{
-  RealBullet() {
-    this.graphics.circle(0, 0, 2);
-    this.graphics.fillColor(Color.Black);
-  }
-}
-
 
