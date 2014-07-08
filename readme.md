@@ -17,4 +17,4 @@ Giggl is our attempt at making a multiplayer arena shooter.
 * Players can cycle through available weapons on inventory.
 * Different types of terrain influence movement behavior of the player. 
 * Terrain will be randomized at game start.
-* Game ends when a player gets 50 kills.
+* Game ends depending on timer or frag/kill limit set by the host.
