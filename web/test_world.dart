@@ -177,6 +177,7 @@ void updateFrame (Frame p) {
         ..turn(object.orientation)
         ..modHitPoints(object.lifeRatio, object.damageFrom);
       if (!object.isMoving) player.stopMoving();
+      if (object.isFiring) player.fire();
       visible.add(object.id);
     }
     else if (realBullets.containsKey(object.id)) {
@@ -185,6 +186,7 @@ void updateFrame (Frame p) {
       realBullets[object.id].rotation = object.orientation;
       visible.add(object.id);
     } else {
+      p1.modHitPoints(object.lifeRatio, object.damageFrom);
       p1.move(object.x, object.y);
       p1.turn(object.orientation);
       if (object.isFiring) p1.fire();
@@ -206,14 +208,27 @@ class RandomWalker {
   Actor player;
   RandomWalker (this.player);
   math.Random random = new math.Random();
-  Timer _timer;
+  Timer _timer, _fireTimer, _stopTimer;
 
   void start() {
     _timer = new Timer.periodic(new Duration(milliseconds: 2000), _walkRandomly);
+    _fireTimer = new Timer.periodic(new Duration(milliseconds: 200), _fire);
+    _stopTimer = new Timer.periodic(new Duration(milliseconds: 10), _stopFiring);
   }
 
   void stop() {
     _timer.cancel();
+    _fireTimer.cancel();
+    _stopTimer.cancel();
+  }
+
+  void _stopFiring(Timer timer) {
+    player.weapon.stop();
+  }
+
+  void _fire(Timer timer) {
+    var fire = random.nextInt(2);
+    if (fire == 0) player.weapon.fire();
   }
 
   void _walkRandomly(Timer timer)  {

@@ -6,7 +6,7 @@ class World {
   List _removals = new List();
   Map _listeners = new Map();
   Map<int, Frame> _playerFrames = new Map();
-  BulletFactory bullets = new BulletFactory(200);
+  BulletFactory bullets = new BulletFactory(1000);
 
   int _tileWidth;
   int _worldWidth;
