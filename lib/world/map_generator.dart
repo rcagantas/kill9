@@ -1,4 +1,4 @@
-part of gglserver;
+part of gglworld;
 
 class MapGenerator {
   static List<num> createSimpleRandom(

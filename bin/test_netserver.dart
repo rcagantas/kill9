@@ -1,4 +1,4 @@
-import 'package:giggl/gglserver.dart';
+import 'package:giggl/gglworld.dart';
 int index = 0;
 
 // debugging only

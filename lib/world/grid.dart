@@ -1,4 +1,4 @@
-part of gglserver;
+part of gglworld;
 
 // Class to describe properties tile element in a grid map;
 

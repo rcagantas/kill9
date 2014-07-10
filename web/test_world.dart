@@ -3,7 +3,7 @@ import 'dart:math' as math;
 import 'dart:html' as html;
 import 'package:stagexl/stagexl.dart';
 import 'package:giggl/gglclient.dart';
-import 'package:giggl/gglserver.dart';
+import 'package:giggl/gglworld.dart';
 import 'package:giggl/gglcommon.dart';
 
 Arena client;

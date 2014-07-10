@@ -1,4 +1,4 @@
-part of gglserver;
+part of gglworld;
 
 // Ammo
 
