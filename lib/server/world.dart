@@ -89,7 +89,7 @@ class World {
         visiObj.orientation = obj.orientation;
         visiObj.id = obj.hashCode;
         if (obj is Actor) {
-          visiObj.life = obj.life;
+          visiObj.lifeRatio = (obj.life * 100)/Actor.MAX_LIFE;
           visiObj.damageFrom = obj.damageFrom;
           visiObj.isFiring = obj.weapon.isFiring;
           visiObj.isMoving = obj.isMoving();

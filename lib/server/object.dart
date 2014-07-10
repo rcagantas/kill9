@@ -79,6 +79,7 @@ class Actor extends WorldObject {
   num _yVelocityHolder = 0;
   num _45degreeSpeed = 0;
 
+  static const int MAX_LIFE = 100;
   int life = 100;
   num damageFrom = 0;
 

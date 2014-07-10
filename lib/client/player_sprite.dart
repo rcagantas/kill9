@@ -17,7 +17,7 @@ class PlayerSprite extends DisplayObjectContainer {
   FlipBook death;
   Shape arcHealth;
   TextField dbg;
-  bool dbgmode = true;
+  bool dbgmode = false;
   num hp = 100;
   ParticleEmitter splatter, splatterAoe;
   num playerNo = -1;
@@ -113,6 +113,12 @@ class PlayerSprite extends DisplayObjectContainer {
 
   void takeDamage(num dmg, num dmgFrom) {
     hp = hp - dmg < 0? 0 : hp - dmg;
+    modHitPoints(hp - dmg, dmgFrom);
+  }
+
+  void modHitPoints(num newHpRatio, num dmgFrom) {
+    if (hp == newHpRatio) return;
+    hp = newHpRatio;
     if (hp == 0) {
       alive = false;
       return;

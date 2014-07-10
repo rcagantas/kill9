@@ -174,13 +174,8 @@ void updateFrame (Frame p) {
     if (otherPs.containsKey(object.id)) {
       var player = otherPs[object.id]
         ..move(object.x, object.y)
-        ..turn(object.orientation);
-
-      var damage = player.hp - object.life;
-
-      if (damage>0) {
-        player.takeDamage(damage, object.damageFrom);
-      }
+        ..turn(object.orientation)
+        ..modHitPoints(object.lifeRatio, object.damageFrom);
       if (!object.isMoving) player.stopMoving();
       visible.add(object.id);
     }

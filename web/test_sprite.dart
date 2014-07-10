@@ -42,7 +42,7 @@ void handleInput() {
   if (io.keyState[37]) { it = -rinc; }
   if (io.keyState[39]) { it = rinc; }
   if (io.keyState[38] || io.mouseL) { p1.fire(); }
-  if (io.keyState[69]) { p1.takeDamage(1, 0); }
+  if (io.keyState[69]) { p1.modHitPoints(1, 0); }
   p1.move(p1.x + ix, p1.y + iy);
   p1.turnAdd(it);
 }

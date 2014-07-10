@@ -8,7 +8,7 @@ class ObjectInFrame {
 }
 
 class ActorInFrame extends ObjectInFrame {
-  num life;
+  num lifeRatio;
   num weaponType;
   num weaponAmmo;
   num damageFrom;
