@@ -227,6 +227,7 @@ class RandomWalker {
   }
 
   void _fire(Timer timer) {
+    if (player.life == 0) return;
     var fire = random.nextInt(2);
     if (fire == 0) player.weapon.fire();
   }
