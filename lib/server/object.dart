@@ -71,7 +71,7 @@ class WorldObject {
   }
 }
 
-class WorldActor extends WorldObject
+class Actor extends WorldObject
 {
 
   Weapon weapon;
@@ -82,7 +82,7 @@ class WorldActor extends WorldObject
 
   int life = 100;
 
-  WorldActor():super(ActorProps.RADIUS, ActorProps.SPEED, ActorProps.TURN_RATE)
+  Actor():super(ActorProps.RADIUS, ActorProps.SPEED, ActorProps.TURN_RATE)
   {
     weapon = new Pistol(this);
     _45degreeSpeed = speed * math.sin(math.PI/4);
@@ -200,7 +200,7 @@ class WorldActor extends WorldObject
 
     objects.forEach((key,object) {
       if (key != this.hashCode) {
-        if (object is WorldActor && object.life == 0) {}
+        if (object is Actor && object.life == 0) {}
         else if (willBump(object, elapsedTime) ) {
           _pauseLeftRightMove();
           _pauseTopDownMove();

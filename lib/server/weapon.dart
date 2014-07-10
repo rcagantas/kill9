@@ -28,11 +28,11 @@ class Bullet extends WorldObject {
 
     //hit someone?
     objects.forEach((key,object) {
-      if (key != this.hashCode && object is WorldActor) {
-        if (object is WorldActor && object.life == 0) {}
+      if (key != this.hashCode && object is Actor) {
+        if (object is Actor && object.life == 0) {}
         else if (willBump(object, elapsedTime)) {
           print ("Player $key is hit");
-          (object as WorldActor).takeDamage(BulletProps.DAMAGE);
+          (object as Actor).takeDamage(BulletProps.DAMAGE);
           _expired = true;
         }
       }
@@ -151,7 +151,7 @@ class Grenade extends WorldObject {
 
 class Weapon {
 
-  WorldActor owner;
+  Actor owner;
 
   Weapon(this.owner);
 

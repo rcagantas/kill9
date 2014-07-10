@@ -44,14 +44,14 @@ class World {
     }
   }
 
-  WorldActor addPlayerandGetReference() {
-    var newPlayer = new WorldActor();
+  Actor addPlayerandGetReference() {
+    var newPlayer = new Actor();
     addObject(newPlayer);
     return newPlayer;
   }
 
   int addPlayer() {
-    var newPlayer = new WorldActor();
+    var newPlayer = new Actor();
     addObject(newPlayer);
     return newPlayer.hashCode;
   }
@@ -68,14 +68,9 @@ class World {
     }
 
     var frame = _playerFrames[playerId];
-    WorldActor player = _objects[playerId];
+    Actor player = _objects[playerId];
 
     frame.playerId = playerId;
-    frame.playerOrientation = player.orientation;
-    frame.playerLife = player.life;
-    frame.x = player.x;
-    frame.y = player.y;
-
     frame.topX = player.x - (WorldConst.VIEWPORT_WIDTH/2);
     frame.topY = player.y - (WorldConst.VIEWPORT_HEIGHT/2);
 
@@ -83,21 +78,22 @@ class World {
 
     _objects.forEach((id,object) {
       WorldObject obj = object;
-      if (id != playerId  && obj.isInView(frame.topX, frame.topY,
-          frame.topX + WorldConst.VIEWPORT_WIDTH, frame.topY + WorldConst.VIEWPORT_HEIGHT)) {
-        var visibleObject = new ObjectInFrame();
-        visibleObject.x = obj.x;
-        visibleObject.y = obj.y;
-        visibleObject.orientation = obj.orientation;
-        visibleObject.id = obj.hashCode;
-        if (obj is WorldActor) {
-          visibleObject.life = obj.life;
-        }
-        frame.visibleObjects.add(visibleObject);
+      if (obj.isInView(frame.topX, frame.topY,
+          frame.topX + WorldConst.VIEWPORT_WIDTH,
+          frame.topY + WorldConst.VIEWPORT_HEIGHT)) {
+        var visiObj = obj is Actor?
+            new ActorInFrame() :
+            new BulletInFrame();
+            visiObj.x = obj.x;
+            visiObj.y = obj.y;
+            visiObj.orientation = obj.orientation;
+            visiObj.id = obj.hashCode;
+            if (obj is Actor) {
+              visiObj.life = obj.life;
+            }
+            frame.visibleObjects.add(visiObj);
       }
-
     });
-
 
     return frame;
   }
@@ -142,37 +138,3 @@ class World {
     _update(elapsed);
   }
 }
-
-class ObjectInFrame {
-  int id;
-  int objectType;
-  int objectState;
-  int life;
-  num x,y,orientation;
-}
-
-class Frame {
-
-  // Player detail;
-  int playerId;
-  num playerOrientation;
-  num x,y;
-  num playerLife;
-
-  // Weapon detail:
-  int weaponType;
-  int weaponAmmo;
-
-  // Viewport
-  num topX,topY;
-
-  // Objects visible in the world
-  List<ObjectInFrame> visibleObjects = new List();
-
-  String toString() {
-    var stringBuffer = new StringBuffer()
-    ..write("PlayerId: $playerId topX: $topX topY $topY");
-    return stringBuffer.toString();
-  }
-}
-

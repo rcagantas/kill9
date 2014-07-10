@@ -9,10 +9,10 @@ import 'package:giggl/gglcommon.dart';
 Arena client;
 InputHandler io;
 PlayerSprite p1;
-WorldActor player1;
+Actor player1;
 
 Map<int, PlayerSprite> otherPs = new Map();
-Map<int, WorldActor> otherAs = new Map();
+Map<int, Actor> otherAs = new Map();
 Map<int, BulletSprite> realBullets = new Map();
 
 List<int> visible = new List();
@@ -167,10 +167,7 @@ void onMouseMove(MouseEvent e) {
 }
 
 void updateFrame (Frame p) {
-  p1.move(p.x, p.y);
-  p1.turn(p.playerOrientation);
   client.move(-p.topX, -p.topY);
-
   visible.removeRange(0, visible.length);
 
   p.visibleObjects.forEach((object) {
@@ -191,6 +188,9 @@ void updateFrame (Frame p) {
       realBullets[object.id].y = object.y;
       realBullets[object.id].rotation = object.orientation;
       visible.add(object.id);
+    } else {
+      p1.move(object.x, object.y);
+      p1.turn(object.orientation);
     }
   });
 
@@ -205,7 +205,7 @@ void updateFrame (Frame p) {
 
 class RandomWalker {
 
-  WorldActor player;
+  Actor player;
   RandomWalker (this.player);
   math.Random random = new math.Random();
   Timer _timer;
