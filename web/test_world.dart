@@ -148,7 +148,7 @@ void handleInput() {
 
   if (io.keyState[37]) { player1.turnIncrement(-.1); }
   if (io.keyState[39]) { player1.turnIncrement(.1); }
-  if (io.keyState[38] || io.mouseL) { p1.fire(); player1.weapon.fire();}
+  if (io.keyState[38] || io.mouseL) { player1.weapon.fire();}
   if (!io.keyState[38] && !io.mouseL){ player1.weapon.stop(); }
 }
 
@@ -191,6 +191,7 @@ void updateFrame (Frame p) {
     } else {
       p1.move(object.x, object.y);
       p1.turn(object.orientation);
+      if (object.fired) p1.fire();
     }
   });
 

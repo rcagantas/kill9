@@ -211,13 +211,9 @@ class PlayerSprite extends DisplayObjectContainer {
     return false;
   }
 
-  num frameskip = 0;
   void fire() {
-    frameskip++;
-    if (frameskip != 4) return;
-    frameskip = 0;
     torso.y =
-    weapons[weapon].y = torso.y == 3? 0 : 3;;
+    weapons[weapon].y = torso.y == 3? 0 : 3;
     weaponSound[weapon].play(false);
   }
 

@@ -12,6 +12,7 @@ class ActorInFrame extends ObjectInFrame {
   num weaponType;
   num weaponAmmo;
   num damageFrom;
+  bool fired = false;
 }
 
 class BulletInFrame extends ObjectInFrame {

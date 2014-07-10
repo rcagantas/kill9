@@ -91,6 +91,7 @@ class World {
         if (obj is Actor) {
           visiObj.life = obj.life;
           visiObj.damageFrom = obj.damageFrom;
+          visiObj.fired = obj.weapon.fired;
         }
         frame.visibleObjects.add(visiObj);
       }
