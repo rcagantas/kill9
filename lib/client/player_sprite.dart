@@ -17,7 +17,7 @@ class PlayerSprite extends DisplayObjectContainer {
   FlipBook death;
   Shape arcHealth;
   TextField dbg;
-  bool dbgmode = false;
+  bool dbgmode = true;
   num hp = 100;
   ParticleEmitter splatter, splatterAoe;
   num playerNo = -1;
@@ -88,7 +88,7 @@ class PlayerSprite extends DisplayObjectContainer {
     x = stage.stageWidth/2;
     y = stage.stageHeight/2;
 
-    TextFormat tf = new TextFormat('Helvetica', 10, Color.Red);
+    TextFormat tf = new TextFormat('Helvetica', 10, Color.Black);
     dbg = new TextField()
       ..defaultTextFormat = tf
       ..x = 30
@@ -100,14 +100,15 @@ class PlayerSprite extends DisplayObjectContainer {
   }
 
   void move(num x, num y) {
-    if (this.x == x && this.y == y) {
-      hip.gotoAndStop(0);
-      return;
-    }
     if (!hip.playing) hip.play();
     fixHipRotation(x, y);
     this.x = x;
     this.y = y;
+  }
+
+  void stopMoving() {
+    hip.gotoAndStop(0);
+    return;
   }
 
   void takeDamage(num dmg, num dmgFrom) {

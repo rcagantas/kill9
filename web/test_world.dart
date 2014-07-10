@@ -181,6 +181,7 @@ void updateFrame (Frame p) {
       if (damage>0) {
         player.takeDamage(damage, object.damageFrom);
       }
+      if (!object.isMoving) player.stopMoving();
       visible.add(object.id);
     }
     else if (realBullets.containsKey(object.id)) {
@@ -191,7 +192,8 @@ void updateFrame (Frame p) {
     } else {
       p1.move(object.x, object.y);
       p1.turn(object.orientation);
-      if (object.fired) p1.fire();
+      if (object.isFiring) p1.fire();
+      if (!object.isMoving) p1.stopMoving();
     }
   });
 

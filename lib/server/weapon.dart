@@ -151,7 +151,7 @@ class Weapon {
 
   Actor owner;
   Weapon(this.owner);
-  bool fired = false;
+  bool isFiring = false;
 
   void fire() {
    print("firing some generic weapon");
@@ -159,7 +159,7 @@ class Weapon {
   }
 
   void stop() {
-    fired = false;
+    isFiring = false;
   }
 }
 
@@ -171,7 +171,7 @@ class Pistol extends Weapon {
   Pistol(owner):super(owner);
 
   void fire() {
-    fired = false;
+    isFiring = false;
     if (_pressed) return;
 
     _pressed = true;
@@ -180,12 +180,12 @@ class Pistol extends Weapon {
       ..init(owner.x, owner.y, owner.orientation, owner.radius);
 
     owner.myWorld.addObject(bullet);
-    fired = true;
+    isFiring = true;
   }
 
   void stop() {
     _pressed = false;
-    fired = false;
+    isFiring = false;
   }
 }
 
@@ -196,7 +196,7 @@ class GrenadeLauncher extends Weapon {
   GrenadeLauncher(owner):super(owner);
 
   void fire() {
-    fired = false;
+    isFiring = false;
     print ("firing $name");
     var grenade = new Grenade(10,300,owner.orientation,5)
         ..x = owner.x
@@ -205,7 +205,7 @@ class GrenadeLauncher extends Weapon {
         ..startY = owner.y;
 
     owner.myWorld.addObject(grenade);
-    fired = true;
+    isFiring = true;
   }
 }
 

@@ -147,6 +147,10 @@ class Actor extends WorldObject {
     yVelocity = 0;
   }
 
+  bool isMoving() {
+    return xVelocity != 0 || yVelocity != 0;
+  }
+
   void turnClockwise() {
     angleVelocity = turnRate;
   }
