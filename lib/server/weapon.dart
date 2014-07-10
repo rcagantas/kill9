@@ -1,7 +1,5 @@
 part of gglserver;
 
-
-
 // Ammo
 
 class Bullet extends WorldObject {

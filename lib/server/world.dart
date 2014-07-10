@@ -84,14 +84,17 @@ class World {
         var visiObj = obj is Actor?
             new ActorInFrame() :
             new BulletInFrame();
-            visiObj.x = obj.x;
-            visiObj.y = obj.y;
-            visiObj.orientation = obj.orientation;
-            visiObj.id = obj.hashCode;
-            if (obj is Actor) {
-              visiObj.life = obj.life;
-            }
-            frame.visibleObjects.add(visiObj);
+        visiObj.x = obj.x;
+        visiObj.y = obj.y;
+        visiObj.orientation = obj.orientation;
+        visiObj.id = obj.hashCode;
+        if (obj is Actor) {
+          visiObj.life = obj.life;
+        } else if (obj is Bullet){
+          visiObj.hitPlayer = obj.hitPlayer;
+          visiObj.hitObject = obj.hitObject;
+        }
+        frame.visibleObjects.add(visiObj);
       }
     });
 
