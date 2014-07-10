@@ -90,9 +90,6 @@ class World {
         visiObj.id = obj.hashCode;
         if (obj is Actor) {
           visiObj.life = obj.life;
-        } else if (obj is Bullet){
-          visiObj.hitPlayer = obj.hitPlayer;
-          visiObj.hitObject = obj.hitObject;
         }
         frame.visibleObjects.add(visiObj);
       }
