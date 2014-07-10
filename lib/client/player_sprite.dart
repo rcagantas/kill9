@@ -20,6 +20,8 @@ class PlayerSprite extends DisplayObjectContainer {
   bool dbgmode = false;
   num hp = 100;
   ParticleEmitter splatter, splatterAoe;
+  Shape bloodPool;
+  Tween bloodPoolTween;
   num playerNo = -1;
 
   PlayerSprite() {
@@ -73,6 +75,18 @@ class PlayerSprite extends DisplayObjectContainer {
       ..pivotX = CENTER
       ..pivotY = CENTER
       ..addTo(this);
+
+    bloodPool = new Shape()
+      ..x = 5
+      ..y = 18
+      ..visible = false
+      ..graphics.circle(0, 0, 1)
+      ..graphics.fillColor(Color.Red)
+      ..addTo(this);
+
+    bloodPoolTween = new Tween(bloodPool, 3.0, TransitionFunction.linear)
+      ..animate.scaleX.to(30)
+      ..animate.scaleY.to(30);
 
     death = ResourceHandler.flipbookDeath(playerNo, 10)
       ..x = -OFFSET
@@ -144,7 +158,13 @@ class PlayerSprite extends DisplayObjectContainer {
     hip.visible =
     arcHealth.visible = b;
     death.visible = !b;
-    if (death.visible) death.gotoAndPlay(0);
+    bloodPool.visible = !b;
+    if (death.visible) {
+      death.gotoAndPlay(0);
+      stage.juggler.add(bloodPoolTween);
+    } else {
+      stage.juggler.remove(bloodPoolTween);
+    }
   }
 
   bool get alive { return head.visible; }
