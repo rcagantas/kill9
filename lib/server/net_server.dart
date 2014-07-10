@@ -2,7 +2,7 @@ import 'dart:io';
 import 'dart:async';
 //import 'dart:math';
 
-class GameServer {
+class NetServer {
   String _hostname;
   int _port;
   var _serverListener;
@@ -10,7 +10,7 @@ class GameServer {
   Map<int,WebSocket> _mapClients = new Map();
   Timer pinger = null; 
   
-  GameServer(String hostname, int port, var addClient, var serverListener, var serverWriter) {
+  NetServer(String hostname, int port, var addClient, var serverListener, var serverWriter) {
     _hostname = hostname;
     _port = port;
     _serverListener = serverListener;
@@ -74,7 +74,7 @@ int index = 0;
 
 // debugging only
 void main() {
-  GameServer gs1 = new GameServer('127.0.0.1', 1024, addPlayer, serverListener, serverWriter);
+  NetServer gs1 = new NetServer('127.0.0.1', 1024, addPlayer, serverListener, serverWriter);
   //GameServer gs2 = new GameServer('127.0.0.1', 1025, addPlayer, serverListener, serverWriter);
 }
 
