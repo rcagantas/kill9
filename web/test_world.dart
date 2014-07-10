@@ -208,11 +208,10 @@ class RandomWalker {
   Actor player;
   RandomWalker (this.player);
   math.Random random = new math.Random();
-  Timer _timer, _fireTimer, _stopTimer;
+  Timer _timer, _fireTimer = null, _stopTimer;
 
   void start() {
     _timer = new Timer.periodic(new Duration(milliseconds: 2000), _walkRandomly);
-    _fireTimer = new Timer.periodic(new Duration(milliseconds: 200), _fire);
     _stopTimer = new Timer.periodic(new Duration(milliseconds: 10), _stopFiring);
   }
 
@@ -236,6 +235,9 @@ class RandomWalker {
     player.stopLeftRightMove();
     player.stopTopDownMove();
     player.stopTurn();
+
+    if (_fireTimer == null)
+      _fireTimer = new Timer.periodic(new Duration(milliseconds: 200), _fire);
 
     var move = random.nextInt(3);
 
