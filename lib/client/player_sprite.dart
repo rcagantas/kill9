@@ -68,7 +68,7 @@ class PlayerSprite extends DisplayObjectContainer {
     }
 
     weaponSound['reload'] = resMgr.getSound('snd_reload');
-     
+
     head = new Bitmap(resMgr.getBitmapData("${pre}_head"))
       ..pivotX = CENTER
       ..pivotY = CENTER
@@ -110,7 +110,7 @@ class PlayerSprite extends DisplayObjectContainer {
     this.y = y;
   }
 
-  void takeDamage(num dmg, bool aoe) {
+  void takeDamage(num dmg, num dmgFrom) {
     hp = hp - dmg < 0? 0 : hp - dmg;
     if (hp == 0) {
       alive = false;
@@ -122,8 +122,11 @@ class PlayerSprite extends DisplayObjectContainer {
     arcHealth
       ..graphics.arc(CENTER, CENTER, HPRADIUS, -angle, angle, false)
       ..graphics.strokeColor(color, 4);
-    if (!aoe) splatter.start(.2);
-    else splatterAoe.start(.5);
+    if (dmgFrom == -1) splatterAoe.start(.5);
+    else {
+      splatter.rotation = peg180(dmgFrom - this.rotation - math.PI);
+      splatter.start(.2);
+    }
   }
 
   void set alive(bool b) {
@@ -157,6 +160,7 @@ class PlayerSprite extends DisplayObjectContainer {
     this.rotation = peg180(r);
     dbg.rotation = -this.rotation;
     fixHipRotation(this.x, this.y);
+    displayAngles();
   }
 
   void turnToPoint(num dx, num dy) {
@@ -184,8 +188,9 @@ class PlayerSprite extends DisplayObjectContainer {
 
   void displayAngles() {
     if (!dbgmode) return;
-    dbg.text = "all: ${(this.rotation * 180/math.PI).toStringAsFixed(2)}\n"
-      + "hip: ${(hip.rotation * 180/math.PI).toStringAsFixed(2)}";
+    dbg.text = "all: ${(this.rotation * 180/math.PI).toStringAsFixed(2)}\n" +
+      "hip: ${(hip.rotation * 180/math.PI).toStringAsFixed(2)}\n" +
+      "spatter: ${(splatter.rotation * 180/math.PI).toStringAsFixed(2)}";
   }
 
   String cycleWeapon() {

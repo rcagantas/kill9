@@ -179,7 +179,7 @@ void updateFrame (Frame p) {
       var damage = player.hp - object.life;
 
       if (damage>0) {
-        player.takeDamage(damage,false);
+        player.takeDamage(damage, object.damageFrom);
       }
       visible.add(object.id);
     }

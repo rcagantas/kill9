@@ -90,6 +90,7 @@ class World {
         visiObj.id = obj.hashCode;
         if (obj is Actor) {
           visiObj.life = obj.life;
+          visiObj.damageFrom = obj.damageFrom;
         }
         frame.visibleObjects.add(visiObj);
       }

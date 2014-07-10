@@ -71,8 +71,7 @@ class WorldObject {
   }
 }
 
-class Actor extends WorldObject
-{
+class Actor extends WorldObject {
 
   Weapon weapon;
 
@@ -81,8 +80,12 @@ class Actor extends WorldObject
   num _45degreeSpeed = 0;
 
   int life = 100;
+  num damageFrom = 0;
 
-  Actor():super(ActorProps.RADIUS, ActorProps.SPEED, ActorProps.TURN_RATE)
+  Actor():
+    super(ActorProps.RADIUS,
+        ActorProps.SPEED,
+        ActorProps.TURN_RATE)
   {
     weapon = new Pistol(this);
     _45degreeSpeed = speed * math.sin(math.PI/4);
@@ -189,8 +192,9 @@ class Actor extends WorldObject
     _yVelocityHolder = 0;
   }
 
-  void takeDamage(int damage) {
+  void takeDamage(int damage, num dmgFrom) {
     life = life - damage;
+    damageFrom = dmgFrom;
     if (life < 0) life = 0;
   }
 

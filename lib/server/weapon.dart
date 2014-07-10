@@ -30,7 +30,7 @@ class Bullet extends WorldObject {
         if (object is Actor && object.life == 0) {}
         else if (willBump(object, elapsedTime)) {
           print ("Player $key is hit");
-          (object as Actor).takeDamage(BulletProps.DAMAGE);
+          (object as Actor).takeDamage(BulletProps.DAMAGE, this.orientation);
           _expired = true;
         }
       }
