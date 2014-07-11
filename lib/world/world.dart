@@ -93,6 +93,8 @@ class World {
           visiObj.damageFrom = obj.damageFrom;
           visiObj.isFiring = obj.weapon.isFiring;
           visiObj.isMoving = obj.isMoving();
+          visiObj.weaponType = obj.weapon.weaponType;
+          visiObj.weaponAmmo = obj.weapon.ammo;
         }
         frame.visibleObjects.add(visiObj);
       }

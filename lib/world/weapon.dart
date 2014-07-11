@@ -152,6 +152,8 @@ class Weapon {
   Actor owner;
   Weapon(this.owner);
   bool isFiring = false;
+  int weaponType;
+  num ammo;
 
   void fire() {
    print("firing some generic weapon");
@@ -168,7 +170,10 @@ class Pistol extends Weapon {
   var name = "Pistol";
   bool _pressed = false;
 
-  Pistol(owner):super(owner);
+  Pistol(owner):super(owner) {
+    weaponType = WeaponType.PISTOL;
+    ammo = 0;
+  }
 
   void fire() {
     isFiring = false;
@@ -189,11 +194,58 @@ class Pistol extends Weapon {
   }
 }
 
+class Rifle extends Weapon {
+
+  var name = "Rifle";
+  bool _pressed = false;
+
+  Rifle(owner):super(owner) {
+    weaponType = WeaponType.RIFLE;
+    ammo = 200;
+  }
+
+  Timer fireTimer;
+
+  void fire() {
+    isFiring = false;
+
+    if (_pressed || ammo == 0) return;
+
+    isFiring = true;
+    _pressed = true;
+    fireTimer = new Timer.periodic(new Duration(milliseconds:100), _fire);
+  }
+
+
+
+  void stop() {
+    if (_pressed && ammo > 0){
+      fireTimer.cancel();
+    }
+    _pressed = false;
+  }
+
+  void _fire(Timer timer) {
+    var bullet = owner.myWorld.bullets.getBullet()
+      ..init(owner.x, owner.y, owner.orientation, owner.radius);
+
+    owner.myWorld.addObject(bullet);
+    ammo = ammo - 1;
+
+    if (ammo == 0) {
+      timer.cancel();
+      isFiring = false;
+    }
+  }
+}
+
 class GrenadeLauncher extends Weapon {
 
   var name = "Grenade Launcher";
 
-  GrenadeLauncher(owner):super(owner);
+  GrenadeLauncher(owner):super(owner) {
+    weaponType = WeaponType.GRENADE_LAUNCHER;
+  }
 
   void fire() {
     isFiring = false;

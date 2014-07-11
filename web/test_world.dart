@@ -48,7 +48,6 @@ void main() {
       ..x = 850
       ..y = 900;
 
-
     for (int i=1; i<5; i++) {
       var p = new PlayerSprite()
       ..move(850 + (i*50) , 900 )
@@ -90,7 +89,7 @@ void main() {
     stage.onKeyUp.listen(onKeyUp);
     stage.onEnterFrame.listen(onFrame);
     stage.onMouseMove.listen(onMouseMove);
-    stage.onMouseRightClick.listen((e) => p1 != null? p1.cycleWeapon() : 0);
+    stage.onMouseRightClick.listen((e) => player1 != null? player1.switchWeapon() : 0);
     io = new InputHandler();
 
 
@@ -98,6 +97,10 @@ void main() {
        new RandomWalker(v)
         ..start();
     });
+
+
+    otherPs[player1.hashCode] = p1;
+    otherAs[player1.hashCode] = player1;
 
     stage.onEnterFrame.listen((EnterFrameEvent e) {
       int count = 0;
@@ -107,11 +110,10 @@ void main() {
         if (p.hp == 0) count = count + 1;
       });
       if (count < 9) {
-        html.querySelector('#detail').innerHtml = 'Killed: $count';
+        html.querySelector('#detail').innerHtml = 'Killed: $count Weapon: ${p1.weapon} Ammo: ${player1.weapon.ammo}';
       }
       else {
         html.querySelector('#detail').innerHtml = 'You WIN!!';
-
       }
 
     });
@@ -168,7 +170,7 @@ void onMouseMove(MouseEvent e) {
 
 void updateFrame (Frame p) {
   client.move(-p.topX, -p.topY);
-  visible.removeRange(0, visible.length);
+  visible.clear();
 
   p.visibleObjects.forEach((object) {
     if (otherPs.containsKey(object.id)) {
@@ -178,6 +180,14 @@ void updateFrame (Frame p) {
         ..modHitPoints(object.lifeRatio, object.damageFrom);
       if (!object.isMoving) player.stopMoving();
       if (object.isFiring) player.fire();
+
+      if (object.weaponType == WeaponType.PISTOL) {
+        if (player.weapon != "pistol") player.setWeapon("pistol");
+      }
+      else if (object.weaponType == WeaponType.RIFLE) {
+        if (player.weapon != "rifle") player.setWeapon("rifle");
+      }
+
       visible.add(object.id);
     }
     else if (realBullets.containsKey(object.id)) {

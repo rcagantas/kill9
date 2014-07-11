@@ -73,7 +73,9 @@ class WorldObject {
 
 class Actor extends WorldObject {
 
+  Queue<Weapon> weapons = new Queue();
   Weapon weapon;
+
 
   num _xVelocityHolder = 0;
   num _yVelocityHolder = 0;
@@ -89,7 +91,16 @@ class Actor extends WorldObject {
         ActorProps.TURN_RATE)
   {
     weapon = new Pistol(this);
+    weapons.addLast(new Rifle(this));
+
     _45degreeSpeed = speed * math.sin(math.PI/4);
+  }
+
+  void switchWeapon() {
+    if (weapons.isEmpty) return;
+
+    weapons.addLast(weapon);
+    weapon = weapons.removeFirst();
   }
 
   void moveLeft() {
