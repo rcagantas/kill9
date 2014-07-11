@@ -15,6 +15,10 @@ void main() {
       ..y = stage.stageHeight/2
       ..addTo(stage);
 
+    PlayerSprite p2 = new PlayerSprite()
+      ..x = stage.stageWidth/2
+      ..y = stage.stageHeight/2
+      ..addTo(stage);
     renderLoop.addStage(stage);
     stage.onKeyUp.listen(onKeyUp);
     stage.onEnterFrame.listen(onFrame);
@@ -37,12 +41,8 @@ void handleInput() {
   if (io.keyState[68]) { ix = inc; }
   if (io.keyState[37]) { it = -rinc; }
   if (io.keyState[39]) { it = rinc; }
-  if (!io.keyState[87] &&
-      !io.keyState[83] &&
-      !io.keyState[65] &&
-      !io.keyState[68]) p1.stopMoving();
   if (io.keyState[38] || io.mouseL) { p1.fire(); }
-  if (io.keyState[69]) { p1.takeDamage(1, 0); }
+  if (io.keyState[69]) { p1.modHitPoints(1, 0); }
   p1.move(p1.x + ix, p1.y + iy);
   p1.turnAdd(it);
 }
