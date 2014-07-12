@@ -274,7 +274,10 @@ class PlayerSprite extends DisplayObjectContainer {
     fireAniPush.delay = time;
     fireAni.add(fireAniPush);
     fireAni.onStart = () => _animatingFiring = true;
-    fireAni.onComplete = () => _animatingFiring = false;
+    fireAni.onComplete = () {
+      _animatingFiring = false;
+      stage.juggler.remove(fireAni);
+    };
     stage.juggler.add(fireAni);
   }
 
