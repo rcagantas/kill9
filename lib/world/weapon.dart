@@ -177,7 +177,7 @@ class Pistol extends Weapon {
 
   void fire() {
     isFiring = false;
-    if (_pressed) return;
+    if (_pressed || owner.life == 0) return;
 
     _pressed = true;
     print ("firing $name");
@@ -207,7 +207,7 @@ class Rifle extends Weapon {
   Timer fireTimer;
 
   void fire() {
-    if (_pressed || ammo == 0) return;
+    if (_pressed || ammo == 0 || owner.life == 0) return;
     isFiring = true;
     _pressed = true;
     _fire(null);

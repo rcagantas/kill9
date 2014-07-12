@@ -97,7 +97,7 @@ class Actor extends WorldObject {
   }
 
   void switchWeapon() {
-    if (weapons.isEmpty) return;
+    if (life == 0 || weapons.isEmpty) return;
 
     weapons.addLast(weapon);
     weapon = weapons.removeFirst();
@@ -172,11 +172,12 @@ class Actor extends WorldObject {
   }
 
   void turnIncrement(num increment) {
+    if (life == 0) return;
     orientation += increment;
   }
 
-  void turnToPoint(num xPt,num yPt)
-  {
+  void turnToPoint(num xPt,num yPt) {
+    if (life == 0) return;
     orientation = math.PI - math.atan2(xPt-x, yPt-y);
   }
 
