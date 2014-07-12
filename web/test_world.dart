@@ -148,15 +148,15 @@ void handleInput() {
     player1.stopLeftRightMove();
   }
 
-  if (io.keyState[37]) { player1.turnIncrement(-.1); }
-  if (io.keyState[39]) { player1.turnIncrement(.1); }
+  if (io.keyState[37]) { player1.turnIncrement(-.05); }
+  if (io.keyState[39]) { player1.turnIncrement(.05); }
   if (io.keyState[38] || io.mouseL) { player1.weapon.fire();}
   if (!io.keyState[38] && !io.mouseL){ player1.weapon.stop(); }
 }
 
 void onKeyUp(KeyboardEvent e) {
   if (p1 == null) return;
-  if (e.keyCode == 40) { p1.cycleWeapon(); }
+  if (e.keyCode == 40) { player1.switchWeapon(); }
   if (e.keyCode == 38 || e.keyCode == 40) {
   }
 }

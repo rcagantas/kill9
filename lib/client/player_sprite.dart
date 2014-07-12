@@ -253,7 +253,7 @@ class PlayerSprite extends DisplayObjectContainer {
   
   void fire() {
     if (_animatingFiring) return;
-    num time = 0.01;
+    num time = 0.02;
     List<Tween> pull = [];
     pull.add(new Tween(torso, time, TransitionFunction.linear)..animate.y.to(3));
     for (String w in weaponNames) 
@@ -269,9 +269,9 @@ class PlayerSprite extends DisplayObjectContainer {
     for (Tween t in push) fireAniPush.add(t);
     
     AnimationChain fireAni = new AnimationChain();
-    fireAniPull.delay = 0.01;
+    fireAniPull.delay = time;
     fireAni.add(fireAniPull);
-    fireAniPush.delay = 0.01;
+    fireAniPush.delay = time;
     fireAni.add(fireAniPush);
     fireAni.onStart = () => _animatingFiring = true;
     fireAni.onComplete = () => _animatingFiring = false;
