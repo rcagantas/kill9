@@ -214,7 +214,7 @@ class RandomWalker {
   Timer _timer, _fireTimer = null, _stopTimer;
 
   void start() {
-    //_timer = new Timer.periodic(new Duration(milliseconds: 2000), _walkRandomly);
+    _timer = new Timer.periodic(new Duration(milliseconds: 2000), _walkRandomly);
   }
 
   void stop() {
