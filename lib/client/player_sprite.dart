@@ -150,6 +150,7 @@ class PlayerSprite extends DisplayObjectContainer {
     Tween bloodPoolTween = new Tween(bloodPool, 3.0, TransitionFunction.linear)
       ..animate.scaleX.to(30)
       ..animate.scaleY.to(30);
+    bloodPoolTween.onComplete = () => stage.juggler.remove(bloodPoolTween);
     stage.juggler.add(bloodPoolTween);
   }
 
