@@ -103,9 +103,6 @@ class World {
     return frame;
   }
 
-
-
-
   void _processInput() {
     // process input
   }

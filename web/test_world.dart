@@ -158,7 +158,6 @@ void onKeyUp(KeyboardEvent e) {
   if (p1 == null) return;
   if (e.keyCode == 40) { p1.cycleWeapon(); }
   if (e.keyCode == 38 || e.keyCode == 40) {
-    p1.resetTorso();
   }
 }
 
@@ -177,17 +176,10 @@ void updateFrame (Frame p) {
       var player = otherPs[object.id]
         ..move(object.x, object.y)
         ..turn(object.orientation)
-        ..modHitPoints(object.lifeRatio, object.damageFrom);
+        ..modHitPoints(object.lifeRatio, object.damageFrom)
+        ..setWeapon(object.weaponType);
       if (!object.isMoving) player.stopMoving();
       if (object.isFiring) player.fire();
-
-      if (object.weaponType == WeaponType.PISTOL) {
-        if (player.weapon != "pistol") player.setWeapon("pistol");
-      }
-      else if (object.weaponType == WeaponType.RIFLE) {
-        if (player.weapon != "rifle") player.setWeapon("rifle");
-      }
-
       visible.add(object.id);
     }
     else if (realBullets.containsKey(object.id)) {
@@ -199,6 +191,7 @@ void updateFrame (Frame p) {
       p1.modHitPoints(object.lifeRatio, object.damageFrom);
       p1.move(object.x, object.y);
       p1.turn(object.orientation);
+      p1.setWeapon(object.weaponType);
       if (object.isFiring) p1.fire();
       if (!object.isMoving) p1.stopMoving();
     }
@@ -221,8 +214,7 @@ class RandomWalker {
   Timer _timer, _fireTimer = null, _stopTimer;
 
   void start() {
-    _timer = new Timer.periodic(new Duration(milliseconds: 2000), _walkRandomly);
-    _stopTimer = new Timer.periodic(new Duration(milliseconds: 10), _stopFiring);
+    //_timer = new Timer.periodic(new Duration(milliseconds: 2000), _walkRandomly);
   }
 
   void stop() {
@@ -246,8 +238,10 @@ class RandomWalker {
     player.stopTopDownMove();
     player.stopTurn();
 
-    if (_fireTimer == null)
+    if (_fireTimer == null) {
       _fireTimer = new Timer.periodic(new Duration(milliseconds: 200), _fire);
+      _stopTimer = new Timer.periodic(new Duration(milliseconds: 10), _stopFiring);
+    }
 
     var move = random.nextInt(3);
 

@@ -23,6 +23,7 @@ class PlayerSprite extends DisplayObjectContainer {
   Shape bloodPool;
   Tween bloodPoolTween;
   num playerNo = -1;
+  bool _animatingFiring = false;
 
   PlayerSprite() {
     playerNo = totalPlayers + 1 < ResourceHandler.MAX_PLAYERS ? ++totalPlayers : ResourceHandler.MAX_PLAYERS;
@@ -98,7 +99,7 @@ class PlayerSprite extends DisplayObjectContainer {
       ..addTo(this)
       ..play();
     stage.juggler.add(death);
-
+    
     x = stage.stageWidth/2;
     y = stage.stageHeight/2;
 
@@ -223,11 +224,23 @@ class PlayerSprite extends DisplayObjectContainer {
   String cycleWeapon() {
     num index = weaponNames.indexOf(weapon);
     String newWeapon = weaponNames[index + 1 >= weaponNames.length? 0 : index + 1];
-    setWeapon(newWeapon);
+    setWeaponStr(newWeapon);
     return newWeapon;
   }
 
-  bool setWeapon(String newWeapon) {
+  bool setWeapon(num weaponType) {
+    String newWeapon;
+    switch(weaponType) {
+      case WeaponType.PISTOL: newWeapon = "pistol"; break;
+      case WeaponType.RIFLE: newWeapon = "rifle"; break;
+      case WeaponType.GRENADE_LAUNCHER: newWeapon = "grenade"; break;
+      case WeaponType.ROCKET_LAUNCHER: newWeapon = "rocket"; break;
+    }
+    return setWeaponStr(newWeapon);
+  }
+  
+  bool setWeaponStr(String newWeapon) {
+    if (newWeapon == weapon) return false;
     if (weaponNames.contains(newWeapon)) {
       weapons[weapon].visible = false;
       weapon = newWeapon;
@@ -237,15 +250,32 @@ class PlayerSprite extends DisplayObjectContainer {
     }
     return false;
   }
-
+  
   void fire() {
-    torso.y =
-    weapons[weapon].y = torso.y == 3? 0 : 3;
-    weaponSound[weapon].play(false);
-  }
+    if (_animatingFiring) return;
+    num time = 0.01;
+    List<Tween> pull = [];
+    pull.add(new Tween(torso, time, TransitionFunction.linear)..animate.y.to(3));
+    for (String w in weaponNames) 
+      pull.add(new Tween(weapons[w], time, TransitionFunction.linear)..animate.y.to(3));
+    AnimationGroup fireAniPull = new AnimationGroup();
+    for (Tween t in pull) fireAniPull.add(t);
 
-  void resetTorso() {
-    torso.y =
-    weapons[weapon].y = 0;
+    List<Tween> push = [];
+    push.add(new Tween(torso, time, TransitionFunction.linear)..animate.y.to(0));
+    for (String w in weaponNames) 
+      push.add(new Tween(weapons[w], time, TransitionFunction.linear)..animate.y.to(0));
+    AnimationGroup fireAniPush = new AnimationGroup();
+    for (Tween t in push) fireAniPush.add(t);
+    
+    AnimationChain fireAni = new AnimationChain();
+    fireAniPull.delay = 0.01;
+    fireAni.add(fireAniPull);
+    fireAniPush.delay = 0.01;
+    fireAni.add(fireAniPush);
+    fireAni.onStart = () => _animatingFiring = true;
+    fireAni.onComplete = () => _animatingFiring = false;
+    stage.juggler.add(fireAni);
+    weaponSound[weapon].play(false);
   }
 }

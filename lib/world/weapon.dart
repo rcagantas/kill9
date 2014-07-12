@@ -207,10 +207,7 @@ class Rifle extends Weapon {
   Timer fireTimer;
 
   void fire() {
-    isFiring = false;
-
     if (_pressed || ammo == 0) return;
-
     isFiring = true;
     _pressed = true;
     fireTimer = new Timer.periodic(new Duration(milliseconds:100), _fire);
@@ -222,6 +219,7 @@ class Rifle extends Weapon {
     if (_pressed && ammo > 0){
       fireTimer.cancel();
     }
+    isFiring = false;
     _pressed = false;
   }
 
@@ -232,6 +230,7 @@ class Rifle extends Weapon {
     owner.myWorld.addObject(bullet);
     ammo = ammo - 1;
 
+    isFiring = true;
     if (ammo == 0) {
       timer.cancel();
       isFiring = false;
