@@ -22,6 +22,7 @@ class MiniMap {
               starty + (i * TileSheet.SIZE/div),
               TileSheet.SIZE/div, TileSheet.SIZE/div)
           ..graphics.fillColor(c)
+          ..alpha = .5
           ..addTo(stage);
       }
     }
@@ -29,6 +30,7 @@ class MiniMap {
     point = new Shape()
       ..graphics.circle(0, starty, 5)
       ..graphics.fillColor(Color.Fuchsia)
+      ..alpha = .7
       ..addTo(stage);
   }
 
