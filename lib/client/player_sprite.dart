@@ -21,7 +21,6 @@ class PlayerSprite extends DisplayObjectContainer {
   num hp = 100;
   ParticleEmitter splatter, splatterAoe;
   Shape bloodPool;
-  Tween bloodPoolTween;
   num playerNo = -1;
   bool _animatingFiring = false;
 
@@ -85,10 +84,6 @@ class PlayerSprite extends DisplayObjectContainer {
       ..graphics.fillColor(Color.Red)
       ..addTo(this);
 
-    bloodPoolTween = new Tween(bloodPool, 3.0, TransitionFunction.linear)
-      ..animate.scaleX.to(30)
-      ..animate.scaleY.to(30);
-
     death = ResourceHandler.flipbookDeath(playerNo, 10)
       ..x = -OFFSET
       ..y = OFFSET
@@ -99,7 +94,7 @@ class PlayerSprite extends DisplayObjectContainer {
       ..addTo(this)
       ..play();
     stage.juggler.add(death);
-    
+
     x = stage.stageWidth/2;
     y = stage.stageHeight/2;
 
@@ -151,6 +146,13 @@ class PlayerSprite extends DisplayObjectContainer {
     }
   }
 
+  void bloodPoolAnimation() {
+    Tween bloodPoolTween = new Tween(bloodPool, 3.0, TransitionFunction.linear)
+      ..animate.scaleX.to(30)
+      ..animate.scaleY.to(30);
+    stage.juggler.add(bloodPoolTween);
+  }
+
   void set alive(bool b) {
     if (head.visible == b) return; // same state. don't animate anything.
     weapons[weapon].visible =
@@ -162,9 +164,7 @@ class PlayerSprite extends DisplayObjectContainer {
     bloodPool.visible = !b;
     if (death.visible) {
       death.gotoAndPlay(0);
-      stage.juggler.add(bloodPoolTween);
-    } else {
-      stage.juggler.remove(bloodPoolTween);
+      bloodPoolAnimation();
     }
   }
 
@@ -238,7 +238,7 @@ class PlayerSprite extends DisplayObjectContainer {
     }
     return setWeaponStr(newWeapon);
   }
-  
+
   bool setWeaponStr(String newWeapon) {
     if (newWeapon == weapon) return false;
     if (weaponNames.contains(newWeapon)) {
@@ -250,24 +250,23 @@ class PlayerSprite extends DisplayObjectContainer {
     }
     return false;
   }
-  
-  void fire() {
-    if (_animatingFiring) return;
+
+  void firingAnimation() {
     num time = 0.02;
     List<Tween> pull = [];
     pull.add(new Tween(torso, time, TransitionFunction.linear)..animate.y.to(3));
-    for (String w in weaponNames) 
+    for (String w in weaponNames)
       pull.add(new Tween(weapons[w], time, TransitionFunction.linear)..animate.y.to(3));
     AnimationGroup fireAniPull = new AnimationGroup();
     for (Tween t in pull) fireAniPull.add(t);
 
     List<Tween> push = [];
     push.add(new Tween(torso, time, TransitionFunction.linear)..animate.y.to(0));
-    for (String w in weaponNames) 
+    for (String w in weaponNames)
       push.add(new Tween(weapons[w], time, TransitionFunction.linear)..animate.y.to(0));
     AnimationGroup fireAniPush = new AnimationGroup();
     for (Tween t in push) fireAniPush.add(t);
-    
+
     AnimationChain fireAni = new AnimationChain();
     fireAniPull.delay = time;
     fireAni.add(fireAniPull);
@@ -276,6 +275,11 @@ class PlayerSprite extends DisplayObjectContainer {
     fireAni.onStart = () => _animatingFiring = true;
     fireAni.onComplete = () => _animatingFiring = false;
     stage.juggler.add(fireAni);
+  }
+
+  void fire() {
+    if (_animatingFiring) return;
+    firingAnimation();
     weaponSound[weapon].play(false);
   }
 }
