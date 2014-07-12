@@ -9,6 +9,7 @@ class Arena extends DisplayObjectContainer {
   LayerPanel trees = new LayerPanel();
   LayerPanel walls = new LayerPanel();
   num treeScale = 1.5;
+  MiniMap miniMap;
 
   Arena() {
     ResourceHandler.init();
@@ -17,8 +18,8 @@ class Arena extends DisplayObjectContainer {
 
   void createMap(num width, num height, List<num> surface) {
     num count = 0;
-    for (num i = 0; i < width; i++) {
-      for (num j = 0; j < height; j++) {
+    for (num i = 0; i < height; i++) {
+      for (num j = 0; j < width; j++) {
         num type = surface[count];
         TileSheet tile = new TileSheet(Surface.PASSABLE)
           ..index = count++
@@ -50,10 +51,12 @@ class Arena extends DisplayObjectContainer {
     playerPanel.addTo(this);
     walls.addTo(this);
     trees.addTo(this);
+    miniMap = new MiniMap(width, height, surface);
   }
 
   void move(num x, num y) {
     this.x = x;
     this.y = y;
+    miniMap.miniMove(-x, -y);
   }
 }
