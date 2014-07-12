@@ -28,8 +28,8 @@ class ResourceHandler {
       "minRadius": 0, "maxRadius": 100, "maxRadiusVariance": 0,
       "rotatePerSecond": 0, "rotatePerSecondVariance": 0,
       "compositeOperation": "source-over",
-      "startColor": {"red": 1, "green": 0, "blue": 0, "alpha": 1},
-      "finishColor": {"red": 1, "green": 0, "blue": 0, "alpha": .25}
+      "startColor": {"red": .5, "green": 0, "blue": 0, "alpha": 1},
+      "finishColor": {"red": .5, "green": 0, "blue": 0, "alpha": .25}
     };
   static Map jsonBloodSplatAoe =
     {
@@ -50,8 +50,8 @@ class ResourceHandler {
       "minRadius": 0, "maxRadius": 100, "maxRadiusVariance": 0,
       "rotatePerSecond": 0, "rotatePerSecondVariance": 0,
       "compositeOperation": "source-over",
-      "startColor": {"red": 1, "green": 0, "blue": 0, "alpha": 1},
-      "finishColor": {"red": 1, "green": 0, "blue": 0, "alpha": .25}
+      "startColor": {"red": .5, "green": 0, "blue": 0, "alpha": 1},
+      "finishColor": {"red": .5, "green": 0, "blue": 0, "alpha": .25}
     };
 
 
@@ -84,7 +84,7 @@ class ResourceHandler {
     resMgr.addBitmapData("crate", "${tiles}/crate.png");
     resMgr.addBitmapData("tree", "${tiles}/tree.png");
     resMgr.addBitmapData("floor", "${tiles}/floor5.png");
-    
+
     //sounds
     resMgr.addSound("snd_pistol", "${sounds}/pistol.ogg");
     resMgr.addSound("snd_rifle", "${sounds}/rifle.ogg");

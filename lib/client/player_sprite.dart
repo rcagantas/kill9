@@ -78,10 +78,10 @@ class PlayerSprite extends DisplayObjectContainer {
 
     bloodPool = new Shape()
       ..x = 5
-      ..y = 18
+      ..y = 20
       ..visible = false
       ..graphics.circle(0, 0, 1)
-      ..graphics.fillColor(Color.Red)
+      ..graphics.fillColor(Color.Maroon)
       ..addTo(this);
 
     death = ResourceHandler.flipbookDeath(playerNo, 10)
@@ -147,11 +147,14 @@ class PlayerSprite extends DisplayObjectContainer {
   }
 
   void bloodPoolAnimation() {
-    Tween bloodPoolTween = new Tween(bloodPool, 3.0, TransitionFunction.linear)
-      ..animate.scaleX.to(30)
-      ..animate.scaleY.to(30);
-    bloodPoolTween.onComplete = () => stage.juggler.remove(bloodPoolTween);
-    stage.juggler.add(bloodPoolTween);
+    math.Random rand = new math.Random();
+    num scale1 = 15 + rand.nextInt(10);
+    Tween poolAni = new Tween(bloodPool, 3.0, TransitionFunction.linear)
+      ..animate.scaleX.to(scale1)
+      ..animate.scaleY.to(scale1 + 5)
+      ..animate.rotation.to(rand.nextDouble());
+    poolAni.onComplete = () => stage.juggler.remove(poolAni);
+    stage.juggler.add(poolAni);
   }
 
   void set alive(bool b) {
