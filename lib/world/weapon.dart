@@ -210,6 +210,7 @@ class Rifle extends Weapon {
     if (_pressed || ammo == 0) return;
     isFiring = true;
     _pressed = true;
+    _fire(null);
     fireTimer = new Timer.periodic(new Duration(milliseconds:100), _fire);
   }
 
@@ -231,7 +232,7 @@ class Rifle extends Weapon {
     ammo = ammo - 1;
 
     isFiring = true;
-    if (ammo == 0) {
+    if (ammo == 0 && timer != null) {
       timer.cancel();
       isFiring = false;
     }
