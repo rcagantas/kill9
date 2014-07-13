@@ -35,7 +35,7 @@ class MiniMap {
   }
 
   void miniMove(num x, num y) {
-    point.x = (div/2 + 3) + (x/div);
-    point.y = (div/2 + 3) + (y/div);
+    point.x = 16 + (x/div);
+    point.y = 12 + (y/div);
   }
 }
