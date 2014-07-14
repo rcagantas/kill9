@@ -39,5 +39,15 @@ class BulletProps {
   static const num DAMAGE = 10;
 }
 
-
-
+class Bots {
+  static List<String> names =
+      ['Yutani bot',
+       'Happyslurpy bot',
+       'Vilatra bot',
+       'Bournick bot',
+       'Castor Troy bot',
+       'Raist bot',
+       'Dendi bot',
+       'Puppey bot',
+       'Iceiceice bot'];
+}

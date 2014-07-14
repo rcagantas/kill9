@@ -16,7 +16,7 @@ class PlayerSprite extends DisplayObjectContainer {
   FlipBook hip;
   FlipBook death;
   Shape arcHealth;
-  TextField dbg;
+  TextField dbg, nameDisplay;
   bool dbgmode = false;
   num hp = 100;
   ParticleEmitter splatter, splatterAoe;
@@ -98,13 +98,23 @@ class PlayerSprite extends DisplayObjectContainer {
     x = stage.stageWidth/2;
     y = stage.stageHeight/2;
 
-    TextFormat tf = new TextFormat('Helvetica', 10, Color.Black);
+    TextFormat tf = new TextFormat('Open Sans', 10, Color.Black);
     dbg = new TextField()
       ..defaultTextFormat = tf
       ..x = 30
       ..y = 30
       ..width = 200
       ..height = 200
+      ..wordWrap = true
+      ..addTo(this);
+
+    TextFormat tfn = new TextFormat('Open Sans', 15, Color.White);
+    nameDisplay = new TextField()
+      ..defaultTextFormat = tfn
+      ..x = 0
+      ..y = 30
+      ..width = 200
+      ..height = 50
       ..wordWrap = true
       ..addTo(this);
   }
@@ -191,6 +201,7 @@ class PlayerSprite extends DisplayObjectContainer {
     if (this.rotation == r) return;
     this.rotation = peg180(r);
     dbg.rotation = -this.rotation;
+    nameDisplay.rotation = -this.rotation;
     fixHipRotation(this.x, this.y);
     displayAngles();
   }

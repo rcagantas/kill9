@@ -51,7 +51,8 @@ void main() {
     for (int i=1; i<5; i++) {
       var p = new PlayerSprite()
       ..move(850 + (i*50) , 900 )
-      ..addTo(client.playerPanel);
+      ..addTo(client.playerPanel)
+      ..nameDisplay.text = Bots.names[i - 1];
 
       var actor = world.addPlayerandGetReference()
           ..x = 850 + (i*50)
@@ -64,7 +65,8 @@ void main() {
     for (int i=1; i<6; i++) {
       var p = new PlayerSprite()
       ..move(800 + (i*50) , 1000 )
-      ..addTo(client.playerPanel);
+      ..addTo(client.playerPanel)
+      ..nameDisplay.text = Bots.names[3 + i];
 
       var actor = world.addPlayerandGetReference()
           ..x = 800 + (i*50)

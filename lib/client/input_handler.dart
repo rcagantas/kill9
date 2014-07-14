@@ -30,7 +30,7 @@ class InputHandler {
           keyPressed;
     });
 
-    TextFormat tf = new TextFormat('Helvetica', 10, Color.Black);
+    TextFormat tf = new TextFormat('Open Sans', 14, Color.Black);
     dbg = new TextField()
       ..defaultTextFormat = tf
       ..x = 30
