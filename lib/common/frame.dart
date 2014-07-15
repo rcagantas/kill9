@@ -2,8 +2,6 @@ part of gglcommon;
 
 class ObjectInFrame {
   num id;
-  num objectType;
-  num objectState;
   num x,y,orientation;
 }
 
@@ -16,10 +14,7 @@ class ActorInFrame extends ObjectInFrame {
   bool isMoving = false;
 }
 
-class BulletInFrame extends ObjectInFrame {
-  bool hitObject;
-  bool hitPlayer;
-}
+class BulletInFrame extends ObjectInFrame {}
 
 class Frame {
   int playerId;
