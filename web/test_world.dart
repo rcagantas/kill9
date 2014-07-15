@@ -25,22 +25,12 @@ void main() {
     client = new Arena();
     num width = 20;
     num height = 20;
-    var surfaceList = MapGenerator.createSimpleRandom(width, height, 7, 12);
+    var surfaceList = MapGenerator.createSimpleRandomSurface(width, height);
     client.createMap(width, height, surfaceList);
     p1 = client.p1;
     p1.move(1000, 1000);
 
-    var grid = new Grid(width, height, 100);
-    // there's probably a better way to compute this
-    num count = 0;
-    for (num i = 0; i < width; i++) {
-      for (num j = 0; j < width; j++) {
-        if (surfaceList[count] == Surface.NON_PASSABLE) {
-          grid.set(j, i, new Tile(Surface.NON_PASSABLE));
-        }
-        count++;
-      }
-    }
+    var grid = new Grid.surface(width, height, 100, surfaceList);
 
     var world = new World(grid);
 

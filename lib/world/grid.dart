@@ -21,6 +21,23 @@ class Grid
     _tileWidth = tileWidth;
   }
 
+  Grid.surface(int width, int height, int tileWidth, List<num> surfaceList) {
+    _width = width;
+    _height = height;
+    _grid = new Map();
+    _tileWidth = tileWidth;
+
+    num count = 0;
+    for (num i = 0; i < width; i++) {
+      for (num j = 0; j < width; j++) {
+        if (surfaceList[count] == Surface.NON_PASSABLE) {
+          this.set(j, i, new Tile(Surface.NON_PASSABLE));
+        }
+        count++;
+      }
+    }
+  }
+
   Tile get(int x, int y) {
     return _grid[ (y * _width) + x];
   }
