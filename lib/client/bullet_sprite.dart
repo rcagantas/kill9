@@ -1,9 +1,13 @@
 part of gglclient;
 
-class BulletSprite extends Shape {
+class BulletSprite extends DisplayObjectContainer {
+  Shape shape;
   BulletSprite() {
-    this.pivotX = this.pivotY = 0;
-    this.graphics.ellipse(0, 0, 3, 6);
-    this.graphics.fillColor(Color.White);
+    shape = new Shape()
+      ..pivotX = 0
+      ..pivotY = 0
+      ..graphics.ellipse(0, 0, 3, 6)
+      ..graphics.fillColor(Color.White)
+      ..addTo(this);
   }
 }
