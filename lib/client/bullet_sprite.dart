@@ -12,20 +12,30 @@ class BulletSprite extends DisplayObjectContainer {
 
 class GrenadeSprite extends DisplayObjectContainer {
   Bitmap grenade;
+  ParticleEmitter particles;
   GrenadeSprite() {
+    particles = new ParticleEmitter(ResourceHandler.jsonGrenade)
+      ..addTo(this);
+    stage.juggler.add(particles);
+
     grenade = new Bitmap(resMgr.getBitmapData("grenade"))
-      ..pivotX = 8.5
-      ..pivotY = 8.5
+      ..pivotX = 7
+      ..pivotY = 7
       ..addTo(this);
   }
 }
 
 class RocketSprite extends DisplayObjectContainer {
   Bitmap rocket;
+  ParticleEmitter particles;
   RocketSprite() {
+    particles = new ParticleEmitter(ResourceHandler.jsonRocket)
+      ..addTo(this);
+    stage.juggler.add(particles);
+
     rocket = new Bitmap(resMgr.getBitmapData("rocket"))
-      ..pivotX = 8.5
-      ..pivotY = 8.5
+      ..pivotX = 7
+      ..pivotY = 7
       ..addTo(this);
   }
 }
