@@ -7,6 +7,7 @@ class Bullet extends WorldObject {
   num maxDistance;
   num startX, startY;
   bool _expired = false;
+  bool hitObject = false, hitActor = false, timedOut = false;
   int damage;
 
   Bullet():super(BulletProps.RADIUS,BulletProps.SPEED,0);
@@ -19,6 +20,9 @@ class Bullet extends WorldObject {
     this.orientation = orientation;
     this.startX = this.x;
     this.startY = this.y;
+    hitObject =
+    hitActor =
+    timedOut =
     _expired = false;
   }
 
@@ -32,6 +36,7 @@ class Bullet extends WorldObject {
           print ("Player $key is hit");
           (object as Actor).takeDamage(BulletProps.DAMAGE, this.orientation);
           _expired = true;
+          hitActor = _expired? true: false;
         }
       }
     });
@@ -43,12 +48,13 @@ class Bullet extends WorldObject {
           myWorld.grid.bumpRight(newPos.x, newPos.y, radius)||
           myWorld.grid.bumpTop(newPos.x, newPos.y, radius) ||
           myWorld.grid.bumpBottom(newPos.x, newPos.y, radius));
-
+      hitObject = _expired? true: false;
     }
     //reached max distance?
     if (!_expired) {
       var p2 = new math.Point(startX,startY);
       _expired = (new math.Point(x,y).distanceTo(p2) > BulletProps.DISTANCE);
+      timedOut = _expired? true: false;
     }
   }
 

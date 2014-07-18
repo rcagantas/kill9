@@ -95,6 +95,10 @@ class World {
           visiObj.isMoving = obj.isMoving();
           visiObj.weaponType = obj.weapon.weaponType;
           visiObj.weaponAmmo = obj.weapon.ammo;
+        } else if (obj is Bullet) {
+          visiObj.hitActor = obj.hitActor;
+          visiObj.hitObject = obj.hitObject;
+          visiObj.timedOut = obj.timedOut;
         }
         frame.visibleObjects.add(visiObj);
       }
@@ -116,15 +120,15 @@ class World {
     // individal object updates
     _objects.forEach((k,v)=>v.update(elapsed));
 
-    // objects for removal
-    _removals.forEach((obj)=>_objects.remove(obj.hashCode));
-    _removals.clear();
-
     //generate frame for each player
     _listeners.forEach((playerId,listener){
       var playerFrame = getFrameDetail(playerId);
       listener(playerFrame);
     });
+
+    // objects for removal
+    _removals.forEach((obj)=>_objects.remove(obj.hashCode));
+    _removals.clear();
   }
 
   void _goRound(Timer timer) {

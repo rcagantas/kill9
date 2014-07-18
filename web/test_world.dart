@@ -178,6 +178,7 @@ void updateFrame (Frame p) {
       realBullets[object.id].x = object.x;
       realBullets[object.id].y = object.y;
       realBullets[object.id].rotation = object.orientation;
+      if (object.hitObject) realBullets[object.id].collide();
       visible.add(object.id);
     } else {
       p1.modHitPoints(object.lifeRatio, object.damageFrom);

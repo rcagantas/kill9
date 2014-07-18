@@ -14,7 +14,11 @@ class ActorInFrame extends ObjectInFrame {
   bool isMoving = false;
 }
 
-class BulletInFrame extends ObjectInFrame {}
+class BulletInFrame extends ObjectInFrame {
+  bool hitObject = false;
+  bool hitActor = false;
+  bool timedOut = false;
+}
 
 class Frame {
   int playerId;

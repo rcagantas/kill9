@@ -149,10 +149,10 @@ class PlayerSprite extends DisplayObjectContainer {
     arcHealth
       ..graphics.arc(CENTER, CENTER, HPRADIUS, -angle, angle, false)
       ..graphics.strokeColor(color, 4);
-    if (dmgFrom == -1) splatterAoe.start(.5);
+    if (dmgFrom == -1) splatterAoe.start(.3);
     else {
       splatter.rotation = peg180(dmgFrom - this.rotation - math.PI);
-      splatter.start(.2);
+      splatter.start(.3);
     }
   }
 
