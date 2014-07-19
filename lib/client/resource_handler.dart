@@ -180,6 +180,8 @@ class ResourceHandler {
     resMgr.addSound("snd_grenade", "${sounds}/grenade.ogg");
     resMgr.addSound("snd_rocket", "${sounds}/rocket.ogg");
     resMgr.addSound("snd_reload", "${sounds}/reload.ogg");
+    
+    SoundMixer.soundTransform = new SoundTransform(0.2);
 
     resMgr.load().then((_) {
       for (int i = 0; i < strideCount; i++) {
