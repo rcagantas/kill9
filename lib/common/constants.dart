@@ -39,6 +39,12 @@ class BulletProps {
   static const num DAMAGE = 10;
 }
 
+class BulletType {
+  static const int BULLET = 0;
+  static const int GRENADE = 1;
+  static const int ROCKET = 2;
+}
+
 class Bots {
   static List<String> names =
       ['Yutani bot',

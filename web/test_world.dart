@@ -178,7 +178,7 @@ void updateFrame (Frame p) {
       realBullets[object.id].x = object.x;
       realBullets[object.id].y = object.y;
       realBullets[object.id].rotation = object.orientation;
-      if (object.hitObject) realBullets[object.id].collide();
+      if (object.hitObject) realBullets[object.id].explode();
       visible.add(object.id);
     }
   });
