@@ -1,6 +1,13 @@
 part of gglclient;
 
-class BulletSprite extends DisplayObjectContainer {
+abstract class ProjectileSprite {
+  void collide();
+  void explode();
+}
+
+class BulletSprite 
+  extends DisplayObjectContainer 
+  implements ProjectileSprite {
   Shape shape;
   ParticleEmitter splash;
   BulletSprite() {
@@ -20,12 +27,19 @@ class BulletSprite extends DisplayObjectContainer {
     shape.visible = b;
   }
 
+  @override
   void collide() {
     splash.start(0.3);
   }
+
+  @override
+  void explode() {
+  }
 }
 
-class GrenadeSprite extends DisplayObjectContainer {
+class GrenadeSprite 
+  extends DisplayObjectContainer 
+  implements ProjectileSprite {
   Bitmap grenade;
   ParticleEmitter particles, explosion;
   GrenadeSprite() {
@@ -46,20 +60,31 @@ class GrenadeSprite extends DisplayObjectContainer {
       ..addTo(this);
   }
 
+  void collide() {
+    
+  }
+  
+  @override
   void set visible(bool b) {
     grenade.visible = b;
+    particles.visible = b;
   }
-
+  
+  @override
   void explode() {
-    explosion.start(0.2);
+    explosion.start(0.5);
   }
 }
 
-class RocketSprite extends DisplayObjectContainer {
+class RocketSprite 
+  extends DisplayObjectContainer 
+  implements ProjectileSprite {
   Bitmap rocket;
   ParticleEmitter particles, explosion;
   RocketSprite() {
     particles = new ParticleEmitter(ResourceHandler.jsonRocket)
+      ..pivotX = 0
+      ..pivotY = -10
       ..addTo(this);
     stage.juggler.add(particles);
 
@@ -77,9 +102,16 @@ class RocketSprite extends DisplayObjectContainer {
 
   void set visible(bool b) {
     rocket.visible = b;
+    particles.visible = b;
   }
 
+  @override
   void explode() {
-    explosion.start(0.2);
+    explosion.start(0.5);
+  }
+
+  @override
+  void collide() {
+    explosion.start(0.5);
   }
 }
