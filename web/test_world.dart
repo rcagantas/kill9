@@ -180,13 +180,6 @@ void updateFrame (Frame p) {
       realBullets[object.id].rotation = object.orientation;
       if (object.hitObject) realBullets[object.id].collide();
       visible.add(object.id);
-    } else {
-      p1.modHitPoints(object.lifeRatio, object.damageFrom);
-      p1.move(object.x, object.y);
-      p1.turn(object.orientation);
-      p1.setWeapon(object.weaponType);
-      if (object.isFiring) p1.fire();
-      if (!object.isMoving) p1.stopMoving();
     }
   });
 
