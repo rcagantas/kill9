@@ -2,7 +2,6 @@ part of gglclient;
 
 class BulletSprite extends DisplayObjectContainer {
   int _type;
-  bool _visible;
   Shape bulletShape;
   ParticleEmitter bulletSplash;
   Bitmap grenade, rocket;
@@ -13,7 +12,6 @@ class BulletSprite extends DisplayObjectContainer {
   }
 
   void set type(int t) {
-    if (_type == t) return;
     this.removeChildren();
     switch(t) {
       case BulletType.BULLET:
@@ -70,7 +68,6 @@ class BulletSprite extends DisplayObjectContainer {
   int get type{ return _type; }
 
   void set visible(bool b) {
-    if (_visible == b) return;
     switch(type) {
       case BulletType.BULLET:
         bulletShape.visible = b;
@@ -84,7 +81,6 @@ class BulletSprite extends DisplayObjectContainer {
         rocketParticles.visible = b;
         break;
     }
-    _visible = b;
   }
 
   void explode() {
