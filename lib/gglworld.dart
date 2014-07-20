@@ -8,6 +8,6 @@ import 'package:giggl/gglcommon.dart';
 part 'world/grid.dart';
 part 'world/object.dart';
 part 'world/utility.dart';
-part 'world/weapon.dart';
+part 'world/weapon2.dart';
 part 'world/world.dart';
 part 'world/map_generator.dart';

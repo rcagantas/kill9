@@ -92,6 +92,8 @@ class Actor extends WorldObject {
   {
     weapon = new Pistol(this);
     weapons.addLast(new Rifle(this));
+    weapons.addLast(new GrenadeLauncher(this));
+    weapons.addLast(new RocketLauncher(this));
 
     _45degreeSpeed = speed * math.sin(math.PI/4);
   }

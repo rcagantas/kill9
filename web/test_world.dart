@@ -40,13 +40,13 @@ void main() {
 
     for (int i=1; i<5; i++) {
       var p = new PlayerSprite()
-      ..move(850 + (i*50) , 900 )
-      ..addTo(arena.playerPanel)
-      ..nameDisplay.text = Bots.names[i - 1];
+        ..move(850 + (i*50) , 900 )
+        ..addTo(arena.playerPanel)
+        ..nameDisplay.text = Bots.names[i - 1];
 
       var actor = world.addPlayerandGetReference()
-          ..x = 850 + (i*50)
-          ..y = 900;
+        ..x = 850 + (i*50)
+        ..y = 900;
 
       players[actor.hashCode] = p;
       actors[actor.hashCode] = actor;
@@ -54,13 +54,13 @@ void main() {
 
     for (int i=1; i<6; i++) {
       var p = new PlayerSprite()
-      ..move(800 + (i*50) , 1000 )
-      ..addTo(arena.playerPanel)
-      ..nameDisplay.text = Bots.names[3 + i];
+        ..move(800 + (i*50) , 1000)
+        ..addTo(arena.playerPanel)
+        ..nameDisplay.text = Bots.names[3 + i];
 
       var actor = world.addPlayerandGetReference()
-          ..x = 800 + (i*50)
-          ..y = 1000;
+        ..x = 800 + (i*50)
+        ..y = 1000;
 
       players[actor.hashCode] = p;
       actors[actor.hashCode] = actor;
@@ -68,9 +68,24 @@ void main() {
 
     world.bullets.getBulletList().forEach((id) {
       bullets[id] = new BulletSprite()
-      ..addTo(arena.playerPanel)
-      ..visible = false;
+        ..addTo(arena.playerPanel)
+        ..visible = false;
     });
+
+    world.bullets.getGrenadeList().forEach((id) {
+      bullets[id] = new BulletSprite()
+        ..addTo(arena.playerPanel)
+        ..type = BulletType.GRENADE
+        ..visible = false;
+    });
+
+    world.bullets.getRocketList().forEach((id) {
+      bullets[id] = new BulletSprite()
+        ..addTo(arena.playerPanel)
+        ..type = BulletType.ROCKET
+        ..visible = false;
+    });
+
 
     p1.removeFromParent();
     p1.addTo(arena.playerPanel);
