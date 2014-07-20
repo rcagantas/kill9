@@ -12,6 +12,7 @@ class BulletSprite extends DisplayObjectContainer {
   }
 
   void set type(int t) {
+    if (t == _type) return;
     this.removeChildren();
     switch(t) {
       case BulletType.BULLET:
