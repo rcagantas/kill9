@@ -175,6 +175,7 @@ void updateFrame (Frame p) {
       visible.add(object.id);
     }
     else if (bullets.containsKey(object.id)) {
+      bullets[object.id].type = object.type;
       bullets[object.id].x = object.x;
       bullets[object.id].y = object.y;
       bullets[object.id].rotation = object.orientation;

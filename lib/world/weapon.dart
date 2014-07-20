@@ -1,72 +1,137 @@
 part of gglworld;
 
-// Ammo
+abstract class AmmoBehavior {
+   void applyPhysics(Bullet bullet, num elapsedTime, Map objects);
+}
 
-class Bullet extends WorldObject {
-
-  num maxDistance;
-  num startX, startY;
-  bool _expired = false;
-  bool hitObject = false, hitActor = false, timedOut = false;
-  int damage;
-
-  Bullet():super(BulletProps.RADIUS,BulletProps.SPEED,0);
-
-  void init(num x, num y, num orientation, num radius) {
-    xVelocity = speed * math.sin(orientation);
-    yVelocity = -speed * math.cos(orientation);
-    this.x = x + (radius * math.sin(orientation));
-    this.y = y - (radius * math.cos(orientation));
-    this.orientation = orientation;
-    this.startX = this.x;
-    this.startY = this.y;
-    hitObject =
-    hitActor =
-    timedOut =
-    _expired = false;
-  }
-
-  void doPhysics(num elapsedTime, Map objects) {
-
+class BulletBehavior implements AmmoBehavior {
+  void applyPhysics(Bullet bullet, num elapsedTime, Map objects) {
     //hit someone?
     objects.forEach((key,object) {
       if (key != this.hashCode && object is Actor) {
         if (object is Actor && object.life == 0) {}
-        else if (willBump(object, elapsedTime)) {
+        else if (bullet.willBump(object, elapsedTime)) {
           print ("Player $key is hit");
-          (object as Actor).takeDamage(BulletProps.DAMAGE, this.orientation);
-          _expired = true;
-          hitActor = _expired? true: false;
+          (object as Actor).takeDamage(BulletProps.DAMAGE, bullet.orientation);
+          bullet.expired = true;
+          bullet.hitActor = bullet.expired? true: false;
         }
       }
     });
 
     //hit walls?
-    if (!_expired) {
-      math.Point newPos = projectLocation(elapsedTime);
-      _expired =  (myWorld.grid.bumpLeft(newPos.x, newPos.y, radius) ||
-          myWorld.grid.bumpRight(newPos.x, newPos.y, radius)||
-          myWorld.grid.bumpTop(newPos.x, newPos.y, radius) ||
-          myWorld.grid.bumpBottom(newPos.x, newPos.y, radius));
-      hitObject = _expired? true: false;
+    if (!bullet.expired) {
+      math.Point newPos = bullet.projectLocation(elapsedTime);
+      bullet.expired =  (bullet.myWorld.grid.bumpLeft(newPos.x, newPos.y, bullet.radius) ||
+          bullet.myWorld.grid.bumpRight(newPos.x, newPos.y, bullet.radius)||
+          bullet.myWorld.grid.bumpTop(newPos.x, newPos.y, bullet.radius) ||
+          bullet.myWorld.grid.bumpBottom(newPos.x, newPos.y, bullet.radius));
+      bullet.hitObject = bullet.expired? true: false;
     }
     //reached max distance?
-    if (!_expired) {
-      var p2 = new math.Point(startX,startY);
-      _expired = (new math.Point(x,y).distanceTo(p2) > BulletProps.DISTANCE);
-      timedOut = _expired? true: false;
+    if (!bullet.expired) {
+      var p2 = new math.Point(bullet.startX,bullet.startY);
+      bullet.expired = (new math.Point(bullet.x,bullet.y).distanceTo(p2) > BulletProps.DISTANCE);
+      bullet.timedOut = bullet.expired? true: false;
     }
   }
+}
 
-  void update(elapsedTime) {
-    if (!_expired) {
-      super.update(elapsedTime);
+class GrenadeBehavior implements AmmoBehavior {
+  void applyPhysics(Bullet bullet, num elapsedTime, Map objects) {
+
+    // expired?
+
+    bullet.expireTime = bullet.expireTime - elapsedTime;
+
+    if (bullet.expireTime <0) {
+      // check damage
+      bullet.expired = true;
+      bullet.hitObject = true;
+      bullet.timedOut = true;
+
+      return;
     }
-    else {
-      myWorld.bullets.putBullet(this);
-      myWorld.removeObject(this);
+
+    // bumped walls?
+
+    var p1 = new math.Point(bullet.x,bullet.y);
+    var p2 = new math.Point(bullet.startX,bullet.startY);
+
+    var newLoc = bullet.projectLocation(elapsedTime);
+
+    if (bullet.myWorld.grid.bumpLeft(newLoc.x, bullet.y, bullet.radius) ||
+        bullet.myWorld.grid.bumpRight(newLoc.x, bullet.y, bullet.radius)) {
+      bullet.xVelocity = -bullet.xVelocity;
+    }
+
+    if (bullet.myWorld.grid.bumpTop(bullet.x, newLoc.y, bullet.radius) ||
+        bullet.myWorld.grid.bumpBottom(bullet.x, newLoc.y, bullet.radius)) {
+      bullet.yVelocity = -bullet.yVelocity;
     }
   }
+}
+
+class Bullet extends WorldObject {
+   int type;
+   num maxDistance;
+   num expireTime;
+   num startX, startY;
+   bool expired = false;
+   bool hitObject = false, hitActor = false, timedOut = false;
+   int damage;
+   Map behaviors;
+
+   Bullet():super(BulletProps.RADIUS,BulletProps.SPEED,0);
+
+   as(int bulletType) {
+    if (bulletType == BulletType.GRENADE) {
+      radius = GrenadeProps.RADIUS;
+      speed = GrenadeProps.SPEED;
+      damage = GrenadeProps.DAMAGE;
+      expireTime = GrenadeProps.EXPIRE_SEC;
+      type = BulletType.GRENADE;
+    } else if (bulletType == BulletType.ROCKET) {
+      type = BulletType.GRENADE;
+    } else {
+      // default to regular bullets
+      radius = BulletProps.RADIUS;
+      speed = BulletProps.SPEED;
+      damage = BulletProps.DAMAGE;
+      maxDistance = BulletProps.DISTANCE;
+      type = BulletType.BULLET;
+    }
+   }
+
+   void init(num x, num y, num orientation, num radius) {
+     xVelocity = speed * math.sin(orientation);
+     yVelocity = -speed * math.cos(orientation);
+     this.x = x + (radius * math.sin(orientation));
+     this.y = y - (radius * math.cos(orientation));
+     this.orientation = orientation;
+     this.startX = this.x;
+     this.startY = this.y;
+     hitObject =
+     hitActor =
+     timedOut =
+     expired = false;
+   }
+
+   void doPhysics(num elapsedTime, Map objects) {
+      AmmoBehavior behavior = behaviors[type];
+
+      behavior.applyPhysics(this, elapsedTime, objects);
+   }
+
+   void update(elapsedTime) {
+     if (!expired) {
+       super.update(elapsedTime);
+     }
+     else {
+       myWorld.bullets.putBullet(this);
+       myWorld.removeObject(this);
+     }
+   }
 }
 
 class BulletFactory {
@@ -74,9 +139,10 @@ class BulletFactory {
   Queue<Bullet> _bullets = new Queue();
   int counter = 0;
 
-  BulletFactory(int bulletCount) {
+  BulletFactory(int bulletCount, Map bulletBehaviors) {
     for (int i = 0; i < bulletCount; i++) {
-      var bullet = new Bullet();
+      var bullet = new Bullet()
+      ..behaviors = bulletBehaviors;
       _bullets.add(bullet);
     }
   }
@@ -101,53 +167,6 @@ class BulletFactory {
   Iterable getBulletList()
   {
     return _bullets.map((e)=>e.hashCode);
-  }
-}
-
-class Grenade extends WorldObject {
-
-  num maxDistance;
-  num expireTime;
-  num startX, startY;
-
-  Subject expires = new Subject();
-
-  Grenade(radius, speed, orientation, expireTime):super(radius,speed,0) {
-    this.orientation = orientation;
-    this.maxDistance = 0;
-    this.expireTime = expireTime;
-
-    xVelocity = speed * math.sin(orientation);
-    yVelocity = -speed * math.cos(orientation);
-  }
-
-  void update(elapsedTime) {
-
-    var p1 = new math.Point(x,y);
-    var p2 = new math.Point(startX,startY);
-
-    if (expireTime < 0) {
-      myWorld.removeObject(this);
-      expires.notify(this, GglEvent.GRENADE_EXPIRES);
-
-      return;
-    }
-
-    var newLoc = projectLocation(elapsedTime);
-
-    if (myWorld.grid.bumpLeft(newLoc.x, y, radius) ||
-        myWorld.grid.bumpRight(newLoc.x, y, radius)) {
-      xVelocity = -xVelocity;
-    }
-
-    if (myWorld.grid.bumpTop(x, newLoc.y, radius) ||
-        myWorld.grid.bumpBottom(x, newLoc.y, radius)) {
-      yVelocity = -yVelocity;
-    }
-
-    super.update(elapsedTime);
-
-    expireTime = expireTime - elapsedTime;
   }
 }
 
@@ -188,6 +207,7 @@ class Pistol extends Weapon {
     _pressed = true;
     print ("firing $name");
     var bullet = owner.myWorld.bullets.getBullet()
+      ..as(BulletType.BULLET)
       ..init(owner.x, owner.y, owner.orientation, owner.radius);
 
     owner.myWorld.addObject(bullet);
@@ -232,6 +252,7 @@ class Rifle extends Weapon {
 
   void _fire(Timer timer) {
     var bullet = owner.myWorld.bullets.getBullet()
+      ..as(BulletType.BULLET)
       ..init(owner.x, owner.y, owner.orientation, owner.radius);
 
     owner.myWorld.addObject(bullet);
@@ -248,22 +269,30 @@ class Rifle extends Weapon {
 class GrenadeLauncher extends Weapon {
 
   var name = "Grenade Launcher";
+  bool _pressed = false;
 
   GrenadeLauncher(owner):super(owner) {
     weaponType = WeaponType.GRENADE_LAUNCHER;
+    ammo = 10;
   }
 
   void fire() {
     isFiring = false;
-    print ("firing $name");
-    var grenade = new Grenade(10,300,owner.orientation,5)
-        ..x = owner.x
-        ..y = owner.y
-        ..startX = owner.x
-        ..startY = owner.y;
+    if (_pressed || owner.life == 0) return;
 
-    owner.myWorld.addObject(grenade);
+    _pressed = true;
+    print ("firing $name");
+    var bullet = owner.myWorld.bullets.getBullet()
+      ..as(BulletType.GRENADE)
+      ..init(owner.x, owner.y, owner.orientation, owner.radius);
+
+    owner.myWorld.addObject(bullet);
     isFiring = true;
+  }
+
+  void stop() {
+    _pressed = false;
+    isFiring = false;
   }
 }
 

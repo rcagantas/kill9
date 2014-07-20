@@ -6,7 +6,8 @@ class World {
   List _removals = new List();
   Map _listeners = new Map();
   Map<int, Frame> _playerFrames = new Map();
-  BulletFactory bullets = new BulletFactory(200);
+  Map<int, AmmoBehavior> _bulletBehaviors = new Map();
+  BulletFactory bullets;
 
   int _tileWidth;
   int _worldWidth;
@@ -18,6 +19,10 @@ class World {
     this.grid = grid;
     _worldWidth = grid.width() * grid.tileWidth();
     _worldHeight = grid.height() * grid.tileWidth();
+
+    _bulletBehaviors[BulletType.BULLET] = new BulletBehavior();
+    _bulletBehaviors[BulletType.GRENADE] = new GrenadeBehavior();
+    bullets = new BulletFactory(200, _bulletBehaviors);
   }
 
   void start() {
@@ -96,6 +101,7 @@ class World {
           visiObj.weaponType = obj.weapon.weaponType;
           visiObj.weaponAmmo = obj.weapon.ammo;
         } else if (obj is Bullet) {
+          visiObj.type = obj.type;
           visiObj.hitActor = obj.hitActor;
           visiObj.hitObject = obj.hitObject;
           visiObj.timedOut = obj.timedOut;

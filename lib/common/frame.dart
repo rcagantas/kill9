@@ -15,6 +15,7 @@ class ActorInFrame extends ObjectInFrame {
 }
 
 class BulletInFrame extends ObjectInFrame {
+  int type;
   bool hitObject = false;
   bool hitActor = false;
   bool timedOut = false;
