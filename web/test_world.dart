@@ -6,14 +6,14 @@ import 'package:giggl/gglclient.dart';
 import 'package:giggl/gglworld.dart';
 import 'package:giggl/gglcommon.dart';
 
-Arena client;
+Arena arena;
 InputHandler io;
 PlayerSprite p1;
 Actor player1;
 
-Map<int, PlayerSprite> otherPs = new Map();
-Map<int, Actor> otherAs = new Map();
-Map<int, BulletSprite> realBullets = new Map();
+Map<int, PlayerSprite> players = new Map();
+Map<int, Actor> actors = new Map();
+Map<int, BulletSprite> bullets = new Map();
 
 List<int> visible = new List();
 List<RandomWalker> walkers = new List();
@@ -22,12 +22,12 @@ void main() {
   ResourceHandler.init();
   resMgr.load().then((_) {
     renderLoop.addStage(stage);
-    client = new Arena();
+    arena = new Arena();
     num width = 20;
     num height = 20;
     var surfaceList = MapGenerator.createSimpleRandomSurface(width, height);
-    client.createMap(width, height, surfaceList);
-    p1 = client.p1;
+    arena.createMap(width, height, surfaceList);
+    p1 = arena.p1;
     p1.move(1000, 1000);
 
     var grid = new Grid.surface(width, height, 100, surfaceList);
@@ -41,39 +41,39 @@ void main() {
     for (int i=1; i<5; i++) {
       var p = new PlayerSprite()
       ..move(850 + (i*50) , 900 )
-      ..addTo(client.playerPanel)
+      ..addTo(arena.playerPanel)
       ..nameDisplay.text = Bots.names[i - 1];
 
       var actor = world.addPlayerandGetReference()
           ..x = 850 + (i*50)
           ..y = 900;
 
-      otherPs[actor.hashCode] = p;
-      otherAs[actor.hashCode] = actor;
+      players[actor.hashCode] = p;
+      actors[actor.hashCode] = actor;
     }
 
     for (int i=1; i<6; i++) {
       var p = new PlayerSprite()
       ..move(800 + (i*50) , 1000 )
-      ..addTo(client.playerPanel)
+      ..addTo(arena.playerPanel)
       ..nameDisplay.text = Bots.names[3 + i];
 
       var actor = world.addPlayerandGetReference()
           ..x = 800 + (i*50)
           ..y = 1000;
 
-      otherPs[actor.hashCode] = p;
-      otherAs[actor.hashCode] = actor;
+      players[actor.hashCode] = p;
+      actors[actor.hashCode] = actor;
     }
 
     world.bullets.getBulletList().forEach((id) {
-      realBullets[id] = new BulletSprite()
-      ..addTo(client.playerPanel)
+      bullets[id] = new BulletSprite()
+      ..addTo(arena.playerPanel)
       ..visible = false;
     });
 
     p1.removeFromParent();
-    p1.addTo(client.playerPanel);
+    p1.addTo(arena.playerPanel);
 
     world.addPlayerFrameListener(player1.hashCode, updateFrame);
     world.start();
@@ -85,20 +85,20 @@ void main() {
     io = new InputHandler();
 
 
-    otherAs.forEach((k,v) {
+    actors.forEach((k,v) {
        new RandomWalker(v)
         ..start();
     });
 
 
-    otherPs[player1.hashCode] = p1;
-    otherAs[player1.hashCode] = player1;
+    players[player1.hashCode] = p1;
+    actors[player1.hashCode] = player1;
 
     stage.onEnterFrame.listen((EnterFrameEvent e) {
       int count = 0;
 
 
-      otherPs.values.forEach((p) {
+      players.values.forEach((p) {
         if (p.hp == 0) count = count + 1;
       });
       if (count < 9) {
@@ -160,12 +160,12 @@ void onMouseMove(MouseEvent e) {
 }
 
 void updateFrame (Frame p) {
-  client.move(-p.topX, -p.topY);
+  arena.move(-p.topX, -p.topY);
   visible.clear();
 
   p.visibleObjects.forEach((object) {
-    if (otherPs.containsKey(object.id)) {
-      var player = otherPs[object.id]
+    if (players.containsKey(object.id)) {
+      var player = players[object.id]
         ..move(object.x, object.y)
         ..turn(object.orientation)
         ..modHitPoints(object.lifeRatio, object.damageFrom)
@@ -174,20 +174,20 @@ void updateFrame (Frame p) {
       if (object.isFiring) player.fire();
       visible.add(object.id);
     }
-    else if (realBullets.containsKey(object.id)) {
-      realBullets[object.id].x = object.x;
-      realBullets[object.id].y = object.y;
-      realBullets[object.id].rotation = object.orientation;
-      if (object.hitObject) realBullets[object.id].explode();
+    else if (bullets.containsKey(object.id)) {
+      bullets[object.id].x = object.x;
+      bullets[object.id].y = object.y;
+      bullets[object.id].rotation = object.orientation;
+      if (object.hitObject) bullets[object.id].explode();
       visible.add(object.id);
     }
   });
 
-  otherPs.forEach((x,v) {
+  players.forEach((x,v) {
     v.visible = visible.contains(x);
   });
 
-  realBullets.forEach((x,v) {
+  bullets.forEach((x,v) {
     v.visible = visible.contains(x);
   });
 }
