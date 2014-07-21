@@ -38,6 +38,37 @@ class BulletBehavior implements AmmoBehavior {
 }
 
 class GrenadeBehavior implements AmmoBehavior {
+
+  void doAOEDamage(Bullet bullet, Map objects, num elapsedTime) {
+    WorldObject ref = new WorldObject(300,0,0);
+    ref.x = bullet.x;
+    ref.y = bullet.y;
+    ref.xVelocity = bullet.xVelocity;
+    ref.yVelocity = bullet.yVelocity;
+
+    objects.forEach((key,object) {
+      if (!(object is Actor)) {}
+      else if (object is Actor && object.life == 0) {}
+      else  {
+        // 300 aoe
+        ref.radius = 300;
+        if (ref.willBump(object, elapsedTime)) {
+          (object as Actor).takeDamage(GrenadeProps.DAMAGE, bullet.orientation);
+          //200 aoe
+          ref.radius = 200;
+          if (ref.willBump(object, elapsedTime)) {
+            (object as Actor).takeDamage(GrenadeProps.DAMAGE, bullet.orientation);
+            //100 aoe
+            ref.radius = 100;
+            if (ref.willBump(object, elapsedTime)) {
+              (object as Actor).takeDamage(GrenadeProps.DAMAGE, bullet.orientation);
+            }
+          }
+        }
+      }
+    });
+  }
+
   void applyPhysics(Bullet bullet, num elapsedTime, Map objects) {
 
     // expired?
@@ -49,25 +80,41 @@ class GrenadeBehavior implements AmmoBehavior {
       bullet.expired = true;
       bullet.hitObject = true;
       bullet.timedOut = true;
-
-      return;
     }
 
-    // bumped walls?
-
-    var p1 = new math.Point(bullet.x,bullet.y);
-    var p2 = new math.Point(bullet.startX,bullet.startY);
-
-    var newLoc = bullet.projectLocation(elapsedTime);
-
-    if (bullet.myWorld.grid.bumpLeft(newLoc.x, bullet.y, bullet.radius) ||
-        bullet.myWorld.grid.bumpRight(newLoc.x, bullet.y, bullet.radius)) {
-      bullet.xVelocity = -bullet.xVelocity;
+    if(!bullet.expired) {
+      objects.forEach((key,object) {
+        if (key != this.hashCode && object is Actor) {
+          if (object is Actor && object.life == 0) {}
+          else if (bullet.willBump(object, elapsedTime)) {
+            print ("Player $key is hit");
+            bullet.expired = true;
+            bullet.hitObject = true;
+          }
+        }
+      });
     }
 
-    if (bullet.myWorld.grid.bumpTop(bullet.x, newLoc.y, bullet.radius) ||
-        bullet.myWorld.grid.bumpBottom(bullet.x, newLoc.y, bullet.radius)) {
-      bullet.yVelocity = -bullet.yVelocity;
+    if(!bullet.expired) {
+
+      // bumped walls?
+
+      var p1 = new math.Point(bullet.x,bullet.y);
+      var p2 = new math.Point(bullet.startX,bullet.startY);
+
+      var newLoc = bullet.projectLocation(elapsedTime);
+
+      if (bullet.myWorld.grid.bumpLeft(newLoc.x, bullet.y, bullet.radius) ||
+          bullet.myWorld.grid.bumpRight(newLoc.x, bullet.y, bullet.radius)) {
+        bullet.xVelocity = -bullet.xVelocity;
+      }
+
+      if (bullet.myWorld.grid.bumpTop(bullet.x, newLoc.y, bullet.radius) ||
+          bullet.myWorld.grid.bumpBottom(bullet.x, newLoc.y, bullet.radius)) {
+        bullet.yVelocity = -bullet.yVelocity;
+      }
+    } else {
+      doAOEDamage(bullet, objects, elapsedTime);
     }
   }
 }

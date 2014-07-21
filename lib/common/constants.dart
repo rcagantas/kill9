@@ -42,7 +42,7 @@ class BulletProps {
 class GrenadeProps {
   static const num RADIUS = 4;
   static const num SPEED = 300;
-  static const num DAMAGE = 20;
+  static const num DAMAGE = 10;
   static const num EXPIRE_SEC = 2;
 }
 
