@@ -1,16 +1,16 @@
-import 'dart:html';
+part of gglclient;
 
 class NetClient {
-  WebSocket socket;
+  html.WebSocket socket;
   String uri;
   int port;
   NetClient(this.uri, this.port) {
-    socket = new WebSocket("ws://${uri}:${port}/ws");
+    socket = new html.WebSocket("ws://${uri}:${port}/ws");
   }
 
   void send(String message) {
     if (socket == null ||
-        socket.readyState != WebSocket.OPEN) {
+        socket.readyState != html.WebSocket.OPEN) {
       return;
     }
     socket.send(message);

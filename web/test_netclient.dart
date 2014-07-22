@@ -1,5 +1,5 @@
-import 'package:giggl/client/net_client.dart';
 import 'dart:html' as html;
+import 'package:giggl/gglclient.dart';
 
 var text = html.querySelector('#text');
 
