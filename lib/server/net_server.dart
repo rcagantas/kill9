@@ -1,70 +1,38 @@
 part of gglserver;
 
 class NetServer {
-  String _hostname;
-  int _port;
-  var _serverListener;
-  var _serverWriter;
-  Map<int,WebSocket> _mapClients = new Map();
-  Timer pinger = null;
+  String address;
+  int port;
+  Function addClient, readyCallback, playerInput;
+  Map<int, WebSocket> players = new Map();
 
-  NetServer(String hostname, int port, var addClient, var serverListener, var serverWriter) {
-    _hostname = hostname;
-    _port = port;
-    _serverListener = serverListener;
-    _serverWriter = serverWriter;
-
-    // each Game server starts a new Host
+  NetServer(this.address, this.port, this.addClient, this.readyCallback) {
     HttpServer
-      .bind(hostname, port)
+      .bind(address, port)
       .then((server) {
-        server.listen((req) {
-          if (req.uri.path == '/ws') {
-            WebSocketTransformer.upgrade(req).then((websocket) {
-              // getId for client and add to map
-              int clientId = addClient();
-              _mapClients[clientId] = websocket;
-
-              _mapClients[clientId].listen(_readMessage);
-
-              // inform client of its clientId
-              String msg = 'clientId=$clientId';
-              _mapClients[clientId].add(msg);
-            });
+        server.listen((HttpRequest request) {
+          if (request.uri.path == "/ws") {
+            WebSocketTransformer
+              .upgrade(request)
+              .then(_addPlayer);
           }
         });
-      });
-      // add catchError!
-
-      // ticker to writeout message, every duration tick
-      if (pinger == null) {
-        pinger = new Timer(new Duration(seconds: 10), _writeMessage);
-      }
-  }
-
-  void _readMessage(String msg) {
-    // do parsing and pass to callback function
-    //_serverListener(data);
-
-    print('debug received $msg');
-  }
-
-  void send(int clientId, var data) {
-    //convert data to String
-    //_writeMessage(_mapClients[clientId], msg);
-  }
-
-  void _writeMessage() {
-    // Loop thru all clients, and try to send a data
-    //_serverWriter(data)
-    //_mapClients[clientId].add(msg);
-
-    _mapClients.forEach((clientId,socket) {
-      //String msg = _serverWriter(clientId);
-      String msg = 'hello $clientId';
-      _mapClients[clientId].add(msg);
-      print('debug sending $msg');
     });
+  }
+
+  void _addPlayer(WebSocket websocket) {
+    if (addClient == null || readyCallback == null) return;
+    if (players.length == 10) return;
+    int id = addClient();
+    players[id] = websocket;
+    websocket.listen(receive);
+    websocket.add("id: ${id}");
+    if (players.length == 10) readyCallback();
+  }
+
+  void send(int id, String data) { players[id].add(data); }
+  void receive(String data) {
+    if (playerInput != null) playerInput(data);
   }
 }
 
