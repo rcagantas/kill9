@@ -33,6 +33,7 @@ class NetServer {
   void send(int id, String data) { players[id].add(data); }
   void receive(String data) {
     if (playerInput != null) playerInput(data);
+    print("$data");
   }
 }
 
