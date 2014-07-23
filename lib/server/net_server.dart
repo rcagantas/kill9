@@ -22,7 +22,7 @@ class NetServer {
 
   void _addPlayer(WebSocket websocket) {
     if (addClient == null || readyCallback == null) return;
-    if (players.length == 10) return;
+
     int id = addClient();
     players[id] = websocket;
     websocket.listen(receive);

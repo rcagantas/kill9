@@ -4,9 +4,15 @@ import 'package:giggl/gglclient.dart';
 var dbg = html.querySelector('#dbg_text');
 
 void main() {
-  NetClient client = new NetClient("127.0.0.1", 1024);
-  client.socket.onMessage.listen(appendDebug);
-  client.socket.onError.listen((e) => dbg.innerHtml = "error on connection.");
+  NetClient client;
+
+  html.querySelector("#join_game").onClick.listen((e) {
+    if (client != null) return;
+    client = new NetClient("127.0.0.1", 1024);client;
+    client.socket.onMessage.listen(appendDebug);
+    client.socket.onMessage.listen(appendDebug);
+    client.socket.onError.listen((e) => dbg.innerHtml = "error on connection.");
+  });
 
   html.querySelector("#create_bot").onClick.listen((e) {
     NetClient client = new NetClient("127.0.0.1", 1024);
