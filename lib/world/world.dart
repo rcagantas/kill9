@@ -61,6 +61,10 @@ class World {
     return newPlayer.hashCode;
   }
 
+  void addActor(Actor actor) {
+    addObject(actor);
+  }
+
 
   void removeObject(WorldObject object) {
     _removals.add(object);

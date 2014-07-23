@@ -3,10 +3,10 @@ part of gglserver;
 class NetServer {
   String address;
   int port;
-  Function addClient, readyCallback, playerInput;
+  Function playerInput, callRandomLobby;
   Map<int, WebSocket> players = new Map();
 
-  NetServer(this.address, this.port, this.addClient, this.readyCallback) {
+  NetServer(this.address, this.port) {
     HttpServer
       .bind(address, port)
       .then((server) {
@@ -14,27 +14,24 @@ class NetServer {
           if (request.uri.path == "/ws") {
             WebSocketTransformer
               .upgrade(request)
-              .then(_addPlayer);
+              .then(_listener);
           }
         });
     });
   }
 
-  void _addPlayer(WebSocket websocket) {
-    if (addClient == null || readyCallback == null) return;
-
-    int id = addClient();
-    print("[${players.length}] player ${id}");
-    players[id] = websocket;
-    websocket.listen(receive);
-    websocket.add("id: ${id}");
-    if (players.length % 10 == 0) readyCallback();
+  void _listener(WebSocket websocket) {
+    websocket.listen((e) {
+      if (e == CommRequest.JOIN_RANDOM) {
+        callRandomLobby(websocket);
+      } else if (playerInput != null) {
+        playerInput(e);
+      } else {
+        print("$e");
+      }
+    });
   }
 
   void send(int id, String data) { players[id].add(data); }
-  void receive(String data) {
-    if (playerInput != null) playerInput(data);
-    print("$data");
-  }
 }
 
