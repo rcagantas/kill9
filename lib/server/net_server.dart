@@ -24,10 +24,11 @@ class NetServer {
     if (addClient == null || readyCallback == null) return;
 
     int id = addClient();
+    print("[${players.length}] player ${id}");
     players[id] = websocket;
     websocket.listen(receive);
     websocket.add("id: ${id}");
-    if (players.length == 10) readyCallback();
+    if (players.length % 10 == 0) readyCallback();
   }
 
   void send(int id, String data) { players[id].add(data); }
