@@ -8,16 +8,15 @@ void main() {
   client.socket.onMessage.listen(updateMessage);
   client.socket.onError.listen(errorMessage);
 
-  var addDummyBtn = html.querySelector("#addDummy");
-  addDummyBtn.onClick.listen((event) {
+  html.querySelector("#create_bot").onClick.listen((e) {
     NetClient client = new NetClient("127.0.0.1", 1024);
     client.socket.onMessage.listen(updateMessage);
   });
 
-  var sendDummyBtn = html.querySelector("#sendDummy");
-  sendDummyBtn.onClick.listen((event) {
-    text.innerHtml += "trying to send data</br>";
-    client.socket.send("dummy data");
+  html.querySelector("#text_data").onKeyDown.listen((e) {
+    if (e.keyCode != 13) return;
+    text.innerHtml += "sending: ${e.target.value}</br>";
+    client.socket.send("${e.target.value}");
   });
 }
 
