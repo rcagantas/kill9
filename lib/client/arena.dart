@@ -12,7 +12,6 @@ class Arena extends DisplayObjectContainer {
   MiniMap miniMap;
 
   Arena() {
-    ResourceHandler.init();
     this.addTo(stage);
   }
 

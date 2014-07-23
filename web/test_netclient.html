@@ -7,12 +7,14 @@
     <link rel="stylesheet" href="simple.css">
   </head>
 
-  </head>
-
   <body>
+    <h1>Giggl Net Test</h1>
+    <button id="join_game">join game</button>
+    <button id="create_game">create game</button>
     <button id="create_bot">create bot</button>
     <p><input type="text" id="text_data" maxlength="15"></p>
-    <div id="text"></div>
+    <canvas id="gglstage" width="640" height="480"></canvas>
+    <div id="dbg_text"></div>
     <script type="application/dart" src="test_netclient.dart"></script>
     <!-- for this next line to work, your pubspec.yaml file must have a dependency on 'browser' -->
     <script src="packages/browser/dart.js"></script>
