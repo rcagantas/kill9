@@ -3,7 +3,7 @@ part of gglserver;
 class NetServer {
   String address;
   int port;
-  Function playerInput, callRandomLobby;
+  Function cbPlayerInput, cbAddPlayer, cbWorldId;
   Map<int, WebSocket> players = new Map();
 
   NetServer(this.address, this.port) {
@@ -23,9 +23,12 @@ class NetServer {
   void _listener(WebSocket websocket) {
     websocket.listen((e) {
       if (e == CommRequest.JOIN_RANDOM) {
-        callRandomLobby(websocket);
-      } else if (playerInput != null) {
-        playerInput(e);
+        int i = cbAddPlayer();
+        players[i] = websocket;
+        send(i, CommRequest.GAME_ID + "${cbWorldId()}");
+        send(i, CommRequest.PLAYER_ID + "${i}");
+      } else if (cbPlayerInput != null) {
+        cbPlayerInput(e);
       } else {
         print("$e");
       }

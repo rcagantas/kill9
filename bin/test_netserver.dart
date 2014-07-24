@@ -13,14 +13,8 @@ void main() {
   var world = new World(grid);
 
   print("waiting for players");
-  net.callRandomLobby = (websocket) {
-    int i = world.addPlayer();
-    net.players[i] = websocket;
-    // send everyone the game id
-    net.send(i, CommRequest.GAME_ID + "${world.hashCode}");
-    net.send(i, CommRequest.PLAYER_ID + "${i}");
-    print("adding player ${i}");
-  };
+  net.cbWorldId = () { return world.hashCode; };
+  net.cbAddPlayer = () { return world.addPlayer(); };
 
   // STEP 2: Publish initializing data to client
   // 1. publish map detail to client
