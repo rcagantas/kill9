@@ -13,7 +13,11 @@ void main() {
   });
 
   html.querySelector("#create_bot").onClick.listen((e) {
-    client.joinRandomGame();
+    NetClient client = new NetClient("127.0.0.1", 1024);
+    client.socket.onOpen.listen((e) {
+      client.joinRandomGame();
+      client.socket.onMessage.listen(appendDebug);
+    });
   });
 
   html.querySelector("#text_data").onKeyDown.listen((e) {

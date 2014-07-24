@@ -28,6 +28,7 @@ class BulletBehavior implements AmmoBehavior {
           bullet.myWorld.grid.bumpBottom(newPos.x, newPos.y, bullet.radius));
       bullet.hitObject = bullet.expired? true: false;
     }
+
     //reached max distance?
     if (!bullet.expired) {
       var p2 = new math.Point(bullet.startX,bullet.startY);

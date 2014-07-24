@@ -4,7 +4,7 @@ class NetClient {
   html.WebSocket socket;
   String uri;
   int port;
-  int gameId;
+  int gameId = 0;
 
   NetClient(this.uri, this.port) {
     socket = new html.WebSocket("ws://${uri}:${port}/ws");
@@ -12,6 +12,7 @@ class NetClient {
   }
 
   void joinRandomGame() {
+    if (gameId == 0)
     socket.send(CommRequest.JOIN_RANDOM);
   }
 
@@ -21,7 +22,7 @@ class NetClient {
 
   void onData(html.MessageEvent event) {
     String message = event.data;
-    if (message.startsWith(CommRequest.GAME_ID)) {
+    if (message.startsWith(CommRequest.GAME_ID) && gameId == 0) {
       gameId = int.parse(message.replaceFirst(CommRequest.GAME_ID, ""));
     }
   }
