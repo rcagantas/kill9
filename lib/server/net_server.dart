@@ -24,6 +24,7 @@ class NetServer {
     websocket.listen((e) {
       if (e == CommRequest.JOIN_RANDOM) {
         int i = cbAddPlayer();
+        if (i == 0) return;
         players[i] = websocket;
         send(i, CommRequest.GAME_ID + "${cbWorldId()}");
         send(i, CommRequest.PLAYER_ID + "${i}");
