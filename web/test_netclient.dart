@@ -25,8 +25,9 @@ void main() {
 
   html.querySelector("#text_data").onKeyDown.listen((e) {
     if (e.keyCode != 13) return;
-    dbg.innerHtml += "sending: ${e.target.value}</br>";
+    dbg.innerHtml = "sending: ${e.target.value}</br>";
     client.socket.send("${e.target.value}");
+    e.target.value = "";
   });
 
   ResourceHandler.init();

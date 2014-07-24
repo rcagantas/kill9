@@ -43,10 +43,11 @@ class Arena extends DisplayObjectContainer {
       }
     }
 
+    /*
     p1 = new PlayerSprite()
       ..move(stage.stageWidth/2, stage.stageHeight/2)
       ..addTo(playerPanel)
-      ..nameDisplay.text = "";
+      ..nameDisplay.text = "";*/
 
     playerPanel.addTo(this);
     walls.addTo(this);

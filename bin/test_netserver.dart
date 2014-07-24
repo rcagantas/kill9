@@ -16,7 +16,9 @@ void main() {
   print("waiting for players");
   net.cbWorldId = () { return world.hashCode; };
   net.cbAddPlayer = () { return world.addPlayer(); };
+  bool started = false;
   world.onReady = () {
+    if (started) return;
     // STEP 2: Publish initializing data to client
     for (Actor a in world.actors) {
       // 1. publish map detail to client
@@ -24,6 +26,7 @@ void main() {
       // 2. publish all object ids to client (players/bullets/etc)
     }
     // at this point everyone is connected;
+    started = true;
   };
 
 

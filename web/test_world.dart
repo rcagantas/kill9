@@ -27,8 +27,8 @@ void main() {
     num height = 20;
     var surfaceList = MapGenerator.createSimpleRandomSurface(width, height);
     arena.createMap(width, height, surfaceList);
-    p1 = arena.p1;
-    p1.move(1000, 1000);
+    //p1 = arena.p1;
+    //p1.move(1000, 1000);
 
     var grid = new Grid.surface(width, height, 100, surfaceList);
 
@@ -37,6 +37,11 @@ void main() {
     player1 = world.addPlayerandGetReference()
       ..x = 850
       ..y = 900;
+
+    p1 = new PlayerSprite()
+      ..move(player1.x, player1.y)
+      ..addTo(arena.playerPanel);
+    arena.p1 = p1;
 
     for (int i=1; i<5; i++) {
       var p = new PlayerSprite()
