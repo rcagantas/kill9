@@ -65,10 +65,11 @@ class Bots {
        'Iceiceice bot'];
 }
 
-class CommRequest {
+class Comm {
   static const String JOIN_RANDOM = "ggl_game_random";
   static const String JOIN_GAME = "ggl_game_join:";
   static const String CREATE_GAME = "ggl_game_create";
   static const String GAME_ID = "ggl_id_game:";
   static const String PLAYER_ID = "ggl_id_player:";
+  static const String SURFACE = "ggl_surface:";
 }

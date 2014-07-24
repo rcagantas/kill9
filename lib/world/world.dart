@@ -5,9 +5,11 @@ class World {
   Map _objects = new Map();
   List _removals = new List();
   Map _listeners = new Map();
+  List<Actor> actors = new List();
   Map<int, Frame> _playerFrames = new Map();
   Map<int, AmmoBehavior> _bulletBehaviors = new Map();
   BulletFactory bullets;
+  Function onReady;
 
   int _tileWidth;
   int _worldWidth;
@@ -56,9 +58,15 @@ class World {
   }
 
   int addPlayer() {
-    var newPlayer = new Actor();
-    addObject(newPlayer);
-    return newPlayer.hashCode;
+    if (actors.length < 10) {
+      var newPlayer = new Actor();
+      addObject(newPlayer);
+      actors.add(newPlayer);
+      print("${actors.length} ${newPlayer.hashCode}");
+      return newPlayer.hashCode;
+    }
+    onReady();
+    return 0;
   }
 
   void removeObject(WorldObject object) {

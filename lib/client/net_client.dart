@@ -13,17 +13,17 @@ class NetClient {
 
   void joinRandomGame() {
     if (gameId == 0)
-    socket.send(CommRequest.JOIN_RANDOM);
+    socket.send(Comm.JOIN_RANDOM);
   }
 
   void joinCustomGame(int gameId) {
-    socket.send(CommRequest.JOIN_GAME + "${gameId}");
+    socket.send(Comm.JOIN_GAME + "${gameId}");
   }
 
   void onData(html.MessageEvent event) {
-    String message = event.data;
-    if (message.startsWith(CommRequest.GAME_ID) && gameId == 0) {
-      gameId = int.parse(message.replaceFirst(CommRequest.GAME_ID, ""));
+    String s = event.data;
+    if (s.startsWith(Comm.GAME_ID) && gameId == 0) {
+      gameId = int.parse(s.replaceFirst(Comm.GAME_ID, ""));
     }
   }
 }

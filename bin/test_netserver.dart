@@ -1,6 +1,7 @@
 import 'package:giggl/gglworld.dart';
 import 'package:giggl/gglcommon.dart';
 import 'package:giggl/gglserver.dart';
+import 'dart:convert';
 
 void main() {
   // STEP 1: Wait for connection
@@ -15,12 +16,16 @@ void main() {
   print("waiting for players");
   net.cbWorldId = () { return world.hashCode; };
   net.cbAddPlayer = () { return world.addPlayer(); };
+  world.onReady = () {
+    // STEP 2: Publish initializing data to client
+    for (Actor a in world.actors) {
+      // 1. publish map detail to client
+      net.send(a.hashCode, Comm.SURFACE + JSON.encode(surfaceList));
+      // 2. publish all object ids to client (players/bullets/etc)
+    }
+    // at this point everyone is connected;
+  };
 
-  // STEP 2: Publish initializing data to client
-  // 1. publish map detail to client
-  // 2. publish all object ids to client (players/bullets/etc)
-
-  // at this point everyone is connected;
 
   // STEP 3: Start game
 
