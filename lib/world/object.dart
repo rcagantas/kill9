@@ -29,9 +29,10 @@ class WorldObject {
 
   WorldObject (this.radius,this.speed, this.turnRate);
 
-  math.Point projectLocation(elapsedTime)
-  {
-    return new math.Point(x + xVelocity * elapsedTime, y + yVelocity * elapsedTime);
+  math.Point projectLocation(elapsedTime) {
+    return new math.Point(
+        x + xVelocity * elapsedTime,
+        y + yVelocity * elapsedTime);
   }
 
   void doPhysics(num elapsedTime, Map objects) {

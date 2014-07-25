@@ -121,65 +121,65 @@ class GrenadeBehavior implements AmmoBehavior {
 }
 
 class Bullet extends WorldObject {
-   int type;
-   num maxDistance;
-   num expireTime;
-   num startX, startY;
-   bool expired = false;
-   bool hitObject = false, hitActor = false, timedOut = false;
-   int damage;
-   Map behaviors;
+  int _type;
+  num maxDistance;
+  num expireTime;
+  num startX, startY;
+  bool expired = false;
+  bool hitObject = false, hitActor = false, timedOut = false;
+  int damage;
+  Map behaviors;
 
-   Bullet():super(BulletProps.RADIUS,BulletProps.SPEED,0);
+  Bullet():super(BulletProps.RADIUS,BulletProps.SPEED,0);
 
-   as(int bulletType) {
+  void set type(int bulletType) {
     if (bulletType == BulletType.GRENADE) {
       radius = GrenadeProps.RADIUS;
       speed = GrenadeProps.SPEED;
       damage = GrenadeProps.DAMAGE;
       expireTime = GrenadeProps.EXPIRE_SEC;
-      type = BulletType.GRENADE;
+      _type = BulletType.GRENADE;
     } else if (bulletType == BulletType.ROCKET) {
-      type = BulletType.GRENADE;
+      _type = BulletType.GRENADE;
     } else {
       // default to regular bullets
       radius = BulletProps.RADIUS;
       speed = BulletProps.SPEED;
       damage = BulletProps.DAMAGE;
       maxDistance = BulletProps.DISTANCE;
-      type = BulletType.BULLET;
+      _type = BulletType.BULLET;
     }
-   }
+  }
 
-   void init(num x, num y, num orientation, num radius) {
-     xVelocity = speed * math.sin(orientation);
-     yVelocity = -speed * math.cos(orientation);
-     this.x = x + (radius * math.sin(orientation));
-     this.y = y - (radius * math.cos(orientation));
-     this.orientation = orientation;
-     this.startX = this.x;
-     this.startY = this.y;
-     hitObject =
-     hitActor =
-     timedOut =
-     expired = false;
-   }
+  num get type { return _type; }
 
-   void doPhysics(num elapsedTime, Map objects) {
-      AmmoBehavior behavior = behaviors[type];
+  void init(num x, num y, num orientation, num radius) {
+    xVelocity = speed * math.sin(orientation);
+    yVelocity = -speed * math.cos(orientation);
+    this.x = x + (radius * math.sin(orientation));
+    this.y = y - (radius * math.cos(orientation));
+    this.orientation = orientation;
+    this.startX = this.x;
+    this.startY = this.y;
+    hitObject =
+    hitActor =
+    timedOut =
+    expired = false;
+  }
 
-      behavior.applyPhysics(this, elapsedTime, objects);
-   }
+  void doPhysics(num elapsedTime, Map objects) {
+    AmmoBehavior behavior = behaviors[type];
+    behavior.applyPhysics(this, elapsedTime, objects);
+  }
 
-   void update(elapsedTime) {
-     if (!expired) {
-       super.update(elapsedTime);
-     }
-     else {
-       myWorld.bullets.putBullet(this);
-       myWorld.removeObject(this);
-     }
-   }
+  void update(elapsedTime) {
+    if (!expired) {
+      super.update(elapsedTime);
+    } else {
+      myWorld.bullets.putBullet(this);
+      myWorld.removeObject(this);
+    }
+  }
 }
 
 class BulletFactory {
@@ -255,7 +255,7 @@ class Pistol extends Weapon {
     _pressed = true;
     print ("firing $name");
     var bullet = owner.myWorld.bullets.getBullet()
-      ..as(BulletType.BULLET)
+      ..type = BulletType.BULLET
       ..init(owner.x, owner.y, owner.orientation, owner.radius);
 
     owner.myWorld.addObject(bullet);
@@ -300,7 +300,7 @@ class Rifle extends Weapon {
 
   void _fire(Timer timer) {
     var bullet = owner.myWorld.bullets.getBullet()
-      ..as(BulletType.BULLET)
+      ..type = BulletType.BULLET
       ..init(owner.x, owner.y, owner.orientation, owner.radius);
 
     owner.myWorld.addObject(bullet);
@@ -331,7 +331,7 @@ class GrenadeLauncher extends Weapon {
     _pressed = true;
     print ("firing $name");
     var bullet = owner.myWorld.bullets.getBullet()
-      ..as(BulletType.GRENADE)
+      ..type = BulletType.GRENADE
       ..init(owner.x, owner.y, owner.orientation, owner.radius);
 
     owner.myWorld.addObject(bullet);
