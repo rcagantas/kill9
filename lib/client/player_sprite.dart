@@ -270,15 +270,13 @@ class PlayerSprite extends DisplayObjectContainer {
     num time = 0.02;
     List<Tween> pull = [];
     pull.add(new Tween(torso, time, TransitionFunction.linear)..animate.y.to(3));
-    for (String w in weaponNames)
-      pull.add(new Tween(weapons[w], time, TransitionFunction.linear)..animate.y.to(3));
+    pull.add(new Tween(weapons[weapon], time, TransitionFunction.linear)..animate.y.to(3));
     AnimationGroup fireAniPull = new AnimationGroup();
     for (Tween t in pull) fireAniPull.add(t);
 
     List<Tween> push = [];
     push.add(new Tween(torso, time, TransitionFunction.linear)..animate.y.to(0));
-    for (String w in weaponNames)
-      push.add(new Tween(weapons[w], time, TransitionFunction.linear)..animate.y.to(0));
+    push.add(new Tween(weapons[weapon], time, TransitionFunction.linear)..animate.y.to(0));
     AnimationGroup fireAniPush = new AnimationGroup();
     for (Tween t in push) fireAniPush.add(t);
 
