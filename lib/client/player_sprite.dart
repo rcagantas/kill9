@@ -265,9 +265,9 @@ class PlayerSprite extends DisplayObjectContainer {
     return false;
   }
 
-  void firingAnimation() {
-    num time = 0.15;
-    Function transition = (num ratio) => 3.0 * (ratio < 0.5? ratio : 1.0 - ratio);
+  void firingAnimation1() {
+    num time = .2;
+    var transition = TransitionFunction.sine;
 
     AnimationGroup fireAni = new AnimationGroup();
     fireAni.add(new Tween(torso, time, transition)..animate.y.to(3));
@@ -277,25 +277,22 @@ class PlayerSprite extends DisplayObjectContainer {
     stage.juggler.add(fireAni);
   }
 
-  void firingAnimation1() {
+  void firingAnimation() {
     num time = 0.02;
-    List<Tween> pull = [];
+
+    AnimationGroup pull = new AnimationGroup();
     pull.add(new Tween(torso, time, TransitionFunction.linear)..animate.y.to(3));
     pull.add(new Tween(weapons[weapon], time, TransitionFunction.linear)..animate.y.to(3));
-    AnimationGroup fireAniPull = new AnimationGroup();
-    for (Tween t in pull) fireAniPull.add(t);
 
-    List<Tween> push = [];
+    AnimationGroup push = new AnimationGroup();
     push.add(new Tween(torso, time, TransitionFunction.linear)..animate.y.to(0));
     push.add(new Tween(weapons[weapon], time, TransitionFunction.linear)..animate.y.to(0));
-    AnimationGroup fireAniPush = new AnimationGroup();
-    for (Tween t in push) fireAniPush.add(t);
 
     AnimationChain fireAni = new AnimationChain();
-    fireAniPull.delay = time;
-    fireAni.add(fireAniPull);
-    fireAniPush.delay = time;
-    fireAni.add(fireAniPush);
+    pull.delay = time;
+    fireAni.add(pull);
+    push.delay = time;
+    fireAni.add(push);
     fireAni.onStart = () => _animatingFiring = true;
     fireAni.onComplete = () => _animatingFiring = false;
     stage.juggler.add(fireAni);
