@@ -163,7 +163,6 @@ class PlayerSprite extends DisplayObjectContainer {
       ..animate.scaleX.to(scale1)
       ..animate.scaleY.to(scale1 + 5)
       ..animate.rotation.to(rand.nextDouble());
-    poolAni.onComplete = () => stage.juggler.remove(poolAni);
     stage.juggler.add(poolAni);
   }
 
@@ -267,6 +266,18 @@ class PlayerSprite extends DisplayObjectContainer {
   }
 
   void firingAnimation() {
+    num time = 0.15;
+    Function transition = (num ratio) => 3.0 * (ratio < 0.5? ratio : 1.0 - ratio);
+
+    AnimationGroup fireAni = new AnimationGroup();
+    fireAni.add(new Tween(torso, time, transition)..animate.y.to(3));
+    fireAni.add(new Tween(weapons[weapon], time, transition)..animate.y.to(3));
+    fireAni.onStart = () => _animatingFiring = true;
+    fireAni.onComplete = () => _animatingFiring = false;
+    stage.juggler.add(fireAni);
+  }
+
+  void firingAnimation1() {
     num time = 0.02;
     List<Tween> pull = [];
     pull.add(new Tween(torso, time, TransitionFunction.linear)..animate.y.to(3));
@@ -286,10 +297,7 @@ class PlayerSprite extends DisplayObjectContainer {
     fireAniPush.delay = time;
     fireAni.add(fireAniPush);
     fireAni.onStart = () => _animatingFiring = true;
-    fireAni.onComplete = () {
-      _animatingFiring = false;
-      stage.juggler.remove(fireAni);
-    };
+    fireAni.onComplete = () => _animatingFiring = false;
     stage.juggler.add(fireAni);
   }
 
