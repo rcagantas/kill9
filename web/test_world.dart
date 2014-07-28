@@ -67,7 +67,7 @@ void main() {
       actors[actor.hashCode] = actor;
     }
 
-    world.bullets.getBulletList().forEach((id) {
+    world.bullets.getBulletIter().forEach((id) {
       bullets[id] = new BulletSprite()
       ..addTo(arena.playerPanel)
       ..visible = false;

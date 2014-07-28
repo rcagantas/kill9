@@ -73,4 +73,5 @@ class Comm {
   static const String PLAYER_ID = "ggl_id_player:";
   static const String SURFACE = "ggl_surface:";
   static const String ACTORS = "ggl_actors:";
+  static const String BULLETS = "ggl_bullets:";
 }

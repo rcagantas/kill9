@@ -212,9 +212,8 @@ class BulletFactory {
     print("Returned: ${_bullets.length}");
   }
 
-  Iterable getBulletList()
-  {
-    return _bullets.map((e)=>e.hashCode);
+  Iterable getBulletIter() {
+    return _bullets.map((e) => e.hashCode);
   }
 }
 

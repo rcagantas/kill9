@@ -1,11 +1,13 @@
 import 'dart:html' as html;
 import 'package:giggl/gglclient.dart';
 import 'package:giggl/gglcommon.dart';
-import 'dart:convert';
 
 var dbg = html.querySelector('#dbg_text');
 Arena arena;
 NetClient client;
+Map<int, PlayerSprite> players = new Map();
+Map<int, BulletSprite> bullets = new Map();
+
 
 void main() {
   client = new NetClient("127.0.0.1", 1024);
@@ -55,7 +57,15 @@ void listener(html.MessageEvent event) {
     List<int> actorCodes = client.decodeData(s);
     for (int i in actorCodes) {
       PlayerSprite ps = new PlayerSprite()
-         ..addTo(arena.playerPanel);
+        ..addTo(arena.playerPanel);
+      players[i] = ps;
+    }
+  } else if (s.startsWith(Comm.BULLETS)) {
+    List<int> bulletCodes = new List();
+    for (int i in bulletCodes) {
+      BulletSprite bs = new BulletSprite()
+        ..addTo(arena.playerPanel);
+      bullets[i] = bs;
     }
   }
 }
