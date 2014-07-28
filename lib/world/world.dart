@@ -14,7 +14,7 @@ class World {
   int _tileWidth;
   int _worldWidth;
   int _worldHeight;
-  Timer _timer = null;
+  Timer _timer = null, _readyTimer = null;
   Stopwatch watch = new Stopwatch();
 
   World (grid) {
@@ -25,12 +25,18 @@ class World {
     _bulletBehaviors[BulletType.BULLET] = new BulletBehavior();
     _bulletBehaviors[BulletType.GRENADE] = new GrenadeBehavior();
     bullets = new BulletFactory(200, _bulletBehaviors);
+    _readyTimer = new Timer.periodic(new Duration(milliseconds: 10),
+      (timer) {
+        if (actors.length == 10) {
+          onReady();
+          _readyTimer.cancel();
+        }
+      });
   }
 
   void start() {
-    if (_timer == null){
+    if (_timer == null)
       _timer = new Timer.periodic(new Duration(milliseconds: 10), this._goRound);
-    }
   }
 
   void stop() {
@@ -65,7 +71,6 @@ class World {
       print("${actors.length} ${newPlayer.hashCode}");
       return newPlayer.hashCode;
     }
-    onReady();
     return 0;
   }
 
