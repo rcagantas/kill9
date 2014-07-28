@@ -2,6 +2,7 @@ library gglclient;
 
 import 'dart:html' as html;
 import 'dart:math' as math;
+import 'dart:convert';
 import 'package:stagexl/stagexl.dart';
 import 'package:stagexl_particle/stagexl_particle.dart';
 import 'package:giggl/gglcommon.dart';

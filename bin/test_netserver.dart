@@ -19,10 +19,14 @@ void main() {
   bool started = false;
   world.onReady = () {
     if (started) return;
+    List<int> actorCodes = new List();
+    for (Actor a in world.actors) actorCodes.add(a.hashCode);
+
     // STEP 2: Publish initializing data to client
     for (Actor a in world.actors) {
       // 1. publish map detail to client
       net.send(a.hashCode, Comm.SURFACE + JSON.encode(surfaceList));
+      net.send(a.hashCode, Comm.ACTORS + JSON.encode(actorCodes));
       // 2. publish all object ids to client (players/bullets/etc)
     }
     // at this point everyone is connected;

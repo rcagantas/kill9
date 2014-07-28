@@ -5,9 +5,19 @@ import 'dart:convert';
 
 var dbg = html.querySelector('#dbg_text');
 Arena arena;
+NetClient client;
 
 void main() {
-  NetClient client = new NetClient("127.0.0.1", 1024);
+  client = new NetClient("127.0.0.1", 1024);
+  handleButtons();
+  ResourceHandler.init();
+  resMgr.load().then((_) {
+    renderLoop.addStage(stage);
+    arena = new Arena();
+  });
+}
+
+void handleButtons() {
   client.socket.onMessage.listen(listener);
   client.socket.onError.listen((e) => dbg.innerHtml = "error on connection.");
 
@@ -29,12 +39,6 @@ void main() {
     client.socket.send("${e.target.value}");
     e.target.value = "";
   });
-
-  ResourceHandler.init();
-  resMgr.load().then((_) {
-    renderLoop.addStage(stage);
-    arena = new Arena();
-  });
 }
 
 void botListener(html.MessageEvent event) {
@@ -45,8 +49,13 @@ void listener(html.MessageEvent event) {
   dbg.innerHtml = "${event.data}</br>";
   String s = event.data;
   if (s.startsWith(Comm.SURFACE)) {
-    var str = s.replaceAll(Comm.SURFACE, "");
-    List<int> surface = JSON.decode(str);
+    List<int> surface = client.decodeData(s);
     arena.createMap(20, 20, surface);
+  } else if (s.startsWith(Comm.ACTORS)) {
+    List<int> actorCodes = client.decodeData(s);
+    for (int i in actorCodes) {
+      PlayerSprite ps = new PlayerSprite()
+         ..addTo(arena.playerPanel);
+    }
   }
 }

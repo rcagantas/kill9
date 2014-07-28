@@ -69,6 +69,7 @@ class World {
       var newPlayer = new Actor();
       addObject(newPlayer);
       actors.add(newPlayer);
+      spawnRandomly(newPlayer);
       print("${actors.length} ${newPlayer.hashCode}");
       return newPlayer.hashCode;
     }

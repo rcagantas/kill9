@@ -36,3 +36,8 @@ class Frame {
     return stringBuffer.toString();
   }
 }
+
+class CommandFrame {
+  int playerId, moveX, moveY;
+  bool fire, weaponCycle;
+}

@@ -26,4 +26,14 @@ class NetClient {
       gameId = int.parse(s.replaceFirst(Comm.GAME_ID, ""));
     }
   }
+
+  dynamic decodeData(String packet) {
+    var data;
+    if (packet.startsWith(Comm.SURFACE)) {
+      data = packet.replaceAll(Comm.SURFACE, "");
+    } else if (packet.startsWith(Comm.ACTORS)) {
+      data = packet.replaceAll(Comm.ACTORS, "");
+    }
+    return JSON.decode(data);
+  }
 }
