@@ -60,6 +60,7 @@ class World {
   Actor addPlayerandGetReference() {
     var newPlayer = new Actor();
     addObject(newPlayer);
+    spawnRandomly(newPlayer);
     return newPlayer;
   }
 
@@ -72,6 +73,23 @@ class World {
       return newPlayer.hashCode;
     }
     return 0;
+  }
+
+  void spawnRandomly(Actor actor) {
+    math.Random rand = new math.Random();
+    int loc = rand.nextInt(grid.surfaceList.length);
+    int count = 0;
+    for (int y = 0; y < grid.height(); y++) {
+      for (int x = 0; x < grid.width(); x++) {
+        if (count == loc) {
+          if (grid.surfaceList[count] == Surface.PASSABLE) {
+            actor.x = (x + 1) * grid.tileWidth() - grid.tileWidth()/2;
+            actor.y = (y + 1) * grid.tileWidth() - grid.tileWidth()/2;
+          }
+        }
+        count++;
+      }
+    }
   }
 
   void removeObject(WorldObject object) {

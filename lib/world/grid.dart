@@ -13,6 +13,7 @@ class Grid
 {
   Map _grid;
   int _width, _height, _tileWidth;
+  List<num> surfaceList;
 
   Grid(int width, int height, int tileWidth) {
     _width = width;
@@ -21,7 +22,7 @@ class Grid
     _tileWidth = tileWidth;
   }
 
-  Grid.surface(int width, int height, int tileWidth, List<num> surfaceList) {
+  Grid.surface(int width, int height, int tileWidth, this.surfaceList) {
     _width = width;
     _height = height;
     _grid = new Map();

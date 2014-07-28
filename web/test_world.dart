@@ -27,16 +27,14 @@ void main() {
     num height = 20;
     var surfaceList = MapGenerator.createSimpleRandomSurface(width, height);
     arena.createMap(width, height, surfaceList);
-    //p1 = arena.p1;
-    //p1.move(1000, 1000);
 
     var grid = new Grid.surface(width, height, 100, surfaceList);
 
     var world = new World(grid);
 
-    player1 = world.addPlayerandGetReference()
-      ..x = 850
-      ..y = 900;
+    player1 = world.addPlayerandGetReference();
+      //..x = 850
+      //..y = 900;
 
     p1 = new PlayerSprite()
       ..move(player1.x, player1.y)
@@ -44,14 +42,12 @@ void main() {
     arena.p1 = p1;
 
     for (int i=1; i<5; i++) {
+      var actor = world.addPlayerandGetReference();
       var p = new PlayerSprite()
-      ..move(850 + (i*50) , 900 )
-      ..addTo(arena.playerPanel)
-      ..nameDisplay.text = Bots.names[i - 1];
+        ..move(actor.x, actor.y)
+        ..addTo(arena.playerPanel)
+        ..nameDisplay.text = Bots.names[i - 1];
 
-      var actor = world.addPlayerandGetReference()
-          ..x = 850 + (i*50)
-          ..y = 900;
 
       players[actor.hashCode] = p;
       actors[actor.hashCode] = actor;

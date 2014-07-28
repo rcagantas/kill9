@@ -274,8 +274,8 @@ class PlayerSprite extends DisplayObjectContainer {
     };
 
     AnimationGroup fireAni = new AnimationGroup();
-    fireAni.add(new Tween(torso, time, transition)..animate.y.to(3));
     fireAni.add(new Tween(weapons[weapon], time, transition)..animate.y.to(3));
+    fireAni.add(new Tween(torso, time, transition)..animate.y.to(3));
     fireAni.onStart = () => _animatingFiring = true;
     fireAni.onComplete = () => _animatingFiring = false;
     stage.juggler.add(fireAni);

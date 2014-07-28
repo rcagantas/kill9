@@ -9,12 +9,12 @@ class MapGenerator {
         num chance = rand.nextDouble();
         num type = (chance * 10).toInt();
 
-        num passableMin = 7;
+        /*num passableMin = 7;
         num passableMax = 12;
         if (passableMin < i && i < passableMax &&
             passableMin < j && j < passableMax) {
           type = Surface.PASSABLE;
-        }
+        }*/
         if (type > Surface.OBSCURING) type = Surface.PASSABLE;
         surface.add(type);
       }
