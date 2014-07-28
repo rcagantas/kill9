@@ -265,9 +265,13 @@ class PlayerSprite extends DisplayObjectContainer {
     return false;
   }
 
-  void firingAnimation1() {
-    num time = .2;
-    var transition = TransitionFunction.sine;
+  void firingAnimation() {
+    num time = .08;
+    var transition = (ratio) {
+      if (ratio < .45) return 0;
+      else if (ratio > .95) return 0;
+      else return 1;
+    };
 
     AnimationGroup fireAni = new AnimationGroup();
     fireAni.add(new Tween(torso, time, transition)..animate.y.to(3));
@@ -277,7 +281,7 @@ class PlayerSprite extends DisplayObjectContainer {
     stage.juggler.add(fireAni);
   }
 
-  void firingAnimation() {
+  void firingAnimation1() {
     num time = 0.02;
 
     AnimationGroup pull = new AnimationGroup();
