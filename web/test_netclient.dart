@@ -7,7 +7,7 @@ Arena arena;
 NetClient client;
 Map<int, PlayerSprite> players = new Map();
 Map<int, BulletSprite> bullets = new Map();
-
+List<int> visible = new List();
 
 void main() {
   client = new NetClient("127.0.0.1", 1024);
@@ -67,5 +67,42 @@ void listener(html.MessageEvent event) {
         ..addTo(arena.playerPanel);
       bullets[i] = bs;
     }
+  } else if (s.startsWith(Comm.FRAME)){
+    Frame p = new Frame.fromString(client.decodeData(s));
+    updateFrame(p);
   }
+}
+
+void updateFrame(Frame p) {
+  arena.move(-p.topX, -p.topY);
+  visible.clear();
+
+  p.visibleObjects.forEach((object) {
+    if (players.containsKey(object.id)) {
+      var player = players[object.id]
+        ..move(object.x, object.y)
+        ..turn(object.orientation)
+        ..modHitPoints(object.lifeRatio, object.damageFrom)
+        ..setWeapon(object.weaponType);
+      if (!object.isMoving) player.stopMoving();
+      if (object.isFiring) player.fire();
+      visible.add(object.id);
+    }
+    else if (bullets.containsKey(object.id)) {
+      bullets[object.id].type = object.type;
+      bullets[object.id].x = object.x;
+      bullets[object.id].y = object.y;
+      bullets[object.id].rotation = object.orientation;
+      if (object.hitObject) bullets[object.id].explode();
+      visible.add(object.id);
+    }
+  });
+
+  players.forEach((x,v) {
+    v.visible = visible.contains(x);
+  });
+
+  bullets.forEach((x,v) {
+    v.visible = visible.contains(x);
+  });
 }

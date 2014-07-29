@@ -33,6 +33,8 @@ class NetClient {
       data = packet.replaceAll(Comm.SURFACE, "");
     } else if (packet.startsWith(Comm.ACTORS)) {
       data = packet.replaceAll(Comm.ACTORS, "");
+    } else if (packet.startsWith(Comm.FRAME)) {
+      data = packet.replaceAll(Comm.FRAME, "");
     }
     return JSON.decode(data);
   }

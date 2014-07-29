@@ -74,4 +74,5 @@ class Comm {
   static const String SURFACE = "ggl_surface:";
   static const String ACTORS = "ggl_actors:";
   static const String BULLETS = "ggl_bullets:";
+  static const String FRAME = "ggl_frame:";
 }
