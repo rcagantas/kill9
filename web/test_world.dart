@@ -160,7 +160,10 @@ void onMouseMove(MouseEvent e) {
       e.stageY + player1.y - stage.stageHeight/2);
 }
 
-void updateFrame (Frame p) {
+void updateFrame (Frame x) {
+  Frame p = new Frame.fromString(x.toString());
+  print(p.toString());
+
   arena.move(-p.topX, -p.topY);
   visible.clear();
 
