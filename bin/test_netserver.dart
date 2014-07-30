@@ -35,8 +35,9 @@ void main() {
         else a.stopTopDownMove();
 
         num increment = 0.05;
-        if (cf.orientation == -1) a.turnIncrement(-increment);
-        else if (cf.orientation == 1) a.turnIncrement(increment);
+        if (cf.orientation == -1) a.turnCounterClockwise();
+        else if (cf.orientation == 1) a.turnClockwise();
+        else a.stopTurn();
 
         if (cf.fire) a.weapon.fire();
         else a.weapon.stop();
