@@ -8,6 +8,7 @@ NetServer net;
 void main() {
   // STEP 1: Wait for connection
   net = new NetServer("127.0.0.1", 1024);
+  bool started = false;
 
   // create world
   num width = 20, height = 20;
@@ -19,7 +20,7 @@ void main() {
   net.cbWorldId = () { return world.hashCode; };
   net.cbAddPlayer = () { return world.addPlayer(); };
   net.cbPlayerInput = (e) {
-    if (e == null) return;
+    if (e == null || !started) return;
     String s = e.toString();
     if (!s.startsWith(Comm.INPUT)) return;
     s = s.replaceAll(Comm.INPUT, "");
@@ -46,7 +47,7 @@ void main() {
       }
     }
   };
-  bool started = false;
+
   world.onReady = () {
     if (started) return;
     List<int> actorCodes = new List();
