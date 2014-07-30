@@ -1,7 +1,6 @@
 import 'dart:html' as html;
 import 'package:giggl/gglclient.dart';
 import 'package:giggl/gglcommon.dart';
-import 'dart:convert';
 
 var dbg = html.querySelector('#dbg_text');
 Arena arena;
@@ -22,7 +21,7 @@ void main() {
     io = new InputHandler();
     io.cbStateChange = (cf) {
       cf.id = id;
-      net.socket.sendString(JSON.encode(cf.toString()));
+      net.socket.sendString(Comm.INPUT + cf.toString());
     };
   });
 }
@@ -52,11 +51,11 @@ void handleButtons() {
 }
 
 void botListener(html.MessageEvent event) {
-  dbg.innerHtml = "${event.data}</br>";
+  //dbg.innerHtml = "${event.data}</br>";
 }
 
 void listener(html.MessageEvent event) {
-  dbg.innerHtml = "${event.data}</br>";
+  //dbg.innerHtml = "${event.data}</br>";
   String s = event.data;
   if (s.startsWith(Comm.SURFACE)) {
     List<int> surface = net.decodeData(s);
@@ -69,7 +68,7 @@ void listener(html.MessageEvent event) {
       players[i] = ps;
     }
   } else if (s.startsWith(Comm.BULLETS)) {
-    List<int> bulletCodes = new List();
+    List<int> bulletCodes = net.decodeData(s);
     for (int i in bulletCodes) {
       BulletSprite bs = new BulletSprite()
         ..addTo(arena.playerPanel);

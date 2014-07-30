@@ -18,6 +18,33 @@ void main() {
   print("waiting for players");
   net.cbWorldId = () { return world.hashCode; };
   net.cbAddPlayer = () { return world.addPlayer(); };
+  net.cbPlayerInput = (e) {
+    if (e == null) return;
+    String s = e.toString();
+    if (!s.startsWith(Comm.INPUT)) return;
+    s = s.replaceAll(Comm.INPUT, "");
+    CommandFrame cf = new CommandFrame.fromString(s);
+    for (Actor a in world.actors) {
+      if (cf.id == a.hashCode) {
+        if (cf.moveX == -1) a.moveLeft();
+        else if (cf.moveX == 1) a.moveRight();
+        else if (cf.moveX == 0) a.stopLeftRightMove();
+
+        if (cf.moveY == -1) a.moveUp();
+        else if (cf.moveY == 1) a.moveDown();
+        else a.stopTopDownMove();
+
+        num increment = 0.05;
+        if (cf.orientation == -1) a.turnIncrement(-increment);
+        else if (cf.orientation == 1) a.turnIncrement(increment);
+
+        if (cf.fire) a.weapon.fire();
+        else a.weapon.stop();
+
+        if (cf.weaponCycle) a.switchWeapon();
+      }
+    }
+  };
   bool started = false;
   world.onReady = () {
     if (started) return;

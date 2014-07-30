@@ -14,6 +14,7 @@ class InputHandler {
     stage.onKeyUp.listen(_keyHandler);
     stage.onMouseMove.listen((e) {mouseX = e.stageX; mouseY = e.stageY; _sc(); });
     stage.onMouseDown.listen((e) { mouseL = true; _sc(); });
+    stage.onMouseRightClick.listen((e) { mouseR = true; _sc(); });
     stage.onMouseUp.listen((e) { mouseL = false; _sc(); });
 
     for(num i = 0; i < 255; i++) keyState[i] = false;
@@ -62,7 +63,10 @@ class InputHandler {
     else _cmdFrame.orientation = 0;
 
     if (keyState[38] || mouseL) _cmdFrame.fire = true;
-    if (keyState[38] && mouseL) _cmdFrame.fire = false;
+    else if (!keyState[38] && !mouseL) _cmdFrame.fire = false;
+
+    if (keyState[40] || mouseR) _cmdFrame.weaponCycle = true;
+    else if (!keyState[40] && !mouseR) _cmdFrame.weaponCycle = false;
 
     if (cbStateChange != null) cbStateChange(_cmdFrame);
   }
