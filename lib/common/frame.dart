@@ -127,6 +127,24 @@ class Frame {
 }
 
 class CommandFrame {
-  int playerId, moveX, moveY;
+  int id, moveX, moveY, orientation;
   bool fire, weaponCycle;
+
+  String toString() {
+    var stringBuffer = new StringBuffer()
+    ..write("$id,$moveX,$moveY,$orientation,")
+    ..write("$fire,$weaponCycle");
+    return stringBuffer.toString();
+  }
+
+  CommandFrame() {}
+  CommandFrame.fromString(String s) {
+    var fields = s.split(",");
+    id = int.parse(fields[0]);
+    moveX = int.parse(fields[1]);
+    moveY = int.parse(fields[2]);
+    orientation = int.parse(fields[3]);
+    fire = fields[4] == "true"? true: false;
+    weaponCycle = fields[5] == "true"? true: false;
+  }
 }

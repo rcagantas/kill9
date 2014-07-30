@@ -29,12 +29,8 @@ class NetClient {
 
   dynamic decodeData(String packet) {
     var data;
-    if (packet.startsWith(Comm.SURFACE)) {
-      data = packet.replaceAll(Comm.SURFACE, "");
-    } else if (packet.startsWith(Comm.ACTORS)) {
-      data = packet.replaceAll(Comm.ACTORS, "");
-    } else if (packet.startsWith(Comm.FRAME)) {
-      data = packet.replaceAll(Comm.FRAME, "");
+    for (String cmd in Comm.commandList) {
+      if (packet.startsWith(cmd)) data = packet.replaceAll(cmd, "");
     }
     return JSON.decode(data);
   }

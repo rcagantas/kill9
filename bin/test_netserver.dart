@@ -31,6 +31,8 @@ void main() {
 
     // STEP 2: Publish initializing data to client
     for (Actor a in world.actors) {
+      // send player id
+      net.send(a.hashCode, Comm.PLAYER_ID + JSON.encode(a.hashCode));
       // 1. publish map detail to client
       net.send(a.hashCode, Comm.SURFACE + JSON.encode(surfaceList));
       // 2. publish all object ids to client (players/bullets/etc)

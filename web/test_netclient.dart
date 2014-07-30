@@ -1,30 +1,38 @@
 import 'dart:html' as html;
 import 'package:giggl/gglclient.dart';
 import 'package:giggl/gglcommon.dart';
+import 'dart:convert';
 
 var dbg = html.querySelector('#dbg_text');
 Arena arena;
-NetClient client;
+InputHandler io;
+NetClient net;
 Map<int, PlayerSprite> players = new Map();
 Map<int, BulletSprite> bullets = new Map();
 List<int> visible = new List();
+int id;
 
 void main() {
-  client = new NetClient("127.0.0.1", 1024);
+  net = new NetClient("127.0.0.1", 1024);
   handleButtons();
   ResourceHandler.init();
   resMgr.load().then((_) {
     renderLoop.addStage(stage);
     arena = new Arena();
+    io = new InputHandler();
+    io.cbStateChange = (cf) {
+      cf.id = id;
+      net.socket.sendString(JSON.encode(cf.toString()));
+    };
   });
 }
 
 void handleButtons() {
-  client.socket.onMessage.listen(listener);
-  client.socket.onError.listen((e) => dbg.innerHtml = "error on connection.");
+  net.socket.onMessage.listen(listener);
+  net.socket.onError.listen((e) => dbg.innerHtml = "error on connection.");
 
   html.querySelector("#join_game").onClick.listen((e) {
-    client.joinRandomGame();
+    net.joinRandomGame();
   });
 
   html.querySelector("#create_bot").onClick.listen((e) {
@@ -38,7 +46,7 @@ void handleButtons() {
   html.querySelector("#text_data").onKeyDown.listen((e) {
     if (e.keyCode != 13) return;
     dbg.innerHtml = "sending: ${e.target.value}</br>";
-    client.socket.send("${e.target.value}");
+    net.socket.send("${e.target.value}");
     e.target.value = "";
   });
 }
@@ -51,10 +59,10 @@ void listener(html.MessageEvent event) {
   dbg.innerHtml = "${event.data}</br>";
   String s = event.data;
   if (s.startsWith(Comm.SURFACE)) {
-    List<int> surface = client.decodeData(s);
+    List<int> surface = net.decodeData(s);
     arena.createMap(20, 20, surface);
   } else if (s.startsWith(Comm.ACTORS)) {
-    List<int> actorCodes = client.decodeData(s);
+    List<int> actorCodes = net.decodeData(s);
     for (int i in actorCodes) {
       PlayerSprite ps = new PlayerSprite()
         ..addTo(arena.playerPanel);
@@ -68,8 +76,10 @@ void listener(html.MessageEvent event) {
       bullets[i] = bs;
     }
   } else if (s.startsWith(Comm.FRAME)){
-    Frame p = new Frame.fromString(client.decodeData(s));
+    Frame p = new Frame.fromString(net.decodeData(s));
     updateFrame(p);
+  } else if (s.startsWith(Comm.PLAYER_ID)) {
+    id = net.decodeData(s);
   }
 }
 
