@@ -78,19 +78,23 @@ class World {
 
   void spawnRandomly(Actor actor) {
     math.Random rand = new math.Random();
-    int loc = rand.nextInt(grid.surfaceList.length);
-    int count = 0;
-    for (int y = 0; y < grid.height(); y++) {
-      for (int x = 0; x < grid.width(); x++) {
-        if (count == loc) {
-          if (grid.surfaceList[count] == Surface.PASSABLE) {
-            actor.x = (x + 1) * grid.tileWidth() - grid.tileWidth()/2;
-            actor.y = (y + 1) * grid.tileWidth() - grid.tileWidth()/2;
+    int loc;
+    int count;
+    do {
+      count = 0;
+      loc = rand.nextInt(grid.surfaceList.length);
+      for (int y = 0; y < grid.height(); y++) {
+        for (int x = 0; x < grid.width(); x++) {
+          if (count == loc &&
+              grid.surfaceList[loc] == Surface.PASSABLE) {
+            actor.x = x * grid.tileWidth() + grid.tileWidth()/2;
+            actor.y = y * grid.tileWidth() + grid.tileWidth()/2;
+            return;
           }
+          count++;
         }
-        count++;
       }
-    }
+    } while (grid.surfaceList[loc] != Surface.PASSABLE);
   }
 
   void removeObject(WorldObject object) {
