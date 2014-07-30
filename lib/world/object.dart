@@ -155,10 +155,18 @@ class Actor extends WorldObject {
 
   void stopLeftRightMove () {
     xVelocity = 0;
+    if (yVelocity < 0)
+      yVelocity = -speed;
+    else if (yVelocity > 0)
+      yVelocity = speed;
   }
 
   void stopTopDownMove () {
     yVelocity = 0;
+    if (xVelocity < 0)
+      xVelocity = -speed;
+    else if (xVelocity > 0)
+      xVelocity = speed;
   }
 
   bool isMoving() {
