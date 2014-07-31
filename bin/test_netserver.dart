@@ -49,8 +49,11 @@ void main() {
         }
         break;
       case Comm.FILL_BOTS:
-        while (world.actors.length < 10)
-          world.addPlayer();
+        while (world.actors.length < 10) {
+          Actor a = world.addPlayerandGetReference();
+          RandomWalker walker = new RandomWalker(a);
+          walker.start();
+        }
         break;
       default:
         print("unhandled command: ${cmd}");

@@ -10,6 +10,7 @@ class World {
   Map<int, AmmoBehavior> _bulletBehaviors = new Map();
   BulletFactory bullets;
   Function onReady;
+  static const int MAX_PLAYERS = 10;
 
   int _tileWidth;
   int _worldWidth;
@@ -27,7 +28,7 @@ class World {
     bullets = new BulletFactory(200, _bulletBehaviors);
     _readyTimer = new Timer.periodic(new Duration(milliseconds: 10),
       (timer) {
-        if (actors.length == 10) {
+        if (actors.length == MAX_PLAYERS) {
           onReady();
           _readyTimer.cancel();
         }
@@ -58,22 +59,20 @@ class World {
   }
 
   Actor addPlayerandGetReference() {
+    if (actors.length >= MAX_PLAYERS)
+      return null;
+
     var newPlayer = new Actor();
     addObject(newPlayer);
+    actors.add(newPlayer);
     spawnRandomly(newPlayer);
+    print("${actors.length} ${newPlayer.hashCode}");
     return newPlayer;
   }
 
   int addPlayer() {
-    if (actors.length < 10) {
-      var newPlayer = new Actor();
-      addObject(newPlayer);
-      actors.add(newPlayer);
-      spawnRandomly(newPlayer);
-      print("${actors.length} ${newPlayer.hashCode}");
-      return newPlayer.hashCode;
-    }
-    return 0;
+    Actor newPlayer = addPlayerandGetReference();
+    return newPlayer.hashCode;
   }
 
   void spawnRandomly(Actor actor) {
