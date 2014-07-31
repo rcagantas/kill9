@@ -1,6 +1,7 @@
 import 'dart:html' as html;
 import 'package:giggl/gglclient.dart';
 import 'package:giggl/gglcommon.dart';
+import 'dart:convert';
 
 var dbg = html.querySelector('#dbg_text');
 Arena arena;
@@ -34,12 +35,8 @@ void handleButtons() {
     net.joinRandomGame();
   });
 
-  html.querySelector("#create_bot").onClick.listen((e) {
-    NetClient client = new NetClient("127.0.0.1", 1024);
-    client.socket.onOpen.listen((e) {
-      client.joinRandomGame();
-      client.socket.onMessage.listen(botListener);
-    });
+  html.querySelector("#fill_bots").onClick.listen((e) {
+    net.socket.send(Comm.FILL_BOTS);
   });
 
   html.querySelector("#text_data").onKeyDown.listen((e) {
@@ -50,35 +47,38 @@ void handleButtons() {
   });
 }
 
-void botListener(html.MessageEvent event) {
-  //dbg.innerHtml = "${event.data}</br>";
-}
-
 void listener(html.MessageEvent event) {
-  //dbg.innerHtml = "${event.data}</br>";
-  String s = event.data;
-  if (s.startsWith(Comm.SURFACE)) {
-    List<int> surface = net.decodeData(s);
-    arena.createMap(20, 20, surface);
-  } else if (s.startsWith(Comm.ACTORS)) {
-    List<int> actorCodes = net.decodeData(s);
-    for (int i in actorCodes) {
-      PlayerSprite ps = new PlayerSprite()
-        ..addTo(arena.playerPanel);
-      players[i] = ps;
-    }
-  } else if (s.startsWith(Comm.BULLETS)) {
-    List<int> bulletCodes = net.decodeData(s);
-    for (int i in bulletCodes) {
-      BulletSprite bs = new BulletSprite()
-        ..addTo(arena.playerPanel);
-      bullets[i] = bs;
-    }
-  } else if (s.startsWith(Comm.FRAME)){
-    Frame p = new Frame.fromString(net.decodeData(s));
-    updateFrame(p);
-  } else if (s.startsWith(Comm.PLAYER_ID)) {
-    id = net.decodeData(s);
+  var s = event.data.toString().split(":");
+  String cmd = s[0] + ":";
+  String data = s[1];
+  switch (cmd) {
+    case Comm.SURFACE:
+      List<int> surface = JSON.decode(data);
+      arena.createMap(20, 20, surface);
+      break;
+    case Comm.ACTORS:
+      List<int> actorCodes = JSON.decode(data);
+      for (int i in actorCodes) {
+        PlayerSprite ps = new PlayerSprite()
+          ..addTo(arena.playerPanel);
+        players[i] = ps;
+      }
+      break;
+    case Comm.BULLETS:
+      List<int> bulletCodes = JSON.decode(data);
+      for (int i in bulletCodes) {
+        BulletSprite bs = new BulletSprite()
+          ..addTo(arena.playerPanel);
+        bullets[i] = bs;
+      }
+      break;
+    case Comm.FRAME:
+      Frame p = new Frame.fromString(JSON.decode(data));
+      updateFrame(p);
+      break;
+    case Comm.PLAYER_ID:
+      id = JSON.decode(data);
+      break;
   }
 }
 

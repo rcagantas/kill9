@@ -3,7 +3,7 @@ part of gglserver;
 class NetServer {
   String address;
   int port;
-  Function cbPlayerInput, cbAddPlayer, cbWorldId;
+  Function cbPlayerInput, cbAddPlayer;
   Map<int, WebSocket> players = new Map();
 
   NetServer(this.address, this.port) {
@@ -26,16 +26,14 @@ class NetServer {
         int i = cbAddPlayer();
         if (i == 0) return;
         players[i] = websocket;
-        send(i, Comm.GAME_ID + "${cbWorldId()}");
-        //send(i, CommRequest.PLAYER_ID + "${i}");
       } else if (cbPlayerInput != null) {
         cbPlayerInput(e);
-      } else {
-        print("$e");
       }
     });
   }
 
-  void send(int id, String data) { players[id].add(data); }
+  void send(int id, String data) {
+    if (players.containsKey(id)) players[id].add(data);
+  }
 }
 

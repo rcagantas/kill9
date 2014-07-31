@@ -17,34 +17,44 @@ void main() {
   var world = new World(grid);
 
   print("waiting for players");
-  net.cbWorldId = () { return world.hashCode; };
   net.cbAddPlayer = () { return world.addPlayer(); };
   net.cbPlayerInput = (e) {
-    if (e == null || !started) return;
-    String s = e.toString();
-    if (!s.startsWith(Comm.INPUT)) return;
-    s = s.replaceAll(Comm.INPUT, "");
-    CommandFrame cf = new CommandFrame.fromString(s);
-    for (Actor a in world.actors) {
-      if (cf.id == a.hashCode) {
-        if (cf.moveX == -1) a.moveLeft();
-        else if (cf.moveX == 1) a.moveRight();
-        else if (cf.moveX == 0) a.stopLeftRightMove();
+    var s = e.split(":");
+    String cmd = s[0] + ":";
+    String data = s[1];
 
-        if (cf.moveY == -1) a.moveUp();
-        else if (cf.moveY == 1) a.moveDown();
-        else a.stopTopDownMove();
+    switch(cmd) {
+      case Comm.INPUT:
+        if (!started) break;
+        CommandFrame cf = new CommandFrame.fromString(data);
+        for (Actor a in world.actors) {
+          if (cf.id == a.hashCode) {
+            if (cf.moveX == -1) a.moveLeft();
+            else if (cf.moveX == 1) a.moveRight();
+            else if (cf.moveX == 0) a.stopLeftRightMove();
 
-        num increment = 0.05;
-        if (cf.orientation == -1) a.turnCounterClockwise();
-        else if (cf.orientation == 1) a.turnClockwise();
-        else a.stopTurn();
+            if (cf.moveY == -1) a.moveUp();
+            else if (cf.moveY == 1) a.moveDown();
+            else a.stopTopDownMove();
 
-        if (cf.fire) a.weapon.fire();
-        else a.weapon.stop();
+            if (cf.orientation == -1) a.turnCounterClockwise();
+            else if (cf.orientation == 1) a.turnClockwise();
+            else a.stopTurn();
 
-        if (cf.weaponCycle) a.switchWeapon();
-      }
+            if (cf.fire) a.weapon.fire();
+            else a.weapon.stop();
+
+            if (cf.weaponCycle) a.switchWeapon();
+          }
+        }
+        break;
+      case Comm.FILL_BOTS:
+        while (world.actors.length < 10)
+          world.addPlayer();
+        break;
+      default:
+        print("unhandled command: ${cmd}");
+        break;
     }
   };
 

@@ -26,12 +26,4 @@ class NetClient {
       gameId = int.parse(s.replaceFirst(Comm.GAME_ID, ""));
     }
   }
-
-  dynamic decodeData(String packet) {
-    var data;
-    for (String cmd in Comm.commandList) {
-      if (packet.startsWith(cmd)) data = packet.replaceAll(cmd, "");
-    }
-    return JSON.decode(data);
-  }
 }
