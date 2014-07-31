@@ -156,8 +156,8 @@ class Bullet extends WorldObject {
   void init(num x, num y, num orientation, num radius) {
     xVelocity = speed * math.sin(orientation);
     yVelocity = -speed * math.cos(orientation);
-    this.x = x + (radius * math.sin(orientation));
-    this.y = y - (radius * math.cos(orientation));
+    this.x = x + (radius * math.sin(orientation)+1);
+    this.y = y - (radius * math.cos(orientation)+1);
     this.orientation = orientation;
     this.startX = this.x;
     this.startY = this.y;
