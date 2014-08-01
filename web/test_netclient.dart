@@ -20,8 +20,11 @@ void main() {
     renderLoop.addStage(stage);
     arena = new Arena();
     io = new InputHandler();
-    io.cbStateChange = (cf) {
+    io.cbStateChange = (CommandFrame cf) {
+      if (id == null || players[id] == null) return;
       cf.id = id;
+      cf.mouseX += players[id].x;
+      cf.mouseY += players[id].y;
       net.socket.sendString(Comm.INPUT + cf.toString());
     };
   });

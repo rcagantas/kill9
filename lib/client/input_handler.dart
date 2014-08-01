@@ -3,7 +3,7 @@ part of gglclient;
 class InputHandler {
   Map<num, bool> keyState = new Map<num, bool>();
   num mouseX = 0, mouseY = 0;
-  bool mouseL = false, mouseR = false;
+  bool mouseL = false, mouseR = false, mouseMoved = false;
   TextField dbg;
   Function cbStateChange = null;
   CommandFrame _cmdFrame = new CommandFrame();
@@ -12,10 +12,15 @@ class InputHandler {
     stage.focus = stage;
     stage.onKeyDown.listen(_keyHandler);
     stage.onKeyUp.listen(_keyHandler);
-    stage.onMouseMove.listen((e) {mouseX = e.stageX; mouseY = e.stageY; _sc(); });
+    stage.onMouseMove.listen((e) {
+      mouseMoved = true;
+      mouseX = e.stageX - stage.stageWidth/2;
+      mouseY = e.stageY - stage.stageHeight/2;
+    });
     stage.onMouseDown.listen((e) { mouseL = true; _sc(); });
     stage.onMouseRightClick.listen((e) { mouseR = true; _sc(); });
     stage.onMouseUp.listen((e) { mouseL = false; _sc(); });
+    stage.onEnterFrame.listen((e) => _sc());
 
     for(num i = 0; i < 255; i++) keyState[i] = false;
 
@@ -50,6 +55,10 @@ class InputHandler {
   }
 
   void _sc() {
+    _cmdFrame.mouseMoved = mouseMoved;
+    _cmdFrame.mouseX = mouseX;
+    _cmdFrame.mouseY = mouseY;
+
     if (keyState[87]) _cmdFrame.moveY = -1;
     else if (keyState[83]) _cmdFrame.moveY = 1;
     else _cmdFrame.moveY = 0;
@@ -69,6 +78,10 @@ class InputHandler {
     else if (!keyState[40] && !mouseR) _cmdFrame.weaponCycle = false;
 
     if (cbStateChange != null) cbStateChange(_cmdFrame);
+
+    mouseMoved = false;
+    mouseL = false;
+    mouseR = false;
   }
 }
 

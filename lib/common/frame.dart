@@ -127,24 +127,32 @@ class Frame {
 }
 
 class CommandFrame {
-  int id, moveX, moveY, orientation;
-  bool fire, weaponCycle;
+  int id = 0, moveX = 0, moveY = 0, orientation = 0;
+  bool fire, weaponCycle, mouseMoved;
+  num mouseX = 0.0, mouseY = 0.0;
 
   String toString() {
     var stringBuffer = new StringBuffer()
-    ..write("$id,$moveX,$moveY,$orientation,")
-    ..write("$fire,$weaponCycle");
+      ..write("$id,$moveX,$moveY,$orientation,")
+      ..write("$fire,$weaponCycle,$mouseMoved,")
+      ..write("$mouseX, $mouseY");
     return stringBuffer.toString();
   }
 
   CommandFrame() {}
   CommandFrame.fromString(String s) {
+    print("$s");
     var fields = s.split(",");
+    if (fields[0] == null) return;
     id = int.parse(fields[0]);
     moveX = int.parse(fields[1]);
     moveY = int.parse(fields[2]);
     orientation = int.parse(fields[3]);
     fire = fields[4] == "true"? true: false;
     weaponCycle = fields[5] == "true"? true: false;
+    mouseMoved = fields[6] == "true"? true: false;
+    mouseX = num.parse(fields[7]);
+    mouseY = num.parse(fields[8]);
+
   }
 }

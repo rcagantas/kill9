@@ -41,6 +41,9 @@ void main() {
             else if (cf.orientation == 1) a.turnClockwise();
             else a.stopTurn();
 
+            if (cf.mouseMoved)
+              a.turnToPoint(cf.mouseX, cf.mouseY);
+
             if (cf.fire) a.weapon.fire();
             else a.weapon.stop();
 
