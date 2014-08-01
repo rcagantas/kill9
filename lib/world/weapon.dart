@@ -11,7 +11,6 @@ class BulletBehavior implements AmmoBehavior {
       if (key != this.hashCode && object is Actor) {
         if (object is Actor && object.life == 0) {}
         else if (bullet.willBump(object, elapsedTime)) {
-          print ("Player $key is hit");
           (object as Actor).takeDamage(BulletProps.DAMAGE, bullet.orientation);
           bullet.expired = true;
           bullet.hitActor = bullet.expired? true: false;
@@ -88,7 +87,6 @@ class GrenadeBehavior implements AmmoBehavior {
         if (key != this.hashCode && object is Actor) {
           if (object is Actor && object.life == 0) {}
           else if (bullet.willBump(object, elapsedTime)) {
-            print ("Player $key is hit");
             bullet.expired = true;
             bullet.hitObject = true;
           }
@@ -198,9 +196,7 @@ class BulletFactory {
   Bullet getBullet() {
     var bullet = _bullets.removeFirst();
     counter = counter + 1;
-
-    print("Borrowed ${_bullets.length}: Total fire: $counter");
-
+    // print("Borrowed ${_bullets.length}: Total fire: $counter");
     return bullet;
   }
 
@@ -209,7 +205,7 @@ class BulletFactory {
       print ("this should not happen");
     }
     _bullets.addLast(bullet);
-    print("Returned: ${_bullets.length}");
+    // print("Returned: ${_bullets.length}");
   }
 
   Iterable getBulletIter() {
@@ -250,9 +246,7 @@ class Pistol extends Weapon {
   void fire() {
     isFiring = false;
     if (_pressed || owner.life == 0) return;
-
     _pressed = true;
-    print ("firing $name");
     var bullet = owner.myWorld.bullets.getBullet()
       ..type = BulletType.BULLET
       ..init(owner.x, owner.y, owner.orientation, owner.radius);
@@ -328,7 +322,6 @@ class GrenadeLauncher extends Weapon {
     if (_pressed || owner.life == 0) return;
 
     _pressed = true;
-    print ("firing $name");
     var bullet = owner.myWorld.bullets.getBullet()
       ..type = BulletType.GRENADE
       ..init(owner.x, owner.y, owner.orientation, owner.radius);

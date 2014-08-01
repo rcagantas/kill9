@@ -26,7 +26,6 @@ class PlayerSprite extends DisplayObjectContainer {
 
   PlayerSprite() {
     playerNo = totalPlayers + 1 < ResourceHandler.MAX_PLAYERS ? ++totalPlayers : ResourceHandler.MAX_PLAYERS;
-    print(playerNo);
     splatter = new ParticleEmitter(ResourceHandler.jsonBloodSplat)
       ..stop(true)
       ..addTo(this);

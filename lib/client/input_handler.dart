@@ -17,9 +17,13 @@ class InputHandler {
       mouseX = e.stageX - stage.stageWidth/2;
       mouseY = e.stageY - stage.stageHeight/2;
     });
-    stage.onMouseDown.listen((e) { mouseL = true; _sc(); });
-    stage.onMouseRightClick.listen((e) { mouseR = true; _sc(); });
-    stage.onMouseUp.listen((e) { mouseL = false; _sc(); });
+    stage.onMouseDown.listen((e) { mouseL = true; });
+    stage.onMouseRightClick.listen((e) {
+      mouseR =
+      _cmdFrame.weaponCycle = true;
+      _sc();
+    });
+    stage.onMouseUp.listen((e) { mouseL = false; });
     stage.onEnterFrame.listen((e) => _sc());
 
     for(num i = 0; i < 255; i++) keyState[i] = false;
@@ -51,7 +55,8 @@ class InputHandler {
 
   void _keyHandler(KeyboardEvent e) {
     keyState[e.keyCode] = e.type == KeyboardEvent.KEY_DOWN? true: false;
-    _sc();
+    if (e.keyCode == 40 && e.type == KeyboardEvent.KEY_UP)
+      _cmdFrame.weaponCycle = true;
   }
 
   void _sc() {
@@ -74,14 +79,10 @@ class InputHandler {
     if (keyState[38] || mouseL) _cmdFrame.fire = true;
     else if (!keyState[38] && !mouseL) _cmdFrame.fire = false;
 
-    if (keyState[40] || mouseR) _cmdFrame.weaponCycle = true;
-    else if (!keyState[40] && !mouseR) _cmdFrame.weaponCycle = false;
-
     if (cbStateChange != null) cbStateChange(_cmdFrame);
 
+    _cmdFrame.weaponCycle = false;
     mouseMoved = false;
-    mouseL = false;
-    mouseR = false;
   }
 }
 

@@ -128,7 +128,7 @@ class Frame {
 
 class CommandFrame {
   int id = 0, moveX = 0, moveY = 0, orientation = 0;
-  bool fire, weaponCycle, mouseMoved;
+  bool fire = false, weaponCycle = false, mouseMoved = false;
   num mouseX = 0.0, mouseY = 0.0;
 
   String toString() {
@@ -141,7 +141,6 @@ class CommandFrame {
 
   CommandFrame() {}
   CommandFrame.fromString(String s) {
-    print("$s");
     var fields = s.split(",");
     if (fields[0] == null) return;
     id = int.parse(fields[0]);
