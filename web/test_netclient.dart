@@ -62,10 +62,11 @@ void listener(html.MessageEvent event) {
     case Comm.ACTORS:
       List<int> actorCodes = JSON.decode(data);
       for (int i in actorCodes) {
-        PlayerSprite ps = new PlayerSprite()
-          ..addTo(arena.playerPanel);
+        PlayerSprite ps = new PlayerSprite();
         players[i] = ps;
+        if (i != id) ps.addTo(arena.playerPanel);
       }
+      players[id].addTo(arena.playerPanel);
       break;
     case Comm.BULLETS:
       List<int> bulletCodes = JSON.decode(data);
