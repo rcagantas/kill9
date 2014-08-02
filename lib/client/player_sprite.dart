@@ -155,14 +155,19 @@ class PlayerSprite extends DisplayObjectContainer {
     }
   }
 
-  void bloodPoolAnimation() {
+  void deathAnimation() {
     math.Random rand = new math.Random();
     num scale1 = 15 + rand.nextInt(10);
     Tween poolAni = new Tween(bloodPool, 3.0, TransitionFunction.linear)
       ..animate.scaleX.to(scale1)
       ..animate.scaleY.to(scale1 + 5)
       ..animate.rotation.to(rand.nextDouble());
-    stage.juggler.add(poolAni);
+    Tween fadeAni = new Tween(this, 3.0, TransitionFunction.linear)
+      ..animate.alpha.to(0);
+    AnimationChain c = new AnimationChain();
+    c.add(poolAni);
+    c.add(fadeAni);
+    stage.juggler.add(c);
   }
 
   void set alive(bool b) {
@@ -176,7 +181,7 @@ class PlayerSprite extends DisplayObjectContainer {
     bloodPool.visible = !b;
     if (death.visible) {
       death.gotoAndPlay(0);
-      bloodPoolAnimation();
+      deathAnimation();
     }
   }
 

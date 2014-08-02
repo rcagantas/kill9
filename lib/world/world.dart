@@ -29,7 +29,7 @@ class World {
     _readyTimer = new Timer.periodic(new Duration(milliseconds: 10),
       (timer) {
         if (actors.length == MAX_PLAYERS) {
-          onReady();
+          if (onReady != null) onReady();
           _readyTimer.cancel();
         }
       });
