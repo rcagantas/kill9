@@ -18,8 +18,9 @@ class PlayerSprite extends DisplayObjectContainer {
   Shape arcHealth;
   TextField dbg, nameDisplay;
   bool dbgmode = false;
+  bool _alive = true;
   num hp = 100;
-  ParticleEmitter splatter, splatterAoe;
+  ParticleEmitter splatter, splatterAoe, spawnParts;
   Shape bloodPool;
   num playerNo = -1;
   bool _animatingFiring = false;
@@ -94,6 +95,12 @@ class PlayerSprite extends DisplayObjectContainer {
       ..play();
     stage.juggler.add(death);
 
+    spawnParts = new ParticleEmitter(ResourceHandler.jsonSpawn)
+      ..stop(true)
+      ..addTo(this);
+    stage.juggler.add(spawnParts);
+
+
     x = stage.stageWidth/2;
     y = stage.stageHeight/2;
 
@@ -131,23 +138,26 @@ class PlayerSprite extends DisplayObjectContainer {
   }
 
   void takeDamage(num dmg, num dmgFrom) {
-    hp = hp - dmg < 0? 0 : hp - dmg;
-    modHitPoints(hp - dmg, dmgFrom);
+    num h = hp - dmg < 0? 0 : hp - dmg;
+    modHitPoints(h - dmg, dmgFrom);
   }
 
   void modHitPoints(num newHpRatio, num dmgFrom) {
-    if (hp == newHpRatio) return;
     hp = newHpRatio;
-    if (hp == 0) {
-      alive = false;
-      return;
-    }
     num angle = math.PI/4 * hp/100;
     num color = hp/100 < .4? Color.Red : Color.YellowGreen;
     arcHealth.graphics.clear();
     arcHealth
       ..graphics.arc(CENTER, CENTER, HPRADIUS, -angle, angle, false)
       ..graphics.strokeColor(color, 4);
+
+    if (hp == 0) {
+      alive = false;
+      return;
+    } else if (hp == 100) {
+      return;
+    }
+
     if (dmgFrom == -1) splatterAoe.start(.3);
     else {
       splatter.rotation = peg180(dmgFrom - this.rotation - math.PI);
@@ -170,22 +180,32 @@ class PlayerSprite extends DisplayObjectContainer {
     stage.juggler.add(c);
   }
 
+  void spawnAnimation() {
+    this.alpha = 100;
+    spawnParts.start(.5);
+  }
+
   void set alive(bool b) {
-    if (head.visible == b) return; // same state. don't animate anything.
+    _alive = b;
     weapons[weapon].visible =
     head.visible =
     torso.visible =
     hip.visible =
     arcHealth.visible = b;
-    death.visible = !b;
+    death.visible =
     bloodPool.visible = !b;
-    if (death.visible) {
+    if (!_alive) {
+      death.visible = true;
+      bloodPool.visible = true;
       death.gotoAndPlay(0);
       deathAnimation();
+    } else {
+      modHitPoints(100, 0);
+      spawnAnimation();
     }
   }
 
-  bool get alive { return head.visible; }
+  bool get alive { return _alive; }
 
   void fixHipRotation(num x, num y) {
     num dx = x - this.x;

@@ -50,8 +50,8 @@ void handleInput() {
 void onKeyUp(KeyboardEvent e) {
   if (p1 == null) return;
   if (e.keyCode == 40) { p1.cycleWeapon(); }
-  if (e.keyCode == 38 || e.keyCode == 40) {
-  }
+  if (e.keyCode == 38 || e.keyCode == 40) {}
+  if (e.keyCode == 82) p1.alive = true;
 }
 
 void onMouseMove(MouseEvent e) {

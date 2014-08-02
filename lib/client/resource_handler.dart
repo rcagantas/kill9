@@ -140,6 +140,26 @@ class ResourceHandler {
       "startColor":{"red":0, "green":0, "blue":0, "alpha":1},
       "finishColor":{"red":1, "green":1, "blue":1, "alpha":0}
     };
+  static Map jsonSpawn =
+    { "maxParticles":200,
+      "duration":0,
+      "lifeSpan":0.9, "lifespanVariance":0.4,
+      "startSize":5, "startSizeVariance":2,
+      "finishSize":10, "finishSizeVariance":2,
+      "shape":"circle",
+      "emitterType":1,
+      "location":{"x":0, "y":0}, "locationVariance":{"x":0, "y":0},
+      "speed":100, "speedVariance":10,
+      "angle":0, "angleVariance":360,
+      "gravity":{"x":0, "y":100},
+      "radialAcceleration":20, "radialAccelerationVariance":0,
+      "tangentialAcceleration":10, "tangentialAccelerationVariance":0,
+      "minRadius":0, "maxRadius":50, "maxRadiusVariance":0,
+      "rotatePerSecond":0, "rotatePerSecondVariance":0,
+      "compositeOperation":"source-over",
+      "startColor":{"red":1, "green":0.75, "blue":0, "alpha":1},
+      "finishColor":{"red":1, "green":0, "blue":0, "alpha":0}
+    };
 
   static init() {
     if (initialized) return; // protect against multiple inits
@@ -180,7 +200,7 @@ class ResourceHandler {
     resMgr.addSound("snd_grenade", "${sounds}/grenade.ogg");
     resMgr.addSound("snd_rocket", "${sounds}/rocket.ogg");
     resMgr.addSound("snd_reload", "${sounds}/reload.ogg");
-    
+
     SoundMixer.soundTransform = new SoundTransform(0.2);
 
     resMgr.load().then((_) {

@@ -19,6 +19,6 @@ part 'client/net_client.dart';
  * global variables
  */
 final html.CanvasElement canvas = html.querySelector('#gglstage');
-final Stage stage = new Stage(canvas);
+final Stage stage = new Stage(canvas/*, webGL: true*/);
 final ResourceManager resMgr = new ResourceManager();
 final RenderLoop renderLoop = new RenderLoop();
