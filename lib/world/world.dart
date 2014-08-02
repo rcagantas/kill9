@@ -25,6 +25,8 @@ class World {
 
     _bulletBehaviors[BulletType.BULLET] = new BulletBehavior();
     _bulletBehaviors[BulletType.GRENADE] = new GrenadeBehavior();
+    _bulletBehaviors[BulletType.ROCKET] = new RocketBehavior();
+
     bullets = new BulletFactory(200, _bulletBehaviors);
     _readyTimer = new Timer.periodic(new Duration(milliseconds: 10),
       (timer) {

@@ -46,6 +46,13 @@ class GrenadeProps {
   static const num EXPIRE_SEC = 2;
 }
 
+class RocketProps {
+  static const num RADIUS = 4;
+  static const num SPEED = 500;
+  static const num DAMAGE = 15;
+  static const num DISTANCE = 1000;
+}
+
 class BulletType {
   static const int BULLET = 0;
   static const int GRENADE = 1;
