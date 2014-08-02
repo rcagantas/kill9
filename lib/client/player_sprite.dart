@@ -143,6 +143,7 @@ class PlayerSprite extends DisplayObjectContainer {
   }
 
   void modHitPoints(num newHpRatio, num dmgFrom) {
+    bool bleed = newHpRatio < hp;
     hp = newHpRatio;
     num angle = math.PI/4 * hp/100;
     num color = hp/100 < .4? Color.Red : Color.YellowGreen;
@@ -158,10 +159,12 @@ class PlayerSprite extends DisplayObjectContainer {
       return;
     }
 
-    if (dmgFrom == -1) splatterAoe.start(.3);
-    else {
-      splatter.rotation = peg180(dmgFrom - this.rotation - math.PI);
-      splatter.start(.3);
+    if (bleed) {
+      if (dmgFrom == -1) splatterAoe.start(.3);
+      else {
+        splatter.rotation = peg180(dmgFrom - this.rotation - math.PI);
+        splatter.start(.3);
+      }
     }
   }
 
