@@ -144,6 +144,10 @@ class World {
         }
         frame.visibleObjects.add(visiObj);
       }
+      if (obj is Actor) {
+        frame.killStats[obj.hashCode] = obj.killCount;
+        frame.deathStats[obj.hashCode] = obj.deathCount;
+      }
     });
 
     return frame;

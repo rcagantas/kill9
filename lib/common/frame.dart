@@ -77,6 +77,10 @@ class Frame {
   // Viewport
   num topX,topY;
 
+  // Player stats;
+  Map killStats = new Map();
+  Map deathStats = new Map();
+
   // Objects visible in the world
   List<ObjectInFrame> visibleObjects = new List();
 
@@ -84,6 +88,18 @@ class Frame {
     var stringBuffer = new StringBuffer()
     ..write("$playerId,$topX,$topY")
     ..write("~");
+    //playerStats
+    killStats.forEach((key, value) {
+      stringBuffer.write("$key,$value,");
+    });
+
+    stringBuffer.write("~");
+
+    deathStats.forEach((key, value) {
+      stringBuffer.write("$key,$value,");
+    });
+
+    stringBuffer.write("~");
 
     visibleObjects.forEach( (obj) {
 
@@ -111,7 +127,22 @@ class Frame {
     topX = num.parse(fields[1]);
     topY = num.parse(fields[2]);
 
-    var objects = main[1].split("|");
+
+    if (main[1] !=  "") {
+      var kills = main[1].split(",");
+      for (int i = 0; i < kills.length-1; i = i+2) {
+        killStats[int.parse(kills[i])] = int.parse(kills[i+1]);
+      }
+    }
+    if (main[2] !=  "") {
+      var deaths = main[1].split(",");
+      for (int i = 0; i < deaths.length-1; i = i+2) {
+        deathStats[int.parse(deaths[i])] = int.parse(deaths[i+1]);
+      }
+    }
+
+
+    var objects = main[3].split("|");
 
     objects.forEach( (str) {
       if (str == "") return;
