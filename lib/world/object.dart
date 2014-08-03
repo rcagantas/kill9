@@ -229,6 +229,9 @@ class Actor extends WorldObject {
       deathCount = deathCount + 1;
       dmgFrom.fromWeapon.owner.killCount = dmgFrom.fromWeapon.owner.killCount + 1;
       life = 0;
+      new Timer(new Duration(seconds: 10), () {
+        life = 100;
+      });
       print ("Player ${dmgFrom.fromWeapon.owner.hashCode} (${dmgFrom.fromWeapon.owner.killCount} kills) -> Player $hashCode ($deathCount death)");
     }
   }

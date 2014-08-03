@@ -143,6 +143,9 @@ class PlayerSprite extends DisplayObjectContainer {
   }
 
   void modHitPoints(num newHpRatio, num dmgFrom) {
+    if (hp == newHpRatio)
+      return;
+
     bool bleed = newHpRatio < hp;
     hp = newHpRatio;
     num angle = math.PI/4 * hp/100;
@@ -156,6 +159,7 @@ class PlayerSprite extends DisplayObjectContainer {
       alive = false;
       return;
     } else if (hp == 100) {
+      alive = true;
       return;
     }
 
