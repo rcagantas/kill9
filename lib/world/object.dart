@@ -84,6 +84,8 @@ class Actor extends WorldObject {
 
   static const int MAX_LIFE = 100;
   int life = 100;
+  int killCount = 0;
+  int deathCount = 0;
   num damageFrom = 0;
 
   Actor():
@@ -220,10 +222,15 @@ class Actor extends WorldObject {
     _yVelocityHolder = 0;
   }
 
-  void takeDamage(int damage, num dmgFrom) {
+  void takeDamage(int damage, Bullet dmgFrom) {
     life = life - damage;
-    damageFrom = dmgFrom;
-    if (life < 0) life = 0;
+    damageFrom = dmgFrom.orientation;
+    if (life <= 0) {
+      deathCount = deathCount + 1;
+      dmgFrom.fromWeapon.owner.killCount = dmgFrom.fromWeapon.owner.killCount + 1;
+      life = 0;
+      print ("Player ${dmgFrom.fromWeapon.owner.hashCode} (${dmgFrom.fromWeapon.owner.killCount} kills) -> Player $hashCode ($deathCount death)");
+    }
   }
 
   void doPhysics(num elapsedTime, Map objects) {

@@ -11,7 +11,7 @@ class BulletBehavior implements AmmoBehavior {
       if (key != this.hashCode && object is Actor) {
         if (object is Actor && object.life == 0) {}
         else if (bullet.willBump(object, elapsedTime)) {
-          (object as Actor).takeDamage(BulletProps.DAMAGE, bullet.orientation);
+          (object as Actor).takeDamage(BulletProps.DAMAGE, bullet);
           bullet.expired = true;
           bullet.hitActor = bullet.expired? true: false;
         }
@@ -53,15 +53,15 @@ class GrenadeBehavior implements AmmoBehavior {
         // 300 aoe
         ref.radius = 300;
         if (ref.willBump(object, elapsedTime)) {
-          (object as Actor).takeDamage(GrenadeProps.DAMAGE, bullet.orientation);
+          (object as Actor).takeDamage(GrenadeProps.DAMAGE, bullet);
           //200 aoe
           ref.radius = 200;
           if (ref.willBump(object, elapsedTime)) {
-            (object as Actor).takeDamage(GrenadeProps.DAMAGE, bullet.orientation);
+            (object as Actor).takeDamage(GrenadeProps.DAMAGE, bullet);
             //100 aoe
             ref.radius = 100;
             if (ref.willBump(object, elapsedTime)) {
-              (object as Actor).takeDamage(GrenadeProps.DAMAGE, bullet.orientation);
+              (object as Actor).takeDamage(GrenadeProps.DAMAGE, bullet);
             }
           }
         }
@@ -134,15 +134,15 @@ class RocketBehavior implements AmmoBehavior {
         // 300 aoe
         ref.radius = 300;
         if (ref.willBump(object, elapsedTime)) {
-          (object as Actor).takeDamage(GrenadeProps.DAMAGE, bullet.orientation);
+          (object as Actor).takeDamage(GrenadeProps.DAMAGE, bullet);
           //200 aoe
           ref.radius = 200;
           if (ref.willBump(object, elapsedTime)) {
-            (object as Actor).takeDamage(GrenadeProps.DAMAGE, bullet.orientation);
+            (object as Actor).takeDamage(GrenadeProps.DAMAGE, bullet);
             //100 aoe
             ref.radius = 100;
             if (ref.willBump(object, elapsedTime)) {
-              (object as Actor).takeDamage(GrenadeProps.DAMAGE, bullet.orientation);
+              (object as Actor).takeDamage(GrenadeProps.DAMAGE, bullet);
             }
           }
         }
@@ -195,6 +195,7 @@ class Bullet extends WorldObject {
   bool hitObject = false, hitActor = false, timedOut = false;
   int damage;
   Map behaviors;
+  Weapon fromWeapon;
 
   Bullet():super(BulletProps.RADIUS,BulletProps.SPEED,0);
 
@@ -223,7 +224,7 @@ class Bullet extends WorldObject {
 
   num get type { return _type; }
 
-  void init(num x, num y, num orientation, num radius) {
+  void init(num x, num y, num orientation, num radius, Weapon weapon) {
     xVelocity = speed * math.sin(orientation);
     yVelocity = -speed * math.cos(orientation);
     this.x = x + ((radius + this.radius) * math.sin(orientation));
@@ -235,6 +236,7 @@ class Bullet extends WorldObject {
     hitActor =
     timedOut =
     expired = false;
+    fromWeapon = weapon;
   }
 
   void doPhysics(num elapsedTime, Map objects) {
@@ -321,7 +323,7 @@ class Pistol extends Weapon {
     _pressed = true;
     var bullet = owner.myWorld.bullets.getBullet()
       ..type = BulletType.BULLET
-      ..init(owner.x, owner.y, owner.orientation, owner.radius);
+      ..init(owner.x, owner.y, owner.orientation, owner.radius, this);
 
     owner.myWorld.addObject(bullet);
     isFiring = true;
@@ -366,7 +368,7 @@ class Rifle extends Weapon {
   void _fire(Timer timer) {
     var bullet = owner.myWorld.bullets.getBullet()
       ..type = BulletType.BULLET
-      ..init(owner.x, owner.y, owner.orientation, owner.radius);
+      ..init(owner.x, owner.y, owner.orientation, owner.radius, this);
 
     owner.myWorld.addObject(bullet);
     ammo = ammo - 1;
@@ -396,7 +398,7 @@ class GrenadeLauncher extends Weapon {
     _pressed = true;
     var bullet = owner.myWorld.bullets.getBullet()
       ..type = BulletType.GRENADE
-      ..init(owner.x, owner.y, owner.orientation, owner.radius);
+      ..init(owner.x, owner.y, owner.orientation, owner.radius, this);
 
     owner.myWorld.addObject(bullet);
     isFiring = true;
@@ -425,7 +427,7 @@ class RocketLauncher extends Weapon {
     _pressed = true;
     var bullet = owner.myWorld.bullets.getBullet()
       ..type = BulletType.ROCKET
-      ..init(owner.x, owner.y, owner.orientation, owner.radius);
+      ..init(owner.x, owner.y, owner.orientation, owner.radius, this);
 
     owner.myWorld.addObject(bullet);
     isFiring = true;
