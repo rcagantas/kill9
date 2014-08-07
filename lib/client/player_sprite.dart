@@ -167,6 +167,7 @@ class PlayerSprite extends DisplayObjectContainer {
   void _deathAnimation() {
     death.visible = true;
     bloodPool.visible = true;
+    bloodPool.scaleX = bloodPool.scaleY = 1.0;
     death.gotoAndPlay(0);
 
     math.Random rand = new math.Random();
