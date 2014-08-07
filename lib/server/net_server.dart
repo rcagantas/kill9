@@ -17,7 +17,7 @@ class NetServer {
               .then(_listener);
           }
         });
-    });
+      });
   }
 
   void _listener(WebSocket websocket) {

@@ -18,7 +18,6 @@ class PlayerSprite extends DisplayObjectContainer {
   Shape arcHealth;
   TextField dbg, nameDisplay;
   bool dbgmode = false;
-  bool _alive = true;
   num hp = 100;
   ParticleEmitter splatter, splatterAoe, spawnParts;
   Shape bloodPool;
@@ -137,42 +136,39 @@ class PlayerSprite extends DisplayObjectContainer {
     return;
   }
 
-  void takeDamage(num dmg, num dmgFrom) {
-    num h = hp - dmg < 0? 0 : hp - dmg;
-    modHitPoints(h - dmg, dmgFrom);
+  void modHitPoints(num hpMod, num dmgFrom) {
+    if (hp == hpMod) return;
+
+    _setVisible(hpMod > 0);
+    _arcUpdate(hpMod);
+    if (hpMod == 0) _deathAnimation();
+    else if (hpMod == 100) spawnParts.start(.5);
+    else _bleedAnimation(dmgFrom);
+    hp = hpMod;
   }
 
-  void modHitPoints(num newHpRatio, num dmgFrom) {
-    if (hp == newHpRatio)
-      return;
-
-    bool bleed = newHpRatio < hp;
-    hp = newHpRatio;
+  void _arcUpdate(num hp) {
     num angle = math.PI/4 * hp/100;
     num color = hp/100 < .4? Color.Red : Color.YellowGreen;
     arcHealth.graphics.clear();
     arcHealth
       ..graphics.arc(CENTER, CENTER, HPRADIUS, -angle, angle, false)
       ..graphics.strokeColor(color, 4);
+  }
 
-    if (hp == 0) {
-      alive = false;
-      return;
-    } else if (hp == 100) {
-      alive = true;
-      return;
-    }
-
-    if (bleed) {
-      if (dmgFrom == -1) splatterAoe.start(.3);
-      else {
-        splatter.rotation = peg180(dmgFrom - this.rotation - math.PI);
-        splatter.start(.3);
-      }
+  void _bleedAnimation(num dmgFrom) {
+    if (dmgFrom == -1) splatterAoe.start(.3);
+    else {
+      splatter.rotation = peg180(dmgFrom - this.rotation - math.PI);
+      splatter.start(.3);
     }
   }
 
-  void deathAnimation() {
+  void _deathAnimation() {
+    death.visible = true;
+    bloodPool.visible = true;
+    death.gotoAndPlay(0);
+
     math.Random rand = new math.Random();
     num scale1 = 15 + rand.nextInt(10);
     Tween poolAni = new Tween(bloodPool, 3.0, TransitionFunction.linear)
@@ -187,13 +183,8 @@ class PlayerSprite extends DisplayObjectContainer {
     stage.juggler.add(c);
   }
 
-  void spawnAnimation() {
-    this.alpha = 100;
-    spawnParts.start(.5);
-  }
-
-  void set alive(bool b) {
-    _alive = b;
+  void _setVisible(bool b) {
+    alpha = 1.0;
     weapons[weapon].visible =
     head.visible =
     torso.visible =
@@ -201,18 +192,7 @@ class PlayerSprite extends DisplayObjectContainer {
     arcHealth.visible = b;
     death.visible =
     bloodPool.visible = !b;
-    if (!_alive) {
-      death.visible = true;
-      bloodPool.visible = true;
-      death.gotoAndPlay(0);
-      deathAnimation();
-    } else {
-      modHitPoints(100, 0);
-      spawnAnimation();
-    }
   }
-
-  bool get alive { return _alive; }
 
   void fixHipRotation(num x, num y) {
     num dx = x - this.x;

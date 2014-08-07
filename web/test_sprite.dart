@@ -42,7 +42,7 @@ void handleInput() {
       !io.keyState[65] &&
       !io.keyState[68]) p1.stopMoving();
   if (io.keyState[38] || io.mouseL) { p1.fire(); }
-  if (io.keyState[69]) { p1.takeDamage(1, 0); }
+  if (io.keyState[69]) { p1.modHitPoints(p1.hp - 1, 0); }
   p1.move(p1.x + ix, p1.y + iy);
   p1.turnAdd(it);
 }
@@ -51,7 +51,7 @@ void onKeyUp(KeyboardEvent e) {
   if (p1 == null) return;
   if (e.keyCode == 40) { p1.cycleWeapon(); }
   if (e.keyCode == 38 || e.keyCode == 40) {}
-  if (e.keyCode == 82) p1.alive = true;
+  if (e.keyCode == 82) p1.modHitPoints(100, 0);
 }
 
 void onMouseMove(MouseEvent e) {
