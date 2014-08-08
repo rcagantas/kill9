@@ -10,6 +10,7 @@ NetClient net;
 Map<int, PlayerSprite> players = new Map();
 Map<int, BulletSprite> bullets = new Map();
 List<int> visible = new List();
+String playerName = "";
 int id;
 
 void main() {
@@ -35,18 +36,22 @@ void handleButtons() {
   net.socket.onError.listen((e) => dbg.innerHtml = "error on connection.");
 
   html.querySelector("#join_game").onClick.listen((e) {
-    net.joinRandomGame();
+    net.joinRandomGame(playerName);
+    dbg.innerHtml = "joining as: ${playerName}</br>";
   });
 
   html.querySelector("#fill_bots").onClick.listen((e) {
     net.socket.send(Comm.FILL_BOTS);
   });
 
-  html.querySelector("#text_data").onKeyDown.listen((e) {
-    if (e.keyCode != 13) return;
+  html.querySelector("#text_data").onChange.listen((e) {
     dbg.innerHtml = "sending: ${e.target.value}</br>";
     net.socket.send("${e.target.value}");
     e.target.value = "";
+  });
+
+  html.querySelector("#player_name").onInput.listen((e) {
+    playerName = e.target.value;
   });
 }
 

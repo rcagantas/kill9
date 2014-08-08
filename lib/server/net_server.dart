@@ -22,12 +22,23 @@ class NetServer {
 
   void _listener(WebSocket websocket) {
     websocket.listen((e) {
-      if (e == Comm.JOIN_RANDOM) {
-        int i = cbAddPlayer();
-        if (i == 0) return;
-        players[i] = websocket;
-      } else if (cbPlayerInput != null) {
-        cbPlayerInput(e);
+      String d = e.toString();
+      var s = d.split(":");
+      var cmd = s.length == 2? s[0]: d;
+      var param = s.length == 2? s[1] : "";
+
+      switch(cmd + ":") {
+        case Comm.JOIN_RANDOM:
+          int i = cbAddPlayer();
+          if (i == 0) return;
+          players[i] = websocket;
+          break;
+        case Comm.FILL_BOTS:
+        case Comm.INPUT:
+          if (cbPlayerInput != null) cbPlayerInput(e);
+          break;
+        default:
+          print("unhandled ${cmd} ${param}");
       }
     });
   }

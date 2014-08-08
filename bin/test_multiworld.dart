@@ -26,27 +26,22 @@ class MultiNetServer {
     websocket.listen((e) {
       String d = e.toString();
       var s = d.split(":");
-      var cmd = s.length == 1? s[0]: d;
+      var cmd = s.length == 2? s[0]: d;
       var param = s.length == 2? s[1] : "";
       print("cmd: ${cmd}; param: ${param}");
-      switch (cmd) {
-        case Comm.JOIN_RANDOM:
-          if (cbJoinRandom == null) break;
-          int i = cbJoinRandom();
-          if (i != 0) players[i] = websocket;
-          break;
-        case Comm.JOIN_GAME:
-          if (cbJoinCustom == null) break;
-          int i = cbJoinCustom(param);
-          if (i != 0) players[i] = websocket;
-          break;
-        case Comm.CREATE_GAME:
-          if (cbCreateCustom == null) break;
-          int i = cbCreateCustom();
-          if (i != 0) players[i] = websocket;
-          break;
+      switch (cmd + ":") {
+        case Comm.JOIN_RANDOM: _callCb(cbJoinRandom, param, websocket); break;
+        case Comm.JOIN_GAME: _callCb(cbJoinCustom, param, websocket); break;
+        case Comm.CREATE_GAME: _callCb(cbCreateCustom, param, websocket); break;
+        case Comm.FILL_BOTS: break;
       }
     });
+  }
+
+  void _callCb(Function cb, dynamic param, WebSocket websocket) {
+    if (cb == null) return;
+    int i = cb(param);
+    if (i == 0) players[i] = websocket;
   }
 }
 
@@ -76,7 +71,7 @@ World worldFactory() {
 void main() {
   World randomWorld = worldFactory();
   mnet = new MultiNetServer("127.0.0.1", 1024);
-  mnet.cbJoinRandom = () { return randomWorld.addPlayer(); };
+  mnet.cbJoinRandom = (e) { return randomWorld.addPlayer(); };
   mnet.cbJoinCustom = (gameId) {
     for (World world in worlds) {
       if (world.hashCode == gameId) {
@@ -85,7 +80,7 @@ void main() {
       return 0;
     }
   };
-  mnet.cbCreateCustom = () {
+  mnet.cbCreateCustom = (e) {
     var world = worldFactory();
     return world.addPlayer();
   };

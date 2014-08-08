@@ -11,9 +11,11 @@ class NetClient {
     socket.onMessage.listen(onData);
   }
 
-  void joinRandomGame() {
-    if (gameId == 0)
-    socket.send(Comm.JOIN_RANDOM);
+  void joinRandomGame(String playerName) {
+    if (gameId == 0 && playerName != "") {
+      socket.send(Comm.JOIN_RANDOM);
+      socket.send(Comm.PLAYER_NAME + "${playerName}");
+    }
   }
 
   void joinCustomGame(int gameId) {
