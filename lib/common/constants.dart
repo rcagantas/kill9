@@ -76,7 +76,6 @@ class Comm {
   static const String JOIN_RANDOM = "ggl_game_random:";
   static const String JOIN_GAME = "ggl_game_join:";
   static const String CREATE_GAME = "ggl_game_create:";
-  static const String GAME_ID = "ggl_id_game:";
   static const String PLAYER_ID = "ggl_id_player:";
   static const String PLAYER_NAME = "ggl_name_player:";
   static const String SURFACE = "ggl_surface:";
@@ -88,7 +87,7 @@ class Comm {
 
   static List<String> commandList =
       [JOIN_RANDOM, JOIN_GAME, CREATE_GAME,
-      GAME_ID, PLAYER_ID, PLAYER_NAME,
+      PLAYER_ID, PLAYER_NAME,
       SURFACE, ACTORS, BULLETS, FRAME,
       FILL_BOTS];
 }
