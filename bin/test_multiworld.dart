@@ -1,68 +1,7 @@
 import 'package:giggl/gglworld.dart';
-import 'dart:io';
 import 'package:giggl/gglcommon.dart';
+import 'package:giggl/gglserver.dart';
 import 'dart:convert';
-
-class MultiNetServer {
-  String address;
-  int port;
-  Function cbCreateCustom, cbJoinRandom,
-      cbJoinCustom, cbFillBots,
-      cbInput;
-  Map<int, WebSocket> players = new Map<int, WebSocket>();
-
-  MultiNetServer(this.address, this.port) {
-    HttpServer
-      .bind(address, port)
-      .then((server) {
-        server.listen((HttpRequest request) {
-          if (request.uri.path == "/ws") {
-            WebSocketTransformer
-              .upgrade(request)
-              .then(_listener);
-          }
-        });
-      });
-  }
-
-  void _listener(WebSocket websocket) {
-    websocket.listen((e) {
-      String d = e.toString();
-      var s = d.split(":");
-      var cmd = s.length == 2? s[0]: d;
-      var param = s.length == 2? s[1] : "";
-      //print("cmd: ${cmd}; param: ${param}");
-      switch (cmd + ":") {
-        case Comm.INPUT: if (cbInput != null) cbInput(param); break;
-        case Comm.JOIN_RANDOM: _callCbJoin(cbJoinRandom, param, websocket); break;
-        case Comm.JOIN_GAME: _callCbJoin(cbJoinCustom, param, websocket); break;
-        case Comm.CREATE_GAME: _callCbJoin(cbCreateCustom, param, websocket); break;
-        case Comm.FILL_BOTS:
-          for (int i in players.keys) {
-            if (players[i] == websocket) {
-              cbFillBots(i);
-            }
-          }
-          break;
-      }
-    });
-  }
-
-  void _callCbJoin(Function cb, dynamic param, WebSocket websocket) {
-    if (cb == null) return;
-    // don't process players who are already in a game.
-    for (WebSocket w in players.values) {
-      if (w == websocket) return;
-    }
-    int i = cb(param);
-    if (i != 0) players[i] = websocket;
-  }
-
-  void send(int id, String data) {
-    if (players.containsKey(id))
-      players[id].add(data);
-  }
-}
 
 World worldFactory(List<World> worlds, MultiNetServer mnet) {
   num width = 20, height = 20;
@@ -80,26 +19,20 @@ World worldFactory(List<World> worlds, MultiNetServer mnet) {
     });
 
     for (Actor a in world.actors) {
-      // send player id
       mnet.send(a.hashCode, Comm.PLAYER_ID + JSON.encode(a.hashCode));
-      // 1. publish map detail to client
       mnet.send(a.hashCode, Comm.SURFACE + JSON.encode(world.grid.surfaceList));
-      // 2. publish all object ids to client (players/bullets/etc)
       mnet.send(a.hashCode, Comm.ACTORS + JSON.encode(actorCodes));
       mnet.send(a.hashCode, Comm.BULLETS + JSON.encode(bulletCodes));
-      // 3. register the frame listener for each player
       world.addPlayerFrameListener(a.hashCode, (Frame p) {
         num id = p.playerId;
-        // compress p and send to client;
         mnet.send(id, Comm.FRAME + JSON.encode(p.toString()));
       });
     }
 
     world.start();
-    print("startin world ${world.hashCode}");
+    print("starting world ${world.hashCode}");
 
     for (Actor a in world.actors) {
-      // if actor is not a player, must be a bot.
       if (!mnet.players.keys.contains(a.hashCode)) {
         RandomWalker walker = new RandomWalker(a);
         walker.start();
