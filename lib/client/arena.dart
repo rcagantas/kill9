@@ -43,6 +43,25 @@ class Arena extends DisplayObjectContainer {
       }
     }
 
+    //add border
+    for (num i = -1; i <= height; i++) {
+      for (num j = -1; j <= width; j++) {
+        if (i == -1 || i == height ||
+            j == -1 || j == width) {
+          /*TileSheet tile = new TileSheet(Surface.OBSCURING)
+            ..x = (j * TileSheet.SIZE) + TileSheet.SIZE/2
+            ..y =  (i * TileSheet.SIZE) + TileSheet.SIZE/2
+            ..scaleX = treeScale
+            ..scaleY = treeScale
+            ..addTo(trees);*/
+          TileSheet groundTile = new TileSheet(Surface.NON_PASSABLE)
+            ..x = (j * TileSheet.SIZE) + TileSheet.SIZE/2
+            ..y =  (i * TileSheet.SIZE) + TileSheet.SIZE/2
+            ..addTo(this);
+        }
+      }
+    }
+
     /*
     p1 = new PlayerSprite()
       ..move(stage.stageWidth/2, stage.stageHeight/2)
