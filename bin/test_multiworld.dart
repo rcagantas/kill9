@@ -5,7 +5,8 @@ import 'package:giggl/gglcommon.dart';
 class MultiNetServer {
   String address;
   int port;
-  Function cbCreateCustom, cbJoinRandom, cbJoinCustom;
+  Function cbCreateCustom, cbJoinRandom, cbJoinCustom,
+    cbGetGameId, cbFillBots;
   Map<int, WebSocket> players = new Map<int, WebSocket>();
 
   MultiNetServer(this.address, this.port) {
@@ -33,7 +34,7 @@ class MultiNetServer {
         case Comm.JOIN_RANDOM: _callCb(cbJoinRandom, param, websocket); break;
         case Comm.JOIN_GAME: _callCb(cbJoinCustom, param, websocket); break;
         case Comm.CREATE_GAME: _callCb(cbCreateCustom, param, websocket); break;
-        case Comm.FILL_BOTS: break;
+        case Comm.FILL_BOTS: cbFillBots(param); break;
       }
     });
   }
@@ -42,14 +43,11 @@ class MultiNetServer {
     if (cb == null) return;
     int i = cb(param);
     if (i == 0) players[i] = websocket;
+    websocket.add("${Comm.GAME_ID}${cbGetGameId(i)}");
   }
 }
 
-
-MultiNetServer mnet;
-List<World> worlds = [];
-
-World worldFactory() {
+World worldFactory(List<World> worlds) {
   num width = 20, height = 20;
   var surfaceList = MapGenerator.createSimpleRandomSurface(width, height);
   var grid = new Grid.surface(width, height, 100, surfaceList);
@@ -69,7 +67,10 @@ World worldFactory() {
 }
 
 void main() {
-  World randomWorld = worldFactory();
+  MultiNetServer mnet;
+  List<World> worlds = [];
+
+  World randomWorld = worldFactory(worlds);
   mnet = new MultiNetServer("127.0.0.1", 1024);
   mnet.cbJoinRandom = (e) { return randomWorld.addPlayer(); };
   mnet.cbJoinCustom = (gameId) {
@@ -81,7 +82,27 @@ void main() {
     }
   };
   mnet.cbCreateCustom = (e) {
-    var world = worldFactory();
+    var world = worldFactory(worlds);
     return world.addPlayer();
+  };
+  mnet.cbGetGameId = (e) {
+    for (World w in worlds) {
+       for (Actor a in w.actors) {
+         if (a.hashCode == e)
+           return w.hashCode;
+       }
+    }
+    return 0;
+  };
+  mnet.cbFillBots = (e) {
+    for (World w in worlds) {
+      if (w.hashCode == int.parse(e)) {
+        while (w.actors.length < 10) {
+          Actor a = w.addPlayerandGetReference();
+          RandomWalker walker = new RandomWalker(a);
+          walker.start();
+        }
+      }
+    }
   };
 }

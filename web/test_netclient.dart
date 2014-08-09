@@ -41,7 +41,7 @@ void handleButtons() {
   });
 
   html.querySelector("#fill_bots").onClick.listen((e) {
-    net.socket.send(Comm.FILL_BOTS);
+    net.socket.send("${Comm.FILL_BOTS}${net.gameId}");
   });
 
   html.querySelector("#text_data").onChange.listen((e) {
