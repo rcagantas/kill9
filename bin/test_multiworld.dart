@@ -32,9 +32,11 @@ World worldFactory(List<World> worlds, MultiNetServer mnet) {
     world.start();
     print("starting world ${world.hashCode}");
 
-    for (Actor a in world.actors) {
+    for (int i = 0; i < world.actors.length; i++) {
+      Actor a = world.actors[i];
       if (!mnet.players.keys.contains(a.hashCode)) {
         RandomWalker walker = new RandomWalker(a);
+        a.name = Bots.names[i];
         walker.start();
       }
     }
@@ -81,6 +83,16 @@ void main() {
             Actor a = w.addPlayerandGetReference();
           }
           return;
+        }
+      }
+    }
+  };
+
+  mnet.cbPlayerName = (int playerId, String playerName) {
+    for (World w in worlds) {
+      for (Actor a in w.actors) {
+        if (a.hashCode == playerId) {
+          a.name = playerName;
         }
       }
     }

@@ -104,6 +104,8 @@ void updateFrame(Frame p) {
         ..setWeapon(object.weaponType);
       if (!object.isMoving) player.stopMoving();
       if (object.isFiring) player.fire();
+      if (p.playerId != object.id)
+        player.nameDisplay.text = object.name;
       visible.add(object.id);
     }
     else if (bullets.containsKey(object.id)) {

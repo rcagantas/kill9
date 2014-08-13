@@ -136,6 +136,7 @@ class World {
           visiObj.isMoving = obj.isMoving();
           visiObj.weaponType = obj.weapon.weaponType;
           visiObj.weaponAmmo = obj.weapon.ammo;
+          visiObj.name = obj.name;
         } else if (obj is Bullet) {
           visiObj.type = obj.type;
           visiObj.hitActor = obj.hitActor;

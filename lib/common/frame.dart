@@ -12,11 +12,13 @@ class ActorInFrame extends ObjectInFrame {
   num damageFrom;
   bool isFiring = false;
   bool isMoving = false;
+  String name;
 
   String toString() {
     var stringBuffer = new StringBuffer()
     ..write("$id,$x,$y,$orientation,")
-    ..write("$lifeRatio,$weaponType,$weaponAmmo,$damageFrom,$isFiring,$isMoving");
+    ..write("$lifeRatio,$weaponType,$weaponAmmo,$damageFrom,$isFiring,$isMoving,")
+    ..write("$name");
     return stringBuffer.toString();
   }
 
@@ -37,6 +39,7 @@ class ActorInFrame extends ObjectInFrame {
     damageFrom = num.parse(fields[7]);
     isFiring = fields[8] == "true";
     isMoving = fields[9] == "true";
+    name = fields[10];
   }
 }
 

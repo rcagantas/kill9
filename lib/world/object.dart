@@ -27,6 +27,8 @@ class WorldObject {
 
   final _fullCircle = 2 * math.PI;
 
+  String name;
+
   WorldObject (this.radius,this.speed, this.turnRate);
 
   math.Point projectLocation(elapsedTime) {

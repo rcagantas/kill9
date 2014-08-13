@@ -5,7 +5,7 @@ class MultiNetServer {
   int port;
   Function cbCreateCustom, cbJoinRandom,
       cbJoinCustom, cbFillBots,
-      cbInput;
+      cbInput, cbPlayerName;
   Map<int, WebSocket> players = new Map<int, WebSocket>();
 
   MultiNetServer(this.address, this.port) {
@@ -35,10 +35,17 @@ class MultiNetServer {
         case Comm.JOIN_GAME: _callCbJoin(cbJoinCustom, param, websocket); break;
         case Comm.CREATE_GAME: _callCbJoin(cbCreateCustom, param, websocket); break;
         case Comm.FILL_BOTS:
+          if (cbFillBots == null) break;
           for (int i in players.keys) {
-            if (players[i] == websocket) {
+            if (players[i] == websocket)
               cbFillBots(i);
-            }
+          }
+          break;
+        case Comm.PLAYER_NAME:
+          if (cbPlayerName == null) return;
+          for (int i in players.keys) {
+            if (players[i] == websocket)
+              cbPlayerName(i, param);
           }
           break;
       }

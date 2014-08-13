@@ -69,7 +69,8 @@ class Bots {
        'Raist bot',
        'Dendi bot',
        'Puppey bot',
-       'Iceiceice bot'];
+       'Iceiceice bot',
+       'Funn1k bot'];
 }
 
 class Comm {
