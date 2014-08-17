@@ -74,6 +74,45 @@ class WorldObject {
   }
 }
 
+class WeaponDrop extends WorldObject{
+  Timer _timer;
+
+  int weaponType;
+  bool _canRespawn = false;
+  math.Random random = new math.Random();
+
+  WeaponDrop(World world):super(ActorProps.RADIUS,0,0) {
+    myWorld = world;
+  }
+
+  void spawn() {
+      if (!_canRespawn) {
+        _canRespawn = true;
+
+        _timer = new Timer(new Duration(seconds:5), () {
+
+            // roll random weapon;
+          math.Random random = new math.Random();
+
+          int weaponType = random.nextInt(3);
+
+          // respawn to random location;
+          myWorld.addObject(this);
+          myWorld.spawnRandomly(this);
+
+        });
+      }
+  }
+
+  void pickedUp(Actor actor) {
+    _canRespawn = true;
+    actor.addWeapon(weaponType);
+    myWorld.removeObject(this);
+
+    spawn();
+  }
+}
+
 class Actor extends WorldObject {
 
   Queue<Weapon> weapons = new Queue();
@@ -96,11 +135,39 @@ class Actor extends WorldObject {
         ActorProps.TURN_RATE)
   {
     weapon = new Pistol(this);
-    weapons.addLast(new Rifle(this));
-    weapons.addLast(new GrenadeLauncher(this));
-    weapons.addLast(new RocketLauncher(this));
 
     _45degreeSpeed = speed * math.sin(math.PI/4);
+  }
+
+  void addWeapon(int type) {
+    if (weapon.weaponType == type) {
+       weapon.addAmmo();
+    }
+    else {
+      bool found = false;
+      weapons.forEach((w) {
+        if (w.weaponType == type) {
+          weapon.addAmmo();
+          found = true;
+        }
+      });
+
+      if (!found) {
+        Weapon newWeapon = null;
+
+        if (type == WeaponType.GRENADE_LAUNCHER)
+          newWeapon = new GrenadeLauncher(this);
+        else if (type == WeaponType.RIFLE)
+          newWeapon = new Rifle(this);
+        else if (type == WeaponType.ROCKET_LAUNCHER)
+          newWeapon = new RocketLauncher(this);
+
+        if (newWeapon != null) {
+          weapons.addFirst(newWeapon);
+          switchWeapon();
+        }
+      }
+    }
   }
 
   void switchWeapon() {

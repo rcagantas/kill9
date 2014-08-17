@@ -305,6 +305,10 @@ class Weapon {
   void stop() {
     isFiring = false;
   }
+
+  void addAmmo() {
+    // do nothing
+  }
 }
 
 class Pistol extends Weapon {
@@ -379,6 +383,10 @@ class Rifle extends Weapon {
       isFiring = false;
     }
   }
+
+  void addAmmo() {
+    ammo = ammo + WeaponAmmo.RIFLE_AMMO;
+  }
 }
 
 class GrenadeLauncher extends Weapon {
@@ -408,6 +416,10 @@ class GrenadeLauncher extends Weapon {
     _pressed = false;
     isFiring = false;
   }
+
+  void addAmmo() {
+    ammo = ammo + WeaponAmmo.GRENADE_AMMO;
+  }
 }
 
 class RocketLauncher extends Weapon {
@@ -436,6 +448,10 @@ class RocketLauncher extends Weapon {
   void stop() {
     _pressed = false;
     isFiring = false;
+  }
+
+  void addAmmo() {
+    ammo = ammo + WeaponAmmo.ROCKET_AMMO;
   }
 }
 

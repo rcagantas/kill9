@@ -11,6 +11,7 @@ class World {
   BulletFactory bullets;
   Function onReady;
   static const int MAX_PLAYERS = 10;
+  WeaponDrop _weaponDrop;
 
   int _tileWidth;
   int _worldWidth;
@@ -20,6 +21,7 @@ class World {
 
   World (grid) {
     this.grid = grid;
+
     _worldWidth = grid.width() * grid.tileWidth();
     _worldHeight = grid.height() * grid.tileWidth();
 
@@ -35,11 +37,18 @@ class World {
           _readyTimer.cancel();
         }
       });
+
+    _weaponDrop = new WeaponDrop(this);
   }
 
   void start() {
-    if (_timer == null)
+    if (_timer == null) {
+      //initializations
+      _weaponDrop.spawn();
+
+      //start game
       _timer = new Timer.periodic(new Duration(milliseconds: 16), this._goRound);
+    }
   }
 
   void stop() {
@@ -77,7 +86,7 @@ class World {
     return newPlayer.hashCode;
   }
 
-  void spawnRandomly(Actor actor) {
+  void spawnRandomly(WorldObject object) {
     math.Random rand = new math.Random();
     int loc;
     int count;
@@ -88,8 +97,8 @@ class World {
         for (int x = 0; x < grid.width(); x++) {
           if (count == loc &&
               grid.surfaceList[loc] == Surface.PASSABLE) {
-            actor.x = x * grid.tileWidth() + grid.tileWidth()/2;
-            actor.y = y * grid.tileWidth() + grid.tileWidth()/2;
+            object.x = x * grid.tileWidth() + grid.tileWidth()/2;
+            object.y = y * grid.tileWidth() + grid.tileWidth()/2;
             return;
           }
           count++;
@@ -122,9 +131,15 @@ class World {
       if (obj.isInView(frame.topX, frame.topY,
           frame.topX + WorldConst.VIEWPORT_WIDTH,
           frame.topY + WorldConst.VIEWPORT_HEIGHT)) {
-        var visiObj = obj is Actor?
-            new ActorInFrame() :
-            new BulletInFrame();
+        var visiObj;
+
+        if (obj is Actor)
+          visiObj = new ActorInFrame();
+        else if (obj is Bullet)
+          visiObj = new BulletInFrame();
+        else
+          visiObj = new WeaponDropInFrame();
+
         visiObj.x = obj.x;
         visiObj.y = obj.y;
         visiObj.orientation = obj.orientation;
@@ -142,6 +157,8 @@ class World {
           visiObj.hitActor = obj.hitActor;
           visiObj.hitObject = obj.hitObject;
           visiObj.timedOut = obj.timedOut;
+        } else if (obj is WeaponDrop) {
+          visiObj.weaponType = obj.weaponType;
         }
         frame.visibleObjects.add(visiObj);
       }

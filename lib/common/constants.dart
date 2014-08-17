@@ -18,10 +18,16 @@ class ActorProps {
 }
 
 class WeaponType {
-  static const int PISTOL = 0;
-  static const int RIFLE = 1;
-  static const int GRENADE_LAUNCHER = 2;
-  static const int ROCKET_LAUNCHER = 3;
+  static const int RIFLE = 0;
+  static const int GRENADE_LAUNCHER = 1;
+  static const int ROCKET_LAUNCHER = 2;
+  static const int PISTOL = 3;
+}
+
+class WeaponAmmo {
+  static const int GRENADE_AMMO = 5;
+  static const int ROCKET_AMMO = 5;
+  static const int RIFLE_AMMO = 200;
 }
 
 class WorldConst {

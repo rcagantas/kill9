@@ -5,6 +5,31 @@ class ObjectInFrame {
   num x,y,orientation;
 }
 
+class WeaponDropInFrame extends ObjectInFrame {
+  int weaponType;
+
+  String toString() {
+    var stringBuffer = new StringBuffer()
+    ..write("$id,$x,$y,$orientation,")
+    ..write("$weaponType");
+    return stringBuffer.toString();
+  }
+
+  WeaponDropInFrame() {
+
+  }
+
+  WeaponDropInFrame.fromString(String s) {
+    var fields = s.split(",");
+
+    id = num.parse(fields[0]);
+    x = num.parse(fields[1]);
+    y = num.parse(fields[2]);;
+    orientation = num.parse(fields[3]);
+    weaponType = int.parse(fields[4]);
+  }
+}
+
 class ActorInFrame extends ObjectInFrame {
   num lifeRatio;
   num weaponType;
@@ -108,8 +133,10 @@ class Frame {
 
       if (obj is ActorInFrame)
         stringBuffer.write("0#");
-      else
+      else if (obj is BulletInFrame)
         stringBuffer.write("1#");
+      else
+        stringBuffer.write("2#");
 
       stringBuffer.write(obj.toString());
       stringBuffer.write("|");
@@ -153,8 +180,10 @@ class Frame {
       var obj = str.split("#");
       if (obj[0] == "0")
         visibleObjects.add(new ActorInFrame.fromString(obj[1]));
-      else
+      else if(obj[0] == "1")
         visibleObjects.add(new BulletInFrame.fromString(obj[1]));
+      else
+        visibleObjects.add(new WeaponDropInFrame.fromString(obj[1]));
     });
 
   }
