@@ -14,6 +14,7 @@ part 'client/tile_sheet.dart';
 part 'client/bullet_sprite.dart';
 part 'client/mini_map.dart';
 part 'client/net_client.dart';
+part 'client/drop_sprite.dart';
 
 /**
  * global variables

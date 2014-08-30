@@ -74,7 +74,7 @@ class WorldObject {
   }
 }
 
-class WeaponDrop extends WorldObject{
+class WeaponDrop extends WorldObject {
   Timer _timer;
 
   int weaponType;
@@ -94,8 +94,8 @@ class WeaponDrop extends WorldObject{
             // roll random weapon;
           math.Random random = new math.Random();
 
-          int weaponType = random.nextInt(3);
-
+          weaponType = random.nextInt(3);
+          print("new weapon drop of type ${weaponType}");
           // respawn to random location;
           myWorld.addObject(this);
           myWorld.spawnRandomly(this);

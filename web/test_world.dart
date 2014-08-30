@@ -160,7 +160,6 @@ void onMouseMove(MouseEvent e) {
 
 void updateFrame (Frame x) {
   Frame p = new Frame.fromString(x.toString());
-  print(p.toString());
 
   arena.move(-p.topX, -p.topY);
   visible.clear();

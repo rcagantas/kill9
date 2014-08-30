@@ -137,7 +137,7 @@ class World {
           visiObj = new ActorInFrame();
         else if (obj is Bullet)
           visiObj = new BulletInFrame();
-        else
+        else if (obj is WeaponDrop)
           visiObj = new WeaponDropInFrame();
 
         visiObj.x = obj.x;
@@ -159,6 +159,7 @@ class World {
           visiObj.timedOut = obj.timedOut;
         } else if (obj is WeaponDrop) {
           visiObj.weaponType = obj.weaponType;
+
         }
         frame.visibleObjects.add(visiObj);
       }

@@ -72,6 +72,7 @@ void main() {
 
   mnet.cbCreateCustom = (e) {
     var world = worldFactory(worlds, mnet);
+    print("created custom world");
     return world.addPlayer();
   };
 

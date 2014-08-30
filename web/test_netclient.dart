@@ -9,6 +9,7 @@ InputHandler io;
 NetClient net;
 Map<int, PlayerSprite> players = new Map();
 Map<int, BulletSprite> bullets = new Map();
+DropSprite drop = new DropSprite();
 List<int> visible = new List();
 String playerName = "";
 int id;
@@ -38,6 +39,10 @@ void handleButtons() {
   html.querySelector("#join_game").onClick.listen((e) {
     net.joinRandomGame(playerName);
     dbg.innerHtml = "joining as: ${playerName}</br>";
+  });
+
+  html.querySelector("#create_game").onClick.listen((e) {
+    net.createGame(playerName);
   });
 
   html.querySelector("#fill_bots").onClick.listen((e) {

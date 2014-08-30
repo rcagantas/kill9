@@ -10,6 +10,10 @@ class NetClient {
     socket.onMessage.listen(onData);
   }
 
+  void onData(html.MessageEvent event) {
+    String s = event.data;
+  }
+
   void joinRandomGame(String playerName) {
     if (playerName != "") {
       socket.send(Comm.JOIN_RANDOM);
@@ -21,7 +25,8 @@ class NetClient {
     socket.send(Comm.JOIN_GAME + "${gameId}");
   }
 
-  void onData(html.MessageEvent event) {
-    String s = event.data;
+  void createGame(String playerName) {
+    socket.send(Comm.CREATE_GAME);
+    socket.send(Comm.PLAYER_NAME + "${playerName}");
   }
 }
