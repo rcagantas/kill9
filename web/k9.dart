@@ -1,3 +1,4 @@
+import 'dart:html' as html;
 import 'package:stagexl/stagexl.dart';
 import 'package:giggl/gglclient2.dart';
 
@@ -7,9 +8,9 @@ class RedDot extends DisplayObjectContainer {
   RedDot() {
     input.cbList.add(action);
     shape = new Shape();
-    shape.graphics.ellipse(0, 0, 50, 100);
+    shape.graphics.ellipse(stage.stageWidth/2, stage.stageHeight/2, 15, 20);
     shape.graphics.fillColor(Color.Red);
-    stage.addChild(shape);
+    this.addChild(shape);
   }
 
   void action(Cmd c) {
@@ -24,6 +25,8 @@ class TestSprite extends DisplayObjectContainer {
   PlayerSprite p1;
   TestSprite() {
     p1 = new PlayerSprite()
+      ..x = stage.stageWidth/2
+      ..y = stage.stageHeight/2
       ..addTo(this);
     input.cbList.add(action);
   }
@@ -36,6 +39,7 @@ class TestSprite extends DisplayObjectContainer {
     p1.move(x, y, r);
     p1.walk(c.moveX != 0 || c.moveY != 0 || c.rotate != 0);
     if (c.fire) p1.fire();
+    if (c.swap) p1.swapWeapon();
   }
 }
 
@@ -46,8 +50,20 @@ void main() {
   print(resLoader);
   fontLoader.load.then((_) {
     resource.load().then((_) {
-      stage.addChild(new TestSprite());
-      stage.addChild(diagnostics);
+      RedDot red = new RedDot();
+      TestSprite player = new TestSprite();
+
+      html.querySelector("#red").onClick.listen((e) {
+        stage.removeChildren();
+        stage.addChild(red);
+        stage.addChild(diagnostics);
+      });
+
+      html.querySelector("#player").onClick.listen((e) {
+        stage.removeChildren();
+        stage.addChild(player);
+        stage.addChild(diagnostics);
+      });
     });
   });
 }

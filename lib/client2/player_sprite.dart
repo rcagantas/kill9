@@ -4,11 +4,15 @@ class PlayerSprite extends DisplayObjectContainer {
   static const num center = 48.5; //center of player tile
   static const num offset = 8;
   static num totalPlayers = -1;
+  static num hpRadius = 33;
+
   num playerNo;
   TextField dbg;
   FlipBook legs;
   Bitmap torso, head;
   List<Bitmap> weapon = [];
+  Shape hpBar;
+  num currentWeapon = 0;
   bool _isFiring = false;
 
   PlayerSprite() {
@@ -25,6 +29,15 @@ class PlayerSprite extends DisplayObjectContainer {
     List<BitmapData> bmpStride = [];
     for (num i = 0; i < 6; i++)
       bmpStride.add(resource.getBitmapData("ac_stride$i"));
+
+    hpBar = new Shape()
+      ..pivotX = center
+      ..pivotY = center
+      ..rotation = math.PI/2
+      ..graphics.arc(center, center, hpRadius, -math.PI/4, math.PI/4, false)
+      ..graphics.strokeColor(Color.YellowGreen, 4)
+      ..addTo(this);
+
 
     legs = new FlipBook(bmpStride, 10)
       ..x = -offset
@@ -94,19 +107,25 @@ class PlayerSprite extends DisplayObjectContainer {
     else if (!walk) legs.gotoAndStop(0);
   }
 
-  num firingTransition(num ratio) {
-    return 0.25 < ratio && ratio < 0.85? 1.0 : 0.0;
-  }
-
   void fire() {
     if (_isFiring) return;
+    Function firingTransition = (num ratio) {
+      return 0.25 < ratio && ratio < 0.85? 1.0 : 0.0;
+    };
+
     num time = .10;
     AnimationGroup fireAni = new AnimationGroup();
-    fireAni.add(new Tween(weapon[0], time, firingTransition)..animate.y.to(3));
+    fireAni.add(new Tween(weapon[currentWeapon], time, firingTransition)..animate.y.to(3));
     fireAni.add(new Tween(torso, time, firingTransition)..animate.y.to(3));
     fireAni.onStart = () => _isFiring = true;
     fireAni.onComplete = () => _isFiring = false;
     stage.juggler.add(fireAni);
+  }
+
+  void swapWeapon() {
+    weapon[currentWeapon].visible = false;
+    currentWeapon = currentWeapon < resLoader.weaponNames.length - 1? currentWeapon + 1: 0;
+    weapon[currentWeapon].visible = true;
   }
 
   void debug() {

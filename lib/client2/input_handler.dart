@@ -35,6 +35,7 @@ class InputHandler {
     diagnostics.addChild(dbg);
 
     stage.focus = stage;
+    stage.onEnterFrame.listen(_reset);
     stage.onKeyDown.listen(_process);
     stage.onKeyUp.listen(_process);
     print("loading input handler");
@@ -43,6 +44,10 @@ class InputHandler {
   void _process(KeyboardEvent e) {
     key[e.keyCode] = e.type == KeyboardEvent.KEY_DOWN ? true : false;
     makeCmd();
+  }
+
+  void _reset(EnterFrameEvent event) {
+    cmd.swap = false;
   }
 
   num trival(num neg, num pos) {
