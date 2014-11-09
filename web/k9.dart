@@ -1,5 +1,4 @@
 import 'dart:html' as html;
-import 'dart:math' as math;
 import 'package:stagexl/stagexl.dart';
 import 'package:giggl/gglclient2.dart';
 import 'package:giggl/gglworld.dart';
@@ -35,18 +34,7 @@ class TestSprite extends DisplayObjectContainer {
     input.cbList.add(action);
   }
 
-  void action(Cmd c) {
-    num ms = 5, tr = .10;
-    num x = p1.x + c.moveX * ms;
-    num y = p1.y + c.moveY * ms;
-    num r = p1.rotation + c.rotate * tr;
-    p1.move(x, y, r);
-    p1.walk(c.moveX != 0 || c.moveY != 0 || c.rotate != 0);
-    if (c.fire) p1.fire();
-    if (c.swap) p1.swapWeapon();
-    if (input.key[69]) p1.takeDamage(1, 45 * math.PI/180);
-    if (input.key[82]) p1.hpRatio = 100;
-  }
+  void action(Cmd c) { p1.action(c); }
 }
 
 class TestArena extends DisplayObjectContainer {
@@ -63,6 +51,7 @@ class TestArena extends DisplayObjectContainer {
     num ms = 5, tr = .10;
     arena.x -= c.moveX * ms;
     arena.y -= c.moveY * ms;
+    arena.players[arena.main].action(c);
   }
 }
 
@@ -77,6 +66,7 @@ void main() {
       DefaultPanel canvasPanel = new DefaultPanel()
         ..addTo(stage);
       stage.addChild(diagnostics);
+      canvasPanel.addChild(new TestArena());
 
       html.querySelector("#red").onClick.listen((e) {
         canvasPanel.removeChildren();

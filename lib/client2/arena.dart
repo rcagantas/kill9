@@ -9,6 +9,7 @@ class Arena extends DisplayObjectContainer {
   TextField dbg;
 
   num main = 0;
+  List<PlayerSprite> players = [];
 
   DefaultPanel floorPanel = new DefaultPanel();
   DefaultPanel cratePanel = new DefaultPanel();
@@ -57,6 +58,16 @@ class Arena extends DisplayObjectContainer {
         dbg.text = "floor: ${count + 1}";
         count++;
        }
+    }
+
+    for (num i = 0; i < resLoader.playerMax; i++) {
+      players.add(new PlayerSprite()
+        ..x = main == i? stage.stageWidth/2 : 0
+        ..y = main == i? stage.stageHeight/2 : 0
+        ..visible = main == i? true: false
+        ..playerNo = i
+        ..addTo(playerPanel)
+        );
     }
   }
 

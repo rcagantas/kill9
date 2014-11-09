@@ -17,7 +17,7 @@ class Diagnostics extends DisplayObjectContainer {
           ..text = "FPS";
   }
 
-  bool get isLogging { return this.parent != null; }
+  bool get isLogging { return stage.contains(this); }
 
   void onFrame(EnterFrameEvent e) {
     this.addChild(dbg);
