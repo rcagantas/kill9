@@ -2,11 +2,12 @@ part of gglclient2;
 
 class Cmd {
   num moveX = 0, moveY = 0, rotate = 0;
-  bool fire = false, swap = false;
+  bool fire = false, swap = false, takeDamage = false;
+  num dmg = 0;
 
   String toString() {
     return "moveX: $moveX; moveY: $moveY; rotate: $rotate\n" +
-        "fire: $fire; swap: $swap";
+        "fire: $fire; swap: $swap;";
   }
 
   bool equals(Cmd c) {
@@ -32,10 +33,8 @@ class InputHandler {
         ..width = 200
         ..height = 200
         ..wordWrap = true;
-    diagnostics.addChild(dbg);
 
     stage.focus = stage;
-    stage.onEnterFrame.listen(_reset);
     stage.onKeyDown.listen(_process);
     stage.onKeyUp.listen(_process);
     print("loading input handler");
@@ -44,10 +43,6 @@ class InputHandler {
   void _process(KeyboardEvent e) {
     key[e.keyCode] = e.type == KeyboardEvent.KEY_DOWN ? true : false;
     makeCmd();
-  }
-
-  void _reset(EnterFrameEvent event) {
-    cmd.swap = false;
   }
 
   num trival(num neg, num pos) {
@@ -75,8 +70,10 @@ class InputHandler {
   }
 
   void _updater(EnterFrameEvent e) {
+    diagnostics.addChild(dbg);
     for (Function f in cbList) {
       f(cmd);
     }
+    cmd.swap = false;
   }
 }

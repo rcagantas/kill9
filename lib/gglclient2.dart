@@ -5,12 +5,17 @@ import 'dart:js' as js;
 import 'dart:math' as math;
 import 'package:stagexl/stagexl.dart';
 import 'dart:async';
+import 'package:stagexl_particle/stagexl_particle.dart';
+import 'package:giggl/gglcommon.dart';
+import 'package:giggl/gglclient.dart';
 
 part 'client2/diagnostics.dart';
 part 'client2/font_loader.dart';
 part 'client2/input_handler.dart';
 part 'client2/resource_loader.dart';
 part 'client2/player_sprite.dart';
+part 'client2/particle_loader.dart';
+part 'client2/arena.dart';
 
 final FontLoader fontLoader = new FontLoader();
 final Stage stage = new Stage(html.querySelector("#maincanvas"));

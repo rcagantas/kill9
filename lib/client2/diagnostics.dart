@@ -15,10 +15,12 @@ class Diagnostics extends DisplayObjectContainer {
           ..height = 200
           ..wordWrap = true
           ..text = "FPS";
-    this.addChild(dbg);
   }
 
+  bool get isLogging { return this.parent != null; }
+
   void onFrame(EnterFrameEvent e) {
+    this.addChild(dbg);
     fps = fps == null? 1.00 / e.passedTime : 0.05 / e.passedTime + 0.95 * fps;
     dbg.text = "FPS: ${fps.roundToDouble()}";
   }

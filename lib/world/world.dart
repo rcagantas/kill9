@@ -19,7 +19,12 @@ class World {
   Timer _timer = null, _readyTimer = null;
   Stopwatch watch = new Stopwatch();
 
-  World (grid) {
+  World.size(num height, num width) {
+    List<num> surface = MapGenerator.createSimpleRandomSurface(width, height);
+    Grid grid = new Grid.surface(width, height, 100, surface);
+  }
+
+  World(grid) {
     this.grid = grid;
 
     _worldWidth = grid.width() * grid.tileWidth();
