@@ -15,6 +15,7 @@ class Arena extends DisplayObjectContainer {
   DefaultPanel cratePanel = new DefaultPanel();
   DefaultPanel treePanel = new DefaultPanel();
   DefaultPanel playerPanel = new DefaultPanel();
+  DefaultPanel miniMap = new DefaultPanel();
 
   Arena(num width, num height, this.surfaces) {
     dbg = new TextField()
@@ -69,6 +70,35 @@ class Arena extends DisplayObjectContainer {
         ..addTo(playerPanel)
         );
     }
+
+    createMiniMap(height, width);
+  }
+
+  void createMiniMap(num height, num width) {
+    num div = 20;
+    num starty = stage.stageHeight - height * TileSheet.SIZE/div;
+    num count = 0;
+    for (num h = 0; h < height; h++) {
+      for (num w = 0; w < width; w++) {
+        num c = Color.Gray;
+        switch(surfaces[count]) {
+          case Surface.NON_PASSABLE: c = Color.Brown; break;
+          case Surface.OBSCURING: c = Color.Green; break;
+        }
+
+        Shape s = new Shape()
+          ..graphics.rect(
+              w * (TileSheet.SIZE/div),
+              starty + (h * TileSheet.SIZE/div),
+              TileSheet.SIZE/div, TileSheet.SIZE/div)
+          ..graphics.fillColor(c)
+          ..alpha = .5
+          ..addTo(miniMap);
+
+        count++;
+      }
+    }
+    miniMap.addTo(this);
   }
 
   Bitmap loadBmp(num type) {
