@@ -138,6 +138,7 @@ class Arena extends DisplayObjectContainer {
   }
 
   void action(Cmd c) {
+    if (!diagnostics.isLogging) dbg.removeFromParent();
     x -= c.moveX * c.ms;
     y -= c.moveY * c.ms;
     miniMap.x += c.moveX * c.ms;

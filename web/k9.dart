@@ -72,24 +72,28 @@ void main() {
   fontLoader.load.then((_) {
     resource.load().then((_) {
       // default
+      RedDot redDot = new RedDot();
+      TestSprite testSprite = new TestSprite();
+      TestArena testArena = new TestArena();
+
       DefaultPanel canvasPanel = new DefaultPanel()
         ..addTo(stage);
       stage.addChild(diagnostics);
-      canvasPanel.addChild(new TestArena());
+      canvasPanel.addChild(testSprite);
 
       html.querySelector("#red").onClick.listen((e) {
         canvasPanel.removeChildren();
-        canvasPanel.addChild(new RedDot());
+        canvasPanel.addChild(redDot);
       });
 
       html.querySelector("#player").onClick.listen((e) {
         canvasPanel.removeChildren();
-        canvasPanel.addChild(new TestSprite());
+        canvasPanel.addChild(testSprite);
       });
 
       html.querySelector("#arena").onClick.listen((e) {
         canvasPanel.removeChildren();
-        canvasPanel.addChild(new TestArena());
+        canvasPanel.addChild(testArena);
       });
 
     });
