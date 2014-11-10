@@ -7,7 +7,6 @@ import 'package:stagexl/stagexl.dart';
 import 'dart:async';
 import 'package:stagexl_particle/stagexl_particle.dart';
 import 'package:giggl/gglcommon.dart';
-import 'package:giggl/gglclient.dart';
 
 part 'client2/diagnostics.dart';
 part 'client2/font_loader.dart';

@@ -1,8 +1,9 @@
 part of gglclient2;
 
 class Cmd {
+  num ms = 5, tr = .10;
   num moveX = 0, moveY = 0, rotate = 0;
-  bool fire = false, swap = false, takeDamage = false;
+  bool fire = false, swap = false;
   num dmg = 0;
 
   String toString() {

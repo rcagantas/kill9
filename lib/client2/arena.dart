@@ -3,13 +3,16 @@ part of gglclient2;
 class DefaultPanel extends DisplayObjectContainer {}
 
 class Arena extends DisplayObjectContainer {
+  num treeScaling = 1.5;
+  num main = 0;
+  num mapScale = 20;
+  static num size = 100;
+
   List<num> surfaces;
   List<Bitmap> surfaceBmp = [];
-  num treeScaling = 1.5;
   TextField dbg;
-
-  num main = 0;
   List<PlayerSprite> players = [];
+  Shape miniMain;
 
   DefaultPanel floorPanel = new DefaultPanel();
   DefaultPanel cratePanel = new DefaultPanel();
@@ -36,8 +39,8 @@ class Arena extends DisplayObjectContainer {
     num count = 0;
     for (num h = 0; h < height; h++) {
       for (num w = 0; w < width; w++) {
-        num posY =  (h * TileSheet.SIZE) + TileSheet.SIZE/2;
-        num posX =  (w * TileSheet.SIZE) + TileSheet.SIZE/2;
+        num posY =  (h * size) + size/2;
+        num posX =  (w * size) + size/2;
         DefaultPanel panel = floorPanel;
         switch(surfaces[count]) {
           case Surface.NON_PASSABLE: panel = cratePanel; break;
@@ -74,33 +77,6 @@ class Arena extends DisplayObjectContainer {
     createMiniMap(height, width);
   }
 
-  void createMiniMap(num height, num width) {
-    num div = 20;
-    num starty = stage.stageHeight - height * TileSheet.SIZE/div;
-    num count = 0;
-    for (num h = 0; h < height; h++) {
-      for (num w = 0; w < width; w++) {
-        num c = Color.Gray;
-        switch(surfaces[count]) {
-          case Surface.NON_PASSABLE: c = Color.Brown; break;
-          case Surface.OBSCURING: c = Color.Green; break;
-        }
-
-        Shape s = new Shape()
-          ..graphics.rect(
-              w * (TileSheet.SIZE/div),
-              starty + (h * TileSheet.SIZE/div),
-              TileSheet.SIZE/div, TileSheet.SIZE/div)
-          ..graphics.fillColor(c)
-          ..alpha = .5
-          ..addTo(miniMap);
-
-        count++;
-      }
-    }
-    miniMap.addTo(this);
-  }
-
   Bitmap loadBmp(num type) {
     Bitmap bmp;
     num size = 100;
@@ -119,6 +95,56 @@ class Arena extends DisplayObjectContainer {
     bmp.pivotX = size/2;
     bmp.pivotY = size/2;
     return bmp;
+  }
+
+  void createMiniMap(num height, num width) {
+    num startx = size/mapScale;
+    num starty = stage.stageHeight - height * size/mapScale;
+    num count = 0;
+    for (num h = 0; h < height; h++) {
+      for (num w = 0; w < width; w++) {
+        num c = Color.Gray;
+        switch(surfaces[count]) {
+          case Surface.NON_PASSABLE: c = Color.Beige; break;
+          case Surface.OBSCURING: c = Color.Green; break;
+        }
+
+        Shape s = new Shape()
+          ..graphics.rect(
+              startx + (w * size/mapScale),
+              starty + (h * size/mapScale),
+              size/mapScale, size/mapScale)
+          ..graphics.fillColor(c)
+          ..alpha = .7
+          ..pivotX = size/mapScale/2
+          ..pivotY = size/mapScale/2
+          ..addTo(miniMap);
+
+        count++;
+      }
+    }
+
+    miniMain = new Shape()
+        ..graphics.rect(
+            startx, starty,
+            size/mapScale, size/mapScale)
+        ..graphics.fillColor(Color.Fuchsia)
+        ..alpha = .7
+        ..pivotX = size/mapScale/2
+        ..pivotY = size/mapScale/2
+        ..addTo(miniMap);
+
+    miniMap.addTo(this);
+  }
+
+  void action(Cmd c) {
+    x -= c.moveX * c.ms;
+    y -= c.moveY * c.ms;
+    miniMap.x += c.moveX * c.ms;
+    miniMap.y += c.moveY * c.ms;
+    players[main].action(c);
+    miniMain.x = players[main].x/mapScale - size/mapScale/2;
+    miniMain.y = players[main].y/mapScale - size/mapScale/2;
   }
 }
 

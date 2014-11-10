@@ -198,16 +198,13 @@ class PlayerSprite extends DisplayObjectContainer {
   }
 
   void action(Cmd c) {
-    num ms = 5, tr = .10;
-    num x = this.x + c.moveX * ms;
-    num y = this.y + c.moveY * ms;
-    num r = rotation + c.rotate * tr;
+    num x = this.x + c.moveX * c.ms;
+    num y = this.y + c.moveY * c.ms;
+    num r = rotation + c.rotate * c.tr;
     move(x, y, r);
     walk(c.moveX != 0 || c.moveY != 0 || c.rotate != 0);
     if (c.fire) fire();
     if (c.swap) swapWeapon();
-    if (input.key[69]) takeDamage(1, 45 * math.PI/180);
-    if (input.key[82]) hpRatio = 100;
   }
 
   void debug() {

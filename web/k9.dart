@@ -1,4 +1,5 @@
 import 'dart:html' as html;
+import 'dart:math' as math;
 import 'package:stagexl/stagexl.dart';
 import 'package:giggl/gglclient2.dart';
 import 'package:giggl/gglworld.dart';
@@ -31,10 +32,14 @@ class TestSprite extends DisplayObjectContainer {
       ..x = stage.stageWidth/2
       ..y = stage.stageHeight/2
       ..addTo(this);
+    input.cbList.add(p1.action);
     input.cbList.add(action);
   }
 
-  void action(Cmd c) { p1.action(c); }
+  void action(Cmd c) {
+    if (input.key[69]) p1.takeDamage(1, 45 * math.PI/180);
+    if (input.key[82]) p1.hpRatio = 100;
+  }
 }
 
 class TestArena extends DisplayObjectContainer {
@@ -44,14 +49,7 @@ class TestArena extends DisplayObjectContainer {
     List<num> surface = MapGenerator.createSimpleRandomSurface(width, height);
     arena = new Arena(width, height, surface)
       ..addTo(this);
-    input.cbList.add(action);
-  }
-
-  void action(Cmd c) {
-    num ms = 5, tr = .10;
-    arena.x -= c.moveX * ms;
-    arena.y -= c.moveY * ms;
-    arena.players[arena.main].action(c);
+    input.cbList.add(arena.action);
   }
 }
 
