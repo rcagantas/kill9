@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:stagexl/stagexl.dart';
 import 'package:giggl/gglclient2.dart';
 import 'package:giggl/gglworld.dart';
+import 'package:giggl/gglcommon.dart';
 
 class RedDot extends DisplayObjectContainer {
   Shape shape;
