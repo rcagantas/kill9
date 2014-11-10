@@ -1,21 +1,5 @@
 part of gglclient2;
 
-class Cmd {
-  num ms = 5, tr = .10;
-  num moveX = 0, moveY = 0, rotate = 0;
-  bool fire = false, swap = false;
-  num dmg = 0;
-
-  String toString() {
-    return "moveX: $moveX; moveY: $moveY; rotate: $rotate\n" +
-        "fire: $fire; swap: $swap;";
-  }
-
-  bool equals(Cmd c) {
-    return this.toString() == c.toString();
-  }
-}
-
 class InputHandler {
   Map<num, bool> key = new Map<num, bool>();
   List<Function> cbList = [];
