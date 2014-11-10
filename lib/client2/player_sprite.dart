@@ -201,6 +201,10 @@ class PlayerSprite extends DisplayObjectContainer {
     num x = this.x + c.moveX * c.ms;
     num y = this.y + c.moveY * c.ms;
     num r = rotation + c.rotate * c.tr;
+    if (c.mouseX != -1 && c.mouseY != -1) {
+      r = math.PI - math.atan2(c.mouseX, c.mouseY);
+    }
+
     move(x, y, r);
     walk(c.moveX != 0 || c.moveY != 0 || c.rotate != 0);
     if (c.fire) fire();

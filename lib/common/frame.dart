@@ -198,6 +198,7 @@ class Cmd {
 
   String toString() {
     return "moveX: $moveX; moveY: $moveY; rotate: $rotate\n" +
+        "mouseX:  $mouseX; mouseY: $mouseY\n" +
         "fire: $fire; swap: $swap;";
   }
 

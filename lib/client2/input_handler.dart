@@ -11,7 +11,6 @@ class InputHandler {
   InputHandler() {
     for (num i = 0; i < 255; i++) key[i] = false;
 
-    stage.onEnterFrame.listen(_updater);
     dbg = new TextField()
         ..defaultTextFormat = diagnostics.font11
         ..x = 300
@@ -26,6 +25,12 @@ class InputHandler {
     stage.onMouseDown.listen((e) { mouseL = true; makeCmd(); });
     stage.onMouseUp.listen((e) { mouseL = false; makeCmd(); });
     stage.onMouseRightClick.listen((e) { cmd.swap = true; });
+    stage.onMouseMove.listen((e) {
+      cmd.mouseX = e.stageX - stage.stageWidth/2;
+      cmd.mouseY = e.stageY - stage.stageHeight/2;
+      makeCmd();
+    });
+    stage.onEnterFrame.listen(_updater);
     print("loading input handler");
   }
 
@@ -64,5 +69,7 @@ class InputHandler {
       f(cmd);
     }
     cmd.swap = false;
+    cmd.mouseX = -1;
+    cmd.mouseY = -1;
   }
 }
