@@ -5,6 +5,7 @@ class InputHandler {
   List<Function> cbList = [];
   TextField dbg;
 
+  bool mouseL = false;
   Cmd cmd = new Cmd();
 
   InputHandler() {
@@ -22,6 +23,9 @@ class InputHandler {
     stage.focus = stage;
     stage.onKeyDown.listen(_process);
     stage.onKeyUp.listen(_process);
+    stage.onMouseDown.listen((e) { mouseL = true; makeCmd(); });
+    stage.onMouseUp.listen((e) { mouseL = false; makeCmd(); });
+    stage.onMouseRightClick.listen((e) { cmd.swap = true; });
     print("loading input handler");
   }
 
@@ -41,7 +45,7 @@ class InputHandler {
     cmd.moveY = trival(87, 83);   // down, up
     cmd.moveX = trival(65, 68);   // left, right
     cmd.rotate = trival(37, 39);  // turn left, right
-    cmd.fire = key[38];           // fire
+    cmd.fire = key[38] || mouseL; // fire
     cmd.swap = key[40];           // swap weapon
     dbg.text = "${cmd}\n" + "pressed:${pressed()}";
   }

@@ -54,6 +54,16 @@ class TestArena extends DisplayObjectContainer {
   }
 }
 
+class TestWorld extends DisplayObjectContainer {
+  World world;
+  Arena arena;
+  TestWorld() {
+    world = new World.size(20, 20);
+    arena = new Arena(20, 20, world.grid.surfaceList);
+    input.cbList.add(arena.action);
+  }
+}
+
 void main() {
   RenderLoop renderLoop = new RenderLoop();
   renderLoop.addStage(stage);

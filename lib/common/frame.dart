@@ -192,6 +192,7 @@ class Frame {
 class Cmd {
   num ms = 5, tr = .10;
   num moveX = 0, moveY = 0, rotate = 0;
+  num mouseX = -1, mouseY = -1;
   bool fire = false, swap = false;
   num dmg = 0;
 
