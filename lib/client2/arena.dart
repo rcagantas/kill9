@@ -13,12 +13,7 @@ class Arena extends DisplayObjectContainer {
   TextField dbg;
   List<PlayerSprite> players = [];
   Shape miniMain;
-
-  DefaultPanel floorPanel = new DefaultPanel();
-  DefaultPanel cratePanel = new DefaultPanel();
-  DefaultPanel treePanel = new DefaultPanel();
-  DefaultPanel playerPanel = new DefaultPanel();
-  DefaultPanel miniMap = new DefaultPanel();
+  DefaultPanel floorPanel, cratePanel, treePanel, playerPanel, miniMap;
 
   Arena(num width, num height, this.surfaces) {
     dbg = new TextField()
@@ -31,33 +26,35 @@ class Arena extends DisplayObjectContainer {
           ..text = "tiles: "
           ..addTo(diagnostics);
 
-    floorPanel.addTo(this);
-    playerPanel.addTo(this);
-    cratePanel.addTo(this);
-    treePanel.addTo(this);
+    floorPanel = new DefaultPanel()..addTo(this);
+    playerPanel = new DefaultPanel()..addTo(this);
+    cratePanel = new DefaultPanel()..addTo(this);
+    treePanel = new DefaultPanel()..addTo(this);
 
     num count = 0;
     for (num h = 0; h < height; h++) {
       for (num w = 0; w < width; w++) {
         num posY =  (h * size) + size/2;
         num posX =  (w * size) + size/2;
+
         DefaultPanel panel = floorPanel;
         switch(surfaces[count]) {
           case Surface.NON_PASSABLE: panel = cratePanel; break;
           case Surface.OBSCURING: panel = treePanel; break;
+          case Surface.PASSABLE: panel = floorPanel; break;
+        }
+
+        if (surfaces[count] == Surface.OBSCURING) {
+          loadBmp(Surface.PASSABLE)
+              ..x = posX
+              ..y = posY
+              ..addTo(floorPanel);
         }
 
         surfaceBmp.add(loadBmp(surfaces[count])
             ..x = posX
             ..y = posY
             ..addTo(panel));
-
-        if (surfaces[count] != Surface.PASSABLE) {
-          loadBmp(Surface.PASSABLE)
-              ..x = posX
-              ..y = posY
-              ..addTo(floorPanel);
-        }
 
         dbg.text = "floor: ${count + 1}";
         count++;
@@ -98,6 +95,8 @@ class Arena extends DisplayObjectContainer {
   }
 
   void createMiniMap(num height, num width) {
+    miniMap = new DefaultPanel();
+
     num startx = size/mapScale;
     num starty = stage.stageHeight - height * size/mapScale;
     num count = 0;
