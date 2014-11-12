@@ -64,6 +64,12 @@ class TestWorld extends DisplayObjectContainer {
   }
 }
 
+void setupPanel(DisplayObjectContainer panel) {
+  stage.removeChildren();
+  stage.addChild(panel);
+  stage.addChild(diagnostics);
+}
+
 void main() {
   RenderLoop renderLoop = new RenderLoop();
   renderLoop.addStage(stage);
@@ -71,31 +77,23 @@ void main() {
   print(resLoader);
   fontLoader.load.then((_) {
     resource.load().then((_) {
-      // default
-      RedDot redDot = new RedDot();
-      TestSprite testSprite = new TestSprite();
-      TestArena testArena = new TestArena();
 
-      DefaultPanel canvasPanel = new DefaultPanel()
-        ..addTo(stage);
-      stage.addChild(diagnostics);
-      canvasPanel.addChild(testSprite);
+      setupPanel(new RedDot());
 
       html.querySelector("#red").onClick.listen((e) {
-        canvasPanel.removeChildren();
-        canvasPanel.addChild(redDot);
+        input.cbList.clear();
+        setupPanel(new RedDot());
       });
 
       html.querySelector("#player").onClick.listen((e) {
-        canvasPanel.removeChildren();
-        canvasPanel.addChild(testSprite);
+        input.cbList.clear();
+        setupPanel(new TestSprite());
       });
 
       html.querySelector("#arena").onClick.listen((e) {
-        canvasPanel.removeChildren();
-        canvasPanel.addChild(testArena);
+        input.cbList.clear();
+        setupPanel(new TestArena());
       });
-
     });
   });
 }
