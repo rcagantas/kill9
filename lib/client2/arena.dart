@@ -4,16 +4,21 @@ class DefaultPanel extends DisplayObjectContainer {}
 
 class Arena extends DisplayObjectContainer {
   num treeScaling = 1.5;
-  num main = 0;
+  num main = 0, mainId = 0;
   num mapScale = 20;
   static num size = 100;
 
   List<num> surfaces;
   List<Bitmap> surfaceBmp = [];
   TextField dbg;
-  List<PlayerSprite> players = [];
+  List<PlayerSprite> sprites = [];
+  Map<int, PlayerSprite> players = new Map();
   Shape miniMain;
   DefaultPanel floorPanel, cratePanel, treePanel, playerPanel, miniMap;
+
+  PlayerSprite get mainPlayer {
+    return mainId != 0 ? players[mainId] : sprites[main];
+  }
 
   Arena(num width, num height, this.surfaces) {
     dbg = new TextField()
@@ -62,7 +67,7 @@ class Arena extends DisplayObjectContainer {
     }
 
     for (num i = 0; i < resLoader.playerMax; i++) {
-      players.add(new PlayerSprite()
+      sprites.add(new PlayerSprite()
         ..x = main == i? stage.stageWidth/2 : 0
         ..y = main == i? stage.stageHeight/2 : 0
         ..visible = main == i? true: false
@@ -142,9 +147,9 @@ class Arena extends DisplayObjectContainer {
     y -= c.moveY * c.ms;
     miniMap.x += c.moveX * c.ms;
     miniMap.y += c.moveY * c.ms;
-    players[main].action(c);
-    miniMain.x = players[main].x/mapScale - size/mapScale/2;
-    miniMain.y = players[main].y/mapScale - size/mapScale/2;
+    sprites[main].action(c);
+    miniMain.x = sprites[main].x/mapScale - size/mapScale/2;
+    miniMain.y = sprites[main].y/mapScale - size/mapScale/2;
   }
 }
 
