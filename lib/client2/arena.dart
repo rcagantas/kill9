@@ -1,11 +1,8 @@
 part of gglclient2;
 
-class DefaultPanel extends DisplayObjectContainer {}
-
 class Arena extends DisplayObjectContainer {
-  num treeScaling = 1.5;
   num main = 0, mainId = 0;
-  num mapScale = 20;
+  num treeScaling = 1.5;
   static num size = 100;
 
   List<num> surfaces;
@@ -13,8 +10,11 @@ class Arena extends DisplayObjectContainer {
   TextField dbg;
   List<PlayerSprite> sprites = [];
   Map<int, PlayerSprite> players = new Map();
+
+  Sprite floorPanel, cratePanel, treePanel, playerPanel;
+  num mapScale = 20;
+  Sprite miniMap;
   Shape miniMain;
-  DefaultPanel floorPanel, cratePanel, treePanel, playerPanel, miniMap;
 
   PlayerSprite get mainPlayer {
     return mainId != 0 ? players[mainId] : sprites[main];
@@ -28,13 +28,12 @@ class Arena extends DisplayObjectContainer {
           ..width = 200
           ..height = 200
           ..wordWrap = true
-          ..text = "tiles: "
-          ..addTo(diagnostics);
+          ..text = "tiles count ";
 
-    floorPanel = new DefaultPanel()..addTo(this);
-    playerPanel = new DefaultPanel()..addTo(this);
-    cratePanel = new DefaultPanel()..addTo(this);
-    treePanel = new DefaultPanel()..addTo(this);
+    floorPanel = new Sprite()..addTo(this);
+    playerPanel = new Sprite()..addTo(this);
+    cratePanel = new Sprite()..addTo(this);
+    treePanel = new Sprite()..addTo(this);
 
     num count = 0;
     for (num h = 0; h < height; h++) {
@@ -42,7 +41,7 @@ class Arena extends DisplayObjectContainer {
         num posY =  (h * size) + size/2;
         num posX =  (w * size) + size/2;
 
-        DefaultPanel panel = floorPanel;
+        Sprite panel = floorPanel;
         switch(surfaces[count]) {
           case Surface.NON_PASSABLE: panel = cratePanel; break;
           case Surface.OBSCURING: panel = treePanel; break;
@@ -61,7 +60,7 @@ class Arena extends DisplayObjectContainer {
             ..y = posY
             ..addTo(panel));
 
-        dbg.text = "floor: ${count + 1}";
+        dbg.text = "tile count: ${count + 1}";
         count++;
        }
     }
@@ -76,35 +75,16 @@ class Arena extends DisplayObjectContainer {
         );
     }
 
-    createMiniMap(height, width);
+    createMiniMap(width, height);
+    dbg.addTo(this);
   }
 
-  Bitmap loadBmp(num type) {
-    Bitmap bmp;
-    num size = 100;
-    math.Random random = new math.Random();
-    switch(type) {
-      case Surface.PASSABLE: bmp = new Bitmap(resource.getBitmapData("floor")); break;
-      case Surface.NON_PASSABLE: bmp = new Bitmap(resource.getBitmapData("crate")); break;
-      case Surface.OBSCURING:
-        bmp = new Bitmap(resource.getBitmapData("tree"))
-          ..scaleX = treeScaling
-          ..scaleY = treeScaling;
-        break;
-    }
-    bmp.rotation = type != Surface.PASSABLE?
-        (math.PI/2) * random.nextInt(4): bmp.rotation;
-    bmp.pivotX = size/2;
-    bmp.pivotY = size/2;
-    return bmp;
-  }
-
-  void createMiniMap(num height, num width) {
-    miniMap = new DefaultPanel();
-
-    num startx = size/mapScale;
-    num starty = stage.stageHeight - height * size/mapScale;
+  void createMiniMap(num width, num height) {
+    miniMap = new Sprite();
+    num startx = 0; //size/mapScale;
+    num starty = 0; //stage.stageHeight - height * size/mapScale;
     num count = 0;
+
     for (num h = 0; h < height; h++) {
       for (num w = 0; w < width; w++) {
         num c = Color.Gray;
@@ -137,19 +117,66 @@ class Arena extends DisplayObjectContainer {
         ..pivotX = size/mapScale/2
         ..pivotY = size/mapScale/2
         ..addTo(miniMap);
-
     miniMap.addTo(this);
+  }
+
+  void miniMove() {
+    num x = players[mainId].x;
+    num y = players[mainId].y;
+    miniMain.x = x/mapScale - size/mapScale/2;
+    miniMain.y = y/mapScale - size/mapScale/2;
+    miniMap.x = x - stage.stageWidth/2;
+    miniMap.y = y + stage.stageHeight/2 - size;
+  }
+
+
+  Bitmap loadBmp(num type) {
+    Bitmap bmp;
+    num size = 100;
+    math.Random random = new math.Random();
+    switch(type) {
+      case Surface.PASSABLE: bmp = new Bitmap(resource.getBitmapData("floor")); break;
+      case Surface.NON_PASSABLE: bmp = new Bitmap(resource.getBitmapData("crate")); break;
+      case Surface.OBSCURING:
+        bmp = new Bitmap(resource.getBitmapData("tree"))
+          ..scaleX = treeScaling
+          ..scaleY = treeScaling;
+        break;
+    }
+    bmp.rotation = type != Surface.PASSABLE?
+        (math.PI/2) * random.nextInt(4): bmp.rotation;
+    bmp.pivotX = size/2;
+    bmp.pivotY = size/2;
+    return bmp;
   }
 
   void action(Cmd c) {
     if (!diagnostics.isLogging) dbg.removeFromParent();
     x -= c.moveX * c.ms;
     y -= c.moveY * c.ms;
-    miniMap.x += c.moveX * c.ms;
-    miniMap.y += c.moveY * c.ms;
     sprites[main].action(c);
-    miniMain.x = sprites[main].x/mapScale - size/mapScale/2;
-    miniMain.y = sprites[main].y/mapScale - size/mapScale/2;
+  }
+
+  void updateFrame(Frame pf) {
+    num playersToAdd = 0;
+    pf.visibleObjects.forEach((obj) {
+      if (obj is ActorInFrame) {
+
+        if (!players.containsKey(obj.id)) {
+          players[obj.id] = sprites[playersToAdd++];
+        }
+
+        if (obj.id == mainId) {
+          x = stage.stageWidth/2 - obj.x;
+          y = stage.stageHeight/2 - obj.y;
+        }
+
+        players[obj.id]
+          ..move(obj.x, obj.y, obj.orientation)
+          ..toggleFire(obj.isFiring);
+      }
+    });
+    miniMove();
   }
 }
 

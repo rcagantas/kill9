@@ -189,25 +189,6 @@ class Frame {
   }
 }
 
-class Cmd {
-  num ms = 5, tr = .10;
-  num id = 0;
-  num moveX = 0, moveY = 0, rotate = 0;
-  num mouseX = -1, mouseY = -1;
-  bool fire = false, swap = false;
-  num dmg = 0;
-
-  String toString() {
-    return "moveX: $moveX; moveY: $moveY; rotate: $rotate\n" +
-        "mouseX:  $mouseX; mouseY: $mouseY\n" +
-        "fire: $fire; swap: $swap;";
-  }
-
-  bool equals(Cmd c) {
-    return this.toString() == c.toString();
-  }
-}
-
 class CommandFrame {
   int id = 0, moveX = 0, moveY = 0, orientation = 0;
   bool fire = false, weaponCycle = false, mouseMoved = false;
@@ -238,3 +219,23 @@ class CommandFrame {
 
   }
 }
+
+class Cmd {
+  num ms = 10, tr = .10;
+  num id = 0;
+  num moveX = 0, moveY = 0, rotate = 0;
+  num mouseX = -1, mouseY = -1;
+  bool fire = false, swap = false;
+  num dmg = 0;
+
+  String toString() {
+    return "moveX: $moveX; moveY: $moveY; rotate: $rotate\n" +
+        "mouseX:  $mouseX; mouseY: $mouseY\n" +
+        "fire: $fire; swap: $swap;";
+  }
+
+  bool equals(Cmd c) {
+    return this.toString() == c.toString();
+  }
+}
+

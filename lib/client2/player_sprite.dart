@@ -125,6 +125,7 @@ class PlayerSprite extends DisplayObjectContainer {
   void move(num x, num y, num r) {
     if (isDead) return;
     fixLegRotation(x, y);
+    walk(this.x != x || this.y != y || this.rotation != peg180(r));
     splatter.rotation = peg180(splatter.rotation + (rotation - r));
     this.x = x; this.y = y; rotation = peg180(r);
     debug();
@@ -133,6 +134,10 @@ class PlayerSprite extends DisplayObjectContainer {
   void walk(bool walk) {
     if (walk && !legs.playing) legs.play();
     else if (!walk) legs.gotoAndStop(0);
+  }
+
+  void toggleFire(bool b) {
+    if (b) fire();
   }
 
   void fire() {
@@ -206,7 +211,6 @@ class PlayerSprite extends DisplayObjectContainer {
     }
 
     move(x, y, r);
-    walk(c.moveX != 0 || c.moveY != 0 || c.rotate != 0);
     if (c.fire) fire();
     if (c.swap) swapWeapon();
   }

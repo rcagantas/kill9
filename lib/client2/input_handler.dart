@@ -2,11 +2,16 @@ part of gglclient2;
 
 class InputHandler {
   Map<num, bool> key = new Map<num, bool>();
-  List<Function> cbList = [];
+  List<Function> _cbList = [];
   TextField dbg;
 
   bool mouseL = false;
+  num mainId = 0;
   Cmd cmd = new Cmd();
+
+  void addListener(void action(Cmd)) {
+    _cbList.add(action);
+  }
 
   InputHandler() {
     for (num i = 0; i < 255; i++) key[i] = false;
@@ -47,6 +52,7 @@ class InputHandler {
   }
 
   void makeCmd() {
+    cmd.id = mainId;
     cmd.moveY = trival(87, 83);   // down, up
     cmd.moveX = trival(65, 68);   // left, right
     cmd.rotate = trival(37, 39);  // turn left, right
@@ -63,9 +69,14 @@ class InputHandler {
     return s;
   }
 
+  void removeListeners() { _cbList.clear(); }
+
+  bool alternate = false;
   void _updater(EnterFrameEvent e) {
+    alternate = !alternate;
+    if (alternate) return;
     diagnostics.addChild(dbg);
-    for (Function f in cbList) {
+    for (Function f in _cbList) {
       f(cmd);
     }
     cmd.swap = false;

@@ -9,7 +9,7 @@ class RedDot extends DisplayObjectContainer {
   Shape shape;
 
   RedDot() {
-    input.cbList.add(action);
+    input.addListener(action);
     shape = new Shape()
       ..x = stage.stageWidth/2
       ..y = stage.stageHeight/2;
@@ -33,8 +33,8 @@ class TestSprite extends DisplayObjectContainer {
       ..x = stage.stageWidth/2
       ..y = stage.stageHeight/2
       ..addTo(this);
-    input.cbList.add(p1.action);
-    input.cbList.add(action);
+    input.addListener(p1.action);
+    input.addListener(action);
   }
 
   void action(Cmd c) {
@@ -50,7 +50,7 @@ class TestArena extends DisplayObjectContainer {
     List<num> surface = MapGenerator.createSimpleRandomSurface(width, height);
     arena = new Arena(width, height, surface)
       ..addTo(this);
-    input.cbList.add(arena.action);
+    input.addListener(arena.action);
   }
 }
 
@@ -60,8 +60,13 @@ class TestWorld extends DisplayObjectContainer {
   Actor player1;
   TestWorld() {
     world = new World.size(20, 20);
-    arena = new Arena(20, 20, world.grid.surfaceList);
+    arena = new Arena(20, 20, world.grid.surfaceList)
+      ..addTo(this);
     player1 = world.addPlayerandGetReference();
+    input.mainId = arena.mainId = player1.hashCode;
+    input.addListener(world.action);
+    world.addPlayerFrameListener(arena.mainId, arena.updateFrame);
+    world.start();
   }
 }
 
@@ -79,21 +84,27 @@ void main() {
   fontLoader.load.then((_) {
     resource.load().then((_) {
 
-      setupPanel(new TestArena());
+      setupPanel(new TestWorld());
 
       html.querySelector("#red").onClick.listen((e) {
-        input.cbList.clear();
+        input.removeListeners();
         setupPanel(new RedDot());
       });
 
       html.querySelector("#player").onClick.listen((e) {
-        input.cbList.clear();
+        input.removeListeners();
         setupPanel(new TestSprite());
       });
 
       html.querySelector("#arena").onClick.listen((e) {
-        input.cbList.clear();
+        input.removeListeners();
         setupPanel(new TestArena());
+      });
+
+      html.querySelector("#world").onClick.listen((e) {
+        input.removeListeners();
+        TestWorld world = new TestWorld();
+        setupPanel(world);
       });
     });
   });

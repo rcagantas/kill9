@@ -21,12 +21,16 @@ class World {
 
   World.size(num height, num width) {
     List<num> surface = MapGenerator.createSimpleRandomSurface(width, height);
-    Grid grid = new Grid.surface(width, height, 100, surface);
+    grid = new Grid.surface(width, height, 100, surface);
+    _init();
   }
 
   World(grid) {
     this.grid = grid;
+    _init();
+  }
 
+  void _init() {
     _worldWidth = grid.width() * grid.tileWidth();
     _worldHeight = grid.height() * grid.tileWidth();
 
@@ -49,7 +53,7 @@ class World {
   void start() {
     if (_timer == null) {
       //initializations
-      _weaponDrop.spawn();
+      //_weaponDrop.spawn();
 
       //start game
       _timer = new Timer.periodic(new Duration(milliseconds: 16), this._goRound);
@@ -212,5 +216,26 @@ class World {
 
     _processInput();
     _update(elapsed);
+  }
+
+  void action(Cmd c) {
+    for (Actor a in actors) {
+      if (a.hashCode == c.id) {
+        if (c.moveX == -1) a.moveLeft();
+        else if (c.moveX == 1) a.moveRight();
+        else if (c.moveX == 0) a.stopLeftRightMove();
+
+        if (c.moveY == -1) a.moveUp();
+        else if (c.moveY == 1) a.moveDown();
+        else if (c.moveY == 0) a.stopTopDownMove();
+
+        if (c.rotate == -1) a.turnCounterClockwise();
+        else if (c.rotate == 1) a.turnClockwise();
+        else if (c.rotate == 0) a.stopTurn();
+
+        if (c.fire) a.weapon.fire();
+        else if (!c.fire) a.weapon.stop();
+      }
+    }
   }
 }
