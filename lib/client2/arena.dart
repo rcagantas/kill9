@@ -155,6 +155,7 @@ class Arena extends DisplayObjectContainer {
     x -= c.moveX * c.ms;
     y -= c.moveY * c.ms;
     sprites[main].action(c);
+    miniMove();
   }
 
   void updateFrame(Frame pf) {
