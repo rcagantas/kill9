@@ -15,6 +15,7 @@ part 'client2/resource_loader.dart';
 part 'client2/player_sprite.dart';
 part 'client2/particle_loader.dart';
 part 'client2/arena.dart';
+part 'client2/bullet_sprite.dart';
 
 final FontLoader fontLoader = new FontLoader();
 final Stage stage = new Stage(html.querySelector("#maincanvas"));

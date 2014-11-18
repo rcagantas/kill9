@@ -187,8 +187,8 @@ class ResourceHandler {
     resMgr.addBitmapData("${pre}_grenade", "${sprites}/${pre}_grenade.png");
     resMgr.addBitmapData("${pre}_rocket", "${sprites}/${pre}_rocket.png");
 
-    resMgr.addBitmapData("grenade", "${sprites}/grenade.png");
-    resMgr.addBitmapData("rocket", "${sprites}/rocket.png");
+    resMgr.addBitmapData("grenade", "${sprites}/bu_grenade.png");
+    resMgr.addBitmapData("rocket", "${sprites}/bu_rocket.png");
 
     resMgr.addBitmapData("crate", "${tiles}/crate.png");
     resMgr.addBitmapData("tree", "${tiles}/tree.png");

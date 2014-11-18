@@ -3,6 +3,7 @@ part of gglclient2;
 class ResourceLoader {
   final num playerMax = 10;
   final List<String> weaponNames = ['pistol','rifle','grenade','rocket'];
+  final List<String> bulletNames = ['bullet', 'grenade', 'rocket'];
   ResourceLoader() {
     String sprites = "assets/sprites";
     String sounds = "assets/sounds";
@@ -29,6 +30,11 @@ class ResourceLoader {
     resource.addBitmapData("crate", "$tiles/crate.png");
     resource.addBitmapData("tree", "$tiles/tree.png");
     resource.addBitmapData("floor", "$tiles/floor5.png");
+
+    for (String bulletName in bulletNames) {
+      print("loading bu_$bulletName.png");
+      resource.addBitmapData(bulletName, "$sprites/bu_$bulletName.png");
+    }
   }
 
   FlipBook flipbookDeath(num playerNo, num frameRate) {

@@ -9,7 +9,9 @@ class Arena extends DisplayObjectContainer {
   List<Bitmap> surfaceBmp = [];
   TextField dbg;
   List<PlayerSprite> sprites = [];
+
   Map<int, PlayerSprite> players = new Map();
+  Map<int, BulletSprite> bullets = new Map();
 
   Sprite floorPanel, cratePanel, treePanel, playerPanel;
   num mapScale = 20;
@@ -159,6 +161,9 @@ class Arena extends DisplayObjectContainer {
   }
 
   void updateFrame(Frame pf) {
+    for (BulletSprite b in bullets.values) b.visible = false;
+    for (PlayerSprite p in players.values) p.visible = false;
+
     num playersToAdd = 0;
     pf.visibleObjects.forEach((obj) {
       if (obj is ActorInFrame) {
@@ -174,7 +179,21 @@ class Arena extends DisplayObjectContainer {
 
         players[obj.id]
           ..move(obj.x, obj.y, obj.orientation)
-          ..toggleFire(obj.isFiring);
+          ..toggleFire(obj.isFiring)
+          ..visible = true;
+      } else if (obj is BulletInFrame) {
+
+        if (!bullets.containsKey(obj.id)) {
+          bullets[obj.id] = new BulletSprite()
+            ..addTo(playerPanel);
+        }
+
+        bullets[obj.id]
+          ..x = obj.x
+          ..y = obj.y
+          ..rotation = obj.orientation
+          ..hitObject(obj.hitObject)
+          ..visible = true;
       }
     });
     miniMove();
