@@ -53,6 +53,10 @@ class World {
   void start() {
     if (_timer == null) {
       //initializations
+      while (actors.length < MAX_PLAYERS) {
+        new RandomWalker(addPlayerandGetReference())..start();
+      }
+
       //_weaponDrop.spawn();
 
       //start game

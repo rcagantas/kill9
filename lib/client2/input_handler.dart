@@ -35,7 +35,7 @@ class InputHandler {
       cmd.mouseY = e.stageY - stage.stageHeight/2;
       makeCmd();
     });
-    stage.onEnterFrame.listen(_updater);
+    stage.onExitFrame.listen(_updater);
     print("loading input handler");
   }
 
@@ -72,7 +72,8 @@ class InputHandler {
   void removeListeners() { _cbList.clear(); }
 
   bool alternate = false;
-  void _updater(EnterFrameEvent e) {
+
+  void _updater(ExitFrameEvent e) {
     alternate = !alternate;
     if (alternate) return;
     diagnostics.addChild(dbg);

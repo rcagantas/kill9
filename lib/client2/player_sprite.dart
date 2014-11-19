@@ -20,8 +20,8 @@ class PlayerSprite extends DisplayObjectContainer {
   bool _isFiring = false;
   num _hpRatio = 100;
 
-  PlayerSprite() {
-    playerNo = 0;
+  PlayerSprite(this.playerNo) {
+
     dbg = new TextField()
              ..defaultTextFormat = diagnostics.font11
              ..width = 200
@@ -125,7 +125,6 @@ class PlayerSprite extends DisplayObjectContainer {
   void move(num x, num y, num r) {
     if (isDead) return;
     fixLegRotation(x, y);
-    walk(this.x != x || this.y != y || this.rotation != peg180(r));
     splatter.rotation = peg180(splatter.rotation + (rotation - r));
     this.x = x; this.y = y; rotation = peg180(r);
     debug();
@@ -210,6 +209,7 @@ class PlayerSprite extends DisplayObjectContainer {
       r = math.PI - math.atan2(c.mouseX, c.mouseY);
     }
 
+    walk(this.x != x || this.y != y || this.rotation != peg180(r));
     move(x, y, r);
     if (c.fire) fire();
     if (c.swap) swapWeapon();

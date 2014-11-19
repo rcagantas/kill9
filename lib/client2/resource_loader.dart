@@ -32,7 +32,6 @@ class ResourceLoader {
     resource.addBitmapData("floor", "$tiles/floor5.png");
 
     for (String bulletName in bulletNames) {
-      print("loading bu_$bulletName.png");
       resource.addBitmapData(bulletName, "$sprites/bu_$bulletName.png");
     }
   }

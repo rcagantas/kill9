@@ -68,11 +68,10 @@ class Arena extends DisplayObjectContainer {
     }
 
     for (num i = 0; i < resLoader.playerMax; i++) {
-      sprites.add(new PlayerSprite()
+      sprites.add(new PlayerSprite(i)
         ..x = main == i? stage.stageWidth/2 : 0
         ..y = main == i? stage.stageHeight/2 : 0
         ..visible = main == i? true: false
-        ..playerNo = i
         ..addTo(playerPanel)
         );
     }
@@ -123,6 +122,7 @@ class Arena extends DisplayObjectContainer {
   }
 
   void miniMove() {
+    if (players[mainId] == null) return;
     num x = players[mainId].x;
     num y = players[mainId].y;
     miniMain.x = x/mapScale - size/mapScale/2;
@@ -161,16 +161,17 @@ class Arena extends DisplayObjectContainer {
   }
 
   void updateFrame(Frame pf) {
+
     for (BulletSprite b in bullets.values) b.visible = false;
     for (PlayerSprite p in players.values) p.visible = false;
 
-    num playersToAdd = 0;
     pf.visibleObjects.forEach((obj) {
       if (obj is ActorInFrame) {
 
-        if (!players.containsKey(obj.id)) {
-          players[obj.id] = sprites[playersToAdd++];
-        }
+        // lazy load the players
+        players.putIfAbsent(obj.id, () {
+          return sprites[players.length + 1];
+        });
 
         if (obj.id == mainId) {
           x = stage.stageWidth/2 - obj.x;
@@ -180,13 +181,14 @@ class Arena extends DisplayObjectContainer {
         players[obj.id]
           ..move(obj.x, obj.y, obj.orientation)
           ..toggleFire(obj.isFiring)
+          ..walk(obj.isMoving)
           ..visible = true;
       } else if (obj is BulletInFrame) {
 
-        if (!bullets.containsKey(obj.id)) {
-          bullets[obj.id] = new BulletSprite()
-            ..addTo(playerPanel);
-        }
+        // lazy load the bullets
+        bullets.putIfAbsent(obj.id, () {
+          return new BulletSprite()..addTo(playerPanel);
+        });
 
         bullets[obj.id]
           ..x = obj.x

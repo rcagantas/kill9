@@ -29,7 +29,7 @@ class RedDot extends DisplayObjectContainer {
 class TestSprite extends DisplayObjectContainer {
   PlayerSprite p1;
   TestSprite() {
-    p1 = new PlayerSprite()
+    p1 = new PlayerSprite(0)
       ..x = stage.stageWidth/2
       ..y = stage.stageHeight/2
       ..addTo(this);
