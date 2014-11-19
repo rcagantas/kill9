@@ -142,6 +142,7 @@ class PlayerSprite extends DisplayObjectContainer {
   void fire() {
     if (isDead) return;
     if (_isFiring) return;
+
     Function firingTransition = (num ratio) {
       return 0.25 < ratio && ratio < 0.85? 1.0 : 0.0;
     };
@@ -165,6 +166,7 @@ class PlayerSprite extends DisplayObjectContainer {
   }
 
   void updateHpBar() {
+    if (hpRatio < 1) return;
     num angle = math.PI/4 * hpRatio/100;
     num color = hpRatio/100 < .4? Color.Red : Color.YellowGreen;
     hpBar.graphics.clear();
@@ -182,23 +184,26 @@ class PlayerSprite extends DisplayObjectContainer {
   }
 
   void set hpRatio(num hp) {
-    if (_hpRatio < 1 && hp == 100) spawn.start(.5);
+    if (_hpRatio < 1 && hp == 100) {
+      spawn.start(.5);
+    } else if (_hpRatio < 1 && hp > 1) {
+      death.gotoAndPlay(0);
+      return;
+    }
     _hpRatio = hp;
-    setVisibility(_hpRatio > 0);
     updateHpBar();
-    if (_hpRatio < 1) death.gotoAndPlay(0);
+    setVisibility(_hpRatio > 0);
   }
 
   num get hpRatio { return _hpRatio; }
 
-  void takeDamage(num damage, num from) {
-    if (hpRatio - damage < 0) {
-      hpRatio = 0;
-      return;
+  void takeDamage(num hp, num from) {
+    if (hp == hpRatio) return;
+    hpRatio = hp;
+    if (hpRatio > 0 && hpRatio != 100) {
+      splatter.rotation = peg180(from - rotation + math.PI);
+      splatter.start(.2);
     }
-    hpRatio = hpRatio - damage;
-    splatter.rotation = peg180(from - rotation);
-    splatter.start(.2);
   }
 
   void action(Cmd c) {

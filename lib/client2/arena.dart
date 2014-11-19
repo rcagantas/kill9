@@ -170,10 +170,11 @@ class Arena extends DisplayObjectContainer {
 
         // lazy load the players
         players.putIfAbsent(obj.id, () {
-          return sprites[players.length + 1];
+          return sprites[players.length];
         });
 
         if (obj.id == mainId) {
+          players[obj.id].addTo(playerPanel);
           x = stage.stageWidth/2 - obj.x;
           y = stage.stageHeight/2 - obj.y;
         }
@@ -182,6 +183,7 @@ class Arena extends DisplayObjectContainer {
           ..move(obj.x, obj.y, obj.orientation)
           ..toggleFire(obj.isFiring)
           ..walk(obj.isMoving)
+          ..takeDamage(obj.lifeRatio, obj.damageFrom)
           ..visible = true;
       } else if (obj is BulletInFrame) {
 

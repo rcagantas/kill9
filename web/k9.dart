@@ -38,7 +38,7 @@ class TestSprite extends DisplayObjectContainer {
   }
 
   void action(Cmd c) {
-    if (input.key[69]) p1.takeDamage(1, 45 * math.PI/180);
+    if (input.key[69]) p1.takeDamage(p1.hpRatio - 1, 45 * math.PI/180);
     if (input.key[82]) p1.hpRatio = 100;
   }
 }
@@ -84,7 +84,8 @@ void main() {
   fontLoader.load.then((_) {
     resource.load().then((_) {
 
-      setupPanel(new TestWorld());
+      TestWorld world = new TestWorld();
+      setupPanel(world);
 
       html.querySelector("#red").onClick.listen((e) {
         input.removeListeners();
@@ -102,8 +103,8 @@ void main() {
       });
 
       html.querySelector("#world").onClick.listen((e) {
-        input.removeListeners();
-        TestWorld world = new TestWorld();
+        input.removeListeners();;
+        input.addListener(world.world.action);
         setupPanel(world);
       });
     });

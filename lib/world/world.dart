@@ -60,7 +60,7 @@ class World {
       //_weaponDrop.spawn();
 
       //start game
-      _timer = new Timer.periodic(new Duration(milliseconds: 16), this._goRound);
+      _timer = new Timer.periodic(new Duration(milliseconds: 10), this._goRound);
     }
   }
 
