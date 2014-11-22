@@ -135,6 +135,10 @@ class Actor extends WorldObject {
         ActorProps.TURN_RATE)
   {
     weapon = new Pistol(this);
+    weapons.add(weapon);
+    weapons.add(new Rifle(this));
+    weapons.add(new GrenadeLauncher(this));
+    weapons.add(new RocketLauncher(this));
 
     _45degreeSpeed = speed * math.sin(math.PI/4);
   }

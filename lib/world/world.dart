@@ -239,6 +239,8 @@ class World {
 
         if (c.fire) a.weapon.fire();
         else if (!c.fire) a.weapon.stop();
+
+        if (c.swap) a.switchWeapon();
       }
     }
   }

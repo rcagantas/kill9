@@ -165,6 +165,14 @@ class PlayerSprite extends DisplayObjectContainer {
     reloadSound.play(false);
   }
 
+  void switchWeapon(int weaponType) {
+    if (weaponType == currentWeapon) return;
+    weapon[currentWeapon].visible = false;
+    currentWeapon = weaponType;
+    weapon[currentWeapon].visible = true;
+    reloadSound.play(false);
+  }
+
   void updateHpBar() {
     if (hpRatio < 1) return;
     num angle = math.PI/4 * hpRatio/100;
@@ -179,6 +187,7 @@ class PlayerSprite extends DisplayObjectContainer {
     legs.visible =
     torso.visible =
     head.visible =
+    hpBar.visible =
     weapon[currentWeapon].visible = b;
     death.visible = !b;
   }

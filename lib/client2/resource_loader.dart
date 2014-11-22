@@ -2,7 +2,7 @@ part of gglclient2;
 
 class ResourceLoader {
   final num playerMax = 10;
-  final List<String> weaponNames = ['pistol','rifle','grenade','rocket'];
+  final List<String> weaponNames = ['rifle','grenade','rocket','pistol'];
   final List<String> bulletNames = ['bullet', 'grenade', 'rocket'];
   ResourceLoader() {
     String sprites = "assets/sprites";

@@ -183,6 +183,7 @@ class Arena extends DisplayObjectContainer {
           ..move(obj.x, obj.y, obj.orientation)
           ..toggleFire(obj.isFiring)
           ..walk(obj.isMoving)
+          ..switchWeapon(obj.weaponType)
           ..takeDamage(obj.lifeRatio, obj.damageFrom)
           ..visible = true;
       } else if (obj is BulletInFrame) {
@@ -197,6 +198,8 @@ class Arena extends DisplayObjectContainer {
           ..y = obj.y
           ..rotation = obj.orientation
           ..hitObject(obj.hitObject)
+          ..hitPlayer(obj.hitActor)
+          ..type = obj.type
           ..visible = true;
       }
     });
