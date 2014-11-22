@@ -166,21 +166,12 @@ class Arena extends DisplayObjectContainer {
     for (BulletSprite b in bullets.values) b.visible = false;
     for (PlayerSprite p in players.values) p.visible = false;
 
+    // if the object isn't in our pool, lazy load it, then use it.
     pf.visibleObjects.forEach((obj) {
       if (obj is ActorInFrame) {
-
-        // lazy load the players
         players.putIfAbsent(obj.id, () {
           return sprites[players.length];
-        });
-
-        if (obj.id == mainId) {
-          players[obj.id].addTo(playerPanel);
-          x = stage.stageWidth/2 - obj.x;
-          y = stage.stageHeight/2 - obj.y;
-        }
-
-        players[obj.id]
+        })
           ..move(obj.x, obj.y, obj.orientation)
           ..toggleFire(obj.isFiring)
           ..walk(obj.isMoving)
@@ -188,14 +179,16 @@ class Arena extends DisplayObjectContainer {
           ..takeDamage(obj.lifeRatio, obj.damageFrom)
           ..visible = true;
 
-      } else if (obj is BulletInFrame) {
+        if (obj.id == mainId) {
+          players[obj.id].addTo(playerPanel);
+          x = stage.stageWidth/2 - obj.x;
+          y = stage.stageHeight/2 - obj.y;
+        }
 
-        // lazy load the bullets
+      } else if (obj is BulletInFrame) {
         bullets.putIfAbsent(obj.id, () {
           return new BulletSprite()..addTo(playerPanel);
-        });
-
-        bullets[obj.id]
+        })
           ..x = obj.x
           ..y = obj.y
           ..rotation = obj.orientation
@@ -207,9 +200,7 @@ class Arena extends DisplayObjectContainer {
       } else if (obj is WeaponDropInFrame) {
         drops.putIfAbsent(obj.id, () {
           return new WeaponDropSprite()..addTo(floorPanel);
-        });
-
-        drops[obj.id]
+        })
           ..x = obj.x
           ..y = obj.y
           ..type = obj.weaponType;
