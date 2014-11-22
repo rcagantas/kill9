@@ -12,6 +12,7 @@ class Arena extends DisplayObjectContainer {
 
   Map<int, PlayerSprite> players = new Map();
   Map<int, BulletSprite> bullets = new Map();
+  Map<int, WeaponDropSprite> drops = new Map();
 
   Sprite floorPanel, cratePanel, treePanel, playerPanel;
   num mapScale = 20;
@@ -186,6 +187,7 @@ class Arena extends DisplayObjectContainer {
           ..switchWeapon(obj.weaponType)
           ..takeDamage(obj.lifeRatio, obj.damageFrom)
           ..visible = true;
+
       } else if (obj is BulletInFrame) {
 
         // lazy load the bullets
@@ -201,6 +203,16 @@ class Arena extends DisplayObjectContainer {
           ..hitPlayer(obj.hitActor)
           ..type = obj.type
           ..visible = true;
+
+      } else if (obj is WeaponDropInFrame) {
+        drops.putIfAbsent(obj.id, () {
+          return new WeaponDropSprite()..addTo(floorPanel);
+        });
+
+        drops[obj.id]
+          ..x = obj.x
+          ..y = obj.y
+          ..type = obj.weaponType;
       }
     });
     miniMove();

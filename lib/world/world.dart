@@ -57,7 +57,7 @@ class World {
         new RandomWalker(addPlayerandGetReference())..start();
       }
 
-      //_weaponDrop.spawn();
+      _weaponDrop.spawn();
 
       //start game
       _timer = new Timer.periodic(new Duration(milliseconds: 10), this._goRound);
