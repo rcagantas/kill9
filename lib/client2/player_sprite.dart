@@ -154,7 +154,7 @@ class PlayerSprite extends DisplayObjectContainer {
     fireAni.onStart = () => _isFiring = true;
     fireAni.onComplete = () => _isFiring = false;
     stage.juggler.add(fireAni);
-    weaponSound[currentWeapon].playSegment(0, currentWeapon == 1? .1:1, false);
+    weaponSound[currentWeapon].playSegment(0, currentWeapon == 0? .1:1, false);
   }
 
   void swapWeapon() {

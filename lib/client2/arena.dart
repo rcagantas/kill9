@@ -171,7 +171,9 @@ class Arena extends DisplayObjectContainer {
       if (obj is ActorInFrame) {
         players.putIfAbsent(obj.id, () {
           return sprites[players.length];
-        })
+        });
+
+        players[obj.id]
           ..move(obj.x, obj.y, obj.orientation)
           ..toggleFire(obj.isFiring)
           ..walk(obj.isMoving)
@@ -188,7 +190,9 @@ class Arena extends DisplayObjectContainer {
       } else if (obj is BulletInFrame) {
         bullets.putIfAbsent(obj.id, () {
           return new BulletSprite()..addTo(playerPanel);
-        })
+        });
+
+        bullets[obj.id]
           ..x = obj.x
           ..y = obj.y
           ..rotation = obj.orientation

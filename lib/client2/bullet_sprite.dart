@@ -26,6 +26,7 @@ class BulletSprite extends DisplayObjectContainer {
         ..stop(true)
         ..addTo(this);
     stage.juggler.add(explode);
+
   }
 
   set visible(bool b) { bulletLayer.visible = b; }
