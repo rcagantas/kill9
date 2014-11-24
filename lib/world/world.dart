@@ -172,7 +172,6 @@ class World {
           visiObj.timedOut = obj.timedOut;
         } else if (obj is WeaponDrop) {
           visiObj.weaponType = obj.weaponType;
-
         }
         frame.visibleObjects.add(visiObj);
       }

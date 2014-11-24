@@ -165,6 +165,7 @@ class Arena extends DisplayObjectContainer {
 
     for (BulletSprite b in bullets.values) b.visible = false;
     for (PlayerSprite p in players.values) p.visible = false;
+    for (WeaponDropSprite w in drops.values) w.visible = false;
 
     // if the object isn't in our pool, lazy load it, then use it.
     pf.visibleObjects.forEach((obj) {
@@ -207,7 +208,8 @@ class Arena extends DisplayObjectContainer {
         })
           ..x = obj.x
           ..y = obj.y
-          ..type = obj.weaponType;
+          ..type = obj.weaponType
+          ..visible = true;
       }
     });
     miniMove();

@@ -91,15 +91,14 @@ class WeaponDrop extends WorldObject {
 
         _timer = new Timer(new Duration(seconds:5), () {
 
-            // roll random weapon;
+          // roll random weapon;
           math.Random random = new math.Random();
 
           weaponType = random.nextInt(3);
-          print("new weapon drop of type ${weaponType}");
           // respawn to random location;
           myWorld.addObject(this);
           myWorld.spawnRandomly(this);
-
+          print("new weapon drop of type ${weaponType} at ${this.x},${this.y}");
         });
       }
   }
@@ -135,9 +134,6 @@ class Actor extends WorldObject {
         ActorProps.TURN_RATE)
   {
     weapon = new Pistol(this);
-    weapons.add(new Rifle(this));
-    weapons.add(new GrenadeLauncher(this));
-    weapons.add(new RocketLauncher(this));
 
     _45degreeSpeed = speed * math.sin(math.PI/4);
   }
@@ -316,8 +312,14 @@ class Actor extends WorldObject {
 
     objects.forEach((key,object) {
       if (key != this.hashCode) {
-        if (object is Actor && object.life == 0) {}
-        else if (willBump(object, elapsedTime) ) {
+        if (object is Actor && object.life == 0) {
+          // walk over dead body
+        } else if (object is WeaponDrop &&
+          willBump(object, elapsedTime)) {
+          // pick up weapon
+          object.pickedUp(this);
+          print("${this.hashCode} picked up weapon ${object.weaponType}");
+        } else if (willBump(object, elapsedTime) ) {
           _pauseLeftRightMove();
           _pauseTopDownMove();
         }
