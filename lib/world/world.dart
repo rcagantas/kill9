@@ -16,7 +16,7 @@ class World {
   int _tileWidth;
   int _worldWidth;
   int _worldHeight;
-  Timer _timer = null, _readyTimer = null;
+  Timer _timer = null, _readyTimer = null, _weaponDropTimer = null;
   Stopwatch watch = new Stopwatch();
 
   World.size(num height, num width) {
@@ -45,9 +45,15 @@ class World {
           if (onReady != null) onReady();
           _readyTimer.cancel();
         }
-      });
+      }
+    );
 
     _weaponDrop = new WeaponDrop(this);
+    _weaponDropTimer = new Timer.periodic(new Duration(seconds: 5),
+      (timer) {
+        _weaponDrop.spawn(this);
+      }
+    );
   }
 
   void start() {
@@ -56,8 +62,6 @@ class World {
       while (actors.length < MAX_PLAYERS) {
         new RandomWalker(addPlayerandGetReference())..start();
       }
-
-      _weaponDrop.spawn();
 
       //start game
       _timer = new Timer.periodic(new Duration(milliseconds: 10), this._goRound);

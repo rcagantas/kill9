@@ -78,37 +78,28 @@ class WeaponDrop extends WorldObject {
   Timer _timer;
 
   int weaponType;
-  bool _canRespawn = false;
   math.Random random = new math.Random();
 
   WeaponDrop(World world):super(ActorProps.RADIUS,0,0) {
     myWorld = world;
   }
 
-  void spawn() {
-      if (!_canRespawn) {
-        _canRespawn = true;
+  void spawn(World myWorld) {
+    this.myWorld = myWorld;
+    // roll random weapon;
+    math.Random random = new math.Random();
 
-        _timer = new Timer(new Duration(seconds:5), () {
-
-          // roll random weapon;
-          math.Random random = new math.Random();
-
-          weaponType = random.nextInt(3);
-          // respawn to random location;
-          myWorld.addObject(this);
-          myWorld.spawnRandomly(this);
-          print("new weapon drop of type ${weaponType} at ${this.x},${this.y}");
-        });
-      }
+    weaponType = random.nextInt(3);
+    // respawn to random location;
+    myWorld.addObject(this);
+    myWorld.spawnRandomly(this);
+    print("weapon drop ${this.hashCode} " +
+        "of type ${weaponType} at ${this.x},${this.y}");
   }
 
   void pickedUp(Actor actor) {
-    _canRespawn = true;
     actor.addWeapon(weaponType);
     myWorld.removeObject(this);
-
-    spawn();
   }
 }
 
