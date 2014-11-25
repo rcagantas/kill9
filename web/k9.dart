@@ -73,7 +73,7 @@ class TestWorld extends DisplayObjectContainer {
 void setupPanel(DisplayObjectContainer panel) {
   stage.removeChildren();
   stage.addChild(panel);
-  stage.addChild(diagnostics);
+  //stage.addChild(diagnostics);
 }
 
 void main() {

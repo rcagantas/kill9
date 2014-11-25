@@ -257,17 +257,21 @@ class Bullet extends WorldObject {
 class BulletFactory {
 
   Queue<Bullet> _bullets = new Queue();
+  Map bulletBehaviors;
   int counter = 0;
 
-  BulletFactory(int bulletCount, Map bulletBehaviors) {
-    for (int i = 0; i < bulletCount; i++) {
-      var bullet = new Bullet()
+  BulletFactory(int bulletCount, this.bulletBehaviors) {
+    for (int i = 0; i < bulletCount; i++) addBullet();
+  }
+
+  void addBullet() {
+    var bullet = new Bullet()
       ..behaviors = bulletBehaviors;
-      _bullets.add(bullet);
-    }
+    _bullets.add(bullet);
   }
 
   Bullet getBullet() {
+    if (_bullets.isEmpty) addBullet();
     var bullet = _bullets.removeFirst();
     counter = counter + 1;
     // print("Borrowed ${_bullets.length}: Total fire: $counter");

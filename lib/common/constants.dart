@@ -67,7 +67,7 @@ class BulletType {
 
 class Bots {
   static List<String> names =
-      ['Yutani bot',
+      ['Retroel bot',
        'Happyslurpy bot',
        'Vilatra bot',
        'Bournick bot',
@@ -76,7 +76,7 @@ class Bots {
        'Dendi bot',
        'Puppey bot',
        'Iceiceice bot',
-       'Funn1k bot'];
+       'Singsing bot'];
 }
 
 class Comm {

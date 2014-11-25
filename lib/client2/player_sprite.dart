@@ -6,7 +6,7 @@ class PlayerSprite extends DisplayObjectContainer {
   static num totalPlayers = -1;
   static num hpRadius = 33;
 
-  TextField dbg;
+  TextField dbg, playerName;
   FlipBook legs, death;
   Bitmap torso, head;
   List<Bitmap> weapon = [];
@@ -23,12 +23,22 @@ class PlayerSprite extends DisplayObjectContainer {
   PlayerSprite(this.playerNo) {
 
     dbg = new TextField()
-             ..defaultTextFormat = diagnostics.font11
-             ..width = 200
-             ..height = 200
-             ..wordWrap = true
-             ..text = "p:"
-             ..addTo(this);
+      ..defaultTextFormat = diagnostics.font11
+      ..width = 200
+      ..height = 200
+      ..wordWrap = true
+      ..text = "p:"
+      ..addTo(this);
+
+    playerName = new TextField()
+      ..defaultTextFormat = new TextFormat('Lato', 15, Color.WhiteSmoke, bold:true, align:"center")
+      ..width = 200
+      ..height = 100
+      ..pivotX = 100
+      ..pivotY = -30
+      ..wordWrap = false
+      ..text = ""
+      ..addTo(this);
 
     splatter = new ParticleEmitter(ParticleLoader.splatter)
       ..stop(true)
@@ -95,6 +105,8 @@ class PlayerSprite extends DisplayObjectContainer {
     stage.juggler.add(spawn);
   }
 
+  void set name(String n) { playerName.text = "$n"; }
+
   bool get isDead { return _hpRatio < 1; }
 
   /** there's probably easier ways to do this. */
@@ -127,6 +139,7 @@ class PlayerSprite extends DisplayObjectContainer {
     fixLegRotation(x, y);
     splatter.rotation = peg180(splatter.rotation + (rotation - r));
     this.x = x; this.y = y; rotation = peg180(r);
+    playerName.rotation = -rotation;
     debug();
   }
 

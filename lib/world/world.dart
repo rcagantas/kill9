@@ -38,7 +38,7 @@ class World {
     _bulletBehaviors[BulletType.GRENADE] = new GrenadeBehavior();
     _bulletBehaviors[BulletType.ROCKET] = new RocketBehavior();
 
-    bullets = new BulletFactory(20, _bulletBehaviors);
+    bullets = new BulletFactory(200, _bulletBehaviors);
     _readyTimer = new Timer.periodic(new Duration(milliseconds: 10),
       (timer) {
         if (actors.length == MAX_PLAYERS) {
@@ -59,12 +59,17 @@ class World {
   void start() {
     if (_timer == null) {
       //initializations
+      List<RandomWalker> bots = [];
       while (actors.length < MAX_PLAYERS) {
-        new RandomWalker(addPlayerandGetReference())..start();
+        bots.add(new RandomWalker(addPlayerandGetReference()));
+        bots[bots.length - 1].player.name = Bots.names[bots.length - 1];
       }
 
       //start game
       _timer = new Timer.periodic(new Duration(milliseconds: 10), this._goRound);
+      for (RandomWalker bot in bots) {
+        bot.start();
+      }
     }
   }
 

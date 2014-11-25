@@ -31,7 +31,7 @@ class Arena extends DisplayObjectContainer {
           ..width = 200
           ..height = 200
           ..wordWrap = true
-          ..text = "tiles count ";
+          ..text = "";
 
     floorPanel = new Sprite()..addTo(this);
     playerPanel = new Sprite()..addTo(this);
@@ -63,7 +63,8 @@ class Arena extends DisplayObjectContainer {
             ..y = posY
             ..addTo(panel));
 
-        dbg.text = "tile count: ${count + 1}";
+        if (diagnostics.isLogging)
+          dbg.text = "tile count: ${count + 1}";
         count++;
        }
     }
@@ -180,6 +181,7 @@ class Arena extends DisplayObjectContainer {
           ..walk(obj.isMoving)
           ..switchWeapon(obj.weaponType)
           ..takeDamage(obj.lifeRatio, obj.damageFrom)
+          ..name = obj.name
           ..visible = true;
 
         if (obj.id == mainId) {
