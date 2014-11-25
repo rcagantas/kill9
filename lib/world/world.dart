@@ -253,6 +253,8 @@ class World {
         if (c.mouseX != -1 && c.mouseY != -1) {
           a.turnToPoint(c.mouseX + a.x, c.mouseY + a.y);
         }
+
+        if (c.name != a.name) { a.name = c.name; }
       }
     }
   }

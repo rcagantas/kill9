@@ -222,11 +222,12 @@ class CommandFrame {
 
 class Cmd {
   num ms = 10, tr = .10;
+  num dmg = 0;
+  String name;
   num id = 0;
   num moveX = 0, moveY = 0, rotate = 0;
   num mouseX = -1, mouseY = -1;
   bool fire = false, swap = false;
-  num dmg = 0;
 
   String toString() {
     return "moveX: $moveX; moveY: $moveY; rotate: $rotate\n" +

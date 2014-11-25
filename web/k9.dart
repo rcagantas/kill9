@@ -73,7 +73,7 @@ class TestWorld extends DisplayObjectContainer {
 void setupPanel(DisplayObjectContainer panel) {
   stage.removeChildren();
   stage.addChild(panel);
-  //stage.addChild(diagnostics);
+  stage.addChild(diagnostics);
 }
 
 void main() {
@@ -84,8 +84,12 @@ void main() {
   fontLoader.load.then((_) {
     resource.load().then((_) {
 
-      TestWorld world = new TestWorld();
-      setupPanel(world);
+      TestWorld testWorld = new TestWorld();
+      setupPanel(testWorld);
+
+      html.querySelector("#player_name").onInput.listen((e) {
+        input.name = e.target.value;
+      });
 
       html.querySelector("#red").onClick.listen((e) {
         input.removeListeners();
@@ -104,8 +108,8 @@ void main() {
 
       html.querySelector("#world").onClick.listen((e) {
         input.removeListeners();;
-        input.addListener(world.world.action);
-        setupPanel(world);
+        input.addListener(testWorld.world.action);
+        setupPanel(testWorld);
       });
     });
   });

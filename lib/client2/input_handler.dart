@@ -7,6 +7,7 @@ class InputHandler {
 
   bool mouseL = false;
   num mainId = 0;
+  String name = "";
   Cmd cmd = new Cmd();
 
   void addListener(void action(Cmd)) {
@@ -53,6 +54,7 @@ class InputHandler {
 
   void makeCmd() {
     cmd.id = mainId;
+    cmd.name = name;
     cmd.moveY = trival(87, 83);   // down, up
     cmd.moveX = trival(65, 68);   // left, right
     cmd.rotate = trival(37, 39);  // turn left, right

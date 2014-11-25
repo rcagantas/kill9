@@ -105,7 +105,7 @@ class PlayerSprite extends DisplayObjectContainer {
     stage.juggler.add(spawn);
   }
 
-  void set name(String n) { playerName.text = "$n"; }
+  void set name(String n) { playerName.text = n == null? "" : "$n"; }
 
   bool get isDead { return _hpRatio < 1; }
 
