@@ -249,6 +249,10 @@ class World {
         else if (!c.fire) a.weapon.stop();
 
         if (c.swap) a.switchWeapon();
+
+        if (c.mouseX != -1 && c.mouseY != -1) {
+          a.turnToPoint(c.mouseX + a.x, c.mouseY + a.y);
+        }
       }
     }
   }
