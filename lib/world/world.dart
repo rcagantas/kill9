@@ -16,8 +16,10 @@ class World {
   int _tileWidth;
   int _worldWidth;
   int _worldHeight;
-  Timer _timer = null, _readyTimer = null, _weaponDropTimer = null;
+  Timer _timer = null, _readyTimer = null,
+      _weaponDropTimer = null, _lobbyTimer = null;
   Stopwatch watch = new Stopwatch();
+  List<RandomWalker> bots = [];
 
   World.size(num height, num width) {
     List<num> surface = MapGenerator.createSimpleRandomSurface(width, height);
@@ -39,31 +41,22 @@ class World {
     _bulletBehaviors[BulletType.ROCKET] = new RocketBehavior();
 
     bullets = new BulletFactory(200, _bulletBehaviors);
-    _readyTimer = new Timer.periodic(new Duration(milliseconds: 10),
-      (timer) {
-        if (actors.length == MAX_PLAYERS) {
-          if (onReady != null) onReady();
-          _readyTimer.cancel();
-        }
+    _readyTimer = new Timer.periodic(new Duration(milliseconds: 10), (timer) {
+      if (actors.length == MAX_PLAYERS) {
+        if (onReady != null) onReady();
+        _readyTimer.cancel();
       }
-    );
+    });
 
     _weaponDrop = new WeaponDrop(this);
-    _weaponDropTimer = new Timer.periodic(new Duration(seconds: 5),
-      (timer) {
-        _weaponDrop.spawn(this);
-      }
-    );
   }
 
   void start() {
-    if (_timer == null) {
+    if (_timer == null && actors.length == MAX_PLAYERS) {
       //initializations
-      List<RandomWalker> bots = [];
-      while (actors.length < MAX_PLAYERS) {
-        bots.add(new RandomWalker(addPlayerandGetReference()));
-        bots[bots.length - 1].player.name = Bots.names[bots.length - 1];
-      }
+      _weaponDropTimer = new Timer.periodic(new Duration(seconds: 5), (timer) {
+        _weaponDrop.spawn(this);
+      });
 
       //start game
       _timer = new Timer.periodic(new Duration(milliseconds: 10), this._goRound);
@@ -100,6 +93,18 @@ class World {
     actors.add(newPlayer);
     spawnRandomly(newPlayer);
     print("${actors.length} ${newPlayer.hashCode}");
+
+    // start the lobby timer once you add a real player
+    _lobbyTimer = new Timer.periodic(new Duration(seconds: 1), (timer) {
+      if (actors.length < MAX_PLAYERS) {
+        bots.add(new RandomWalker(addPlayerandGetReference()));
+        bots[bots.length - 1].player.name = Bots.names[bots.length - 1];
+      } else {
+        _lobbyTimer.cancel();
+        start();
+      }
+    });
+
     return newPlayer;
   }
 
@@ -231,6 +236,7 @@ class World {
   }
 
   void action(Cmd c) {
+    if (_timer == null) return;
     for (Actor a in actors) {
       if (a.hashCode == c.id) {
         if (c.moveX == -1) a.moveLeft();

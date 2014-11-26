@@ -223,8 +223,8 @@ class CommandFrame {
 class Cmd {
   num ms = 10, tr = .10;
   num dmg = 0;
-  String name;
   num id = 0;
+  String name;
   num moveX = 0, moveY = 0, rotate = 0;
   num mouseX = -1, mouseY = -1;
   bool fire = false, swap = false;
@@ -233,6 +233,31 @@ class Cmd {
     return "moveX: $moveX; moveY: $moveY; rotate: $rotate\n" +
         "mouseX:  $mouseX; mouseY: $mouseY\n" +
         "fire: $fire; swap: $swap;";
+  }
+
+  String stringify() {
+    StringBuffer sb = new StringBuffer()
+      ..write("$id,$name,")
+      ..write("$moveX,$moveY,$rotate,")
+      ..write("$mouseX,$mouseY,")
+      ..write("$fire,$swap,");
+    return sb.toString();
+  }
+
+  Cmd() {}
+
+  Cmd.fromString(String s) {
+    var fields = s.split(",");
+    if (fields[0] == null) return;
+    id = num.parse(fields[0]);
+    name = fields[1];
+    moveX = num.parse(fields[2]);
+    moveY = num.parse(fields[3]);
+    rotate = num.parse(fields[4]);
+    mouseX = num.parse(fields[5]);
+    mouseY = num.parse(fields[6]);
+    fire = fields[7] == "true"? true: false;
+    swap = fields[8] == "true"? true: false;
   }
 
   bool equals(Cmd c) {

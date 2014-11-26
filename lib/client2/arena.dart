@@ -121,6 +121,7 @@ class Arena extends DisplayObjectContainer {
         ..pivotY = size/mapScale/2
         ..addTo(miniMap);
     miniMap.addTo(this);
+    miniMove();
   }
 
   void miniMove() {
@@ -163,6 +164,7 @@ class Arena extends DisplayObjectContainer {
   }
 
   void updateFrame(Frame pf) {
+    mainId = pf.playerId;
 
     for (BulletSprite b in bullets.values) b.visible = false;
     for (PlayerSprite p in players.values) p.visible = false;

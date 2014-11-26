@@ -4,6 +4,7 @@ import 'package:stagexl/stagexl.dart';
 import 'package:giggl/gglclient2.dart';
 import 'package:giggl/gglworld.dart';
 import 'package:giggl/gglcommon.dart';
+import 'dart:convert';
 
 class RedDot extends DisplayObjectContainer {
   Shape shape;
@@ -63,10 +64,41 @@ class TestWorld extends DisplayObjectContainer {
     arena = new Arena(20, 20, world.grid.surfaceList)
       ..addTo(this);
     player1 = world.addPlayerandGetReference();
-    input.mainId = arena.mainId = player1.hashCode;
+    input.mainId = player1.hashCode;
     input.addListener(world.action);
-    world.addPlayerFrameListener(arena.mainId, arena.updateFrame);
-    world.start();
+    world.addPlayerFrameListener(input.mainId, arena.updateFrame);
+  }
+}
+
+class TestNetClient extends DisplayObjectContainer {
+  Arena arena;
+  Frame pf;
+  TestNetClient() {
+    String uri = "127.0.0.1";
+    num port = 1024;
+    html.WebSocket socket = new html.WebSocket("ws://${uri}:${port}/ws");
+    print("trying to open $socket");
+    socket.onOpen.listen((e) {
+      print("socket opened.");
+      socket.send("init");
+      input.addListener((Cmd cmd) {
+        if (arena == null) return;
+        cmd.id = arena.mainId;
+        socket.send(cmd.stringify());
+      });
+    });
+
+    socket.onMessage.listen((e) {
+      if (arena == null) {
+        arena = new Arena(20, 20, JSON.decode(e.data))
+          ..addTo(this);
+      } else {
+        arena.updateFrame(new Frame.fromString(e.data));
+      }
+    });
+    socket.onError.listen((e) {
+      print("cannot open socket");
+    });
   }
 }
 
@@ -84,8 +116,9 @@ void main() {
   fontLoader.load.then((_) {
     resource.load().then((_) {
 
-      TestWorld testWorld = new TestWorld();
-      setupPanel(testWorld);
+      TestWorld testWorld = null; //new TestWorld();
+      TestNetClient testNetClient = new TestNetClient();
+      setupPanel(testNetClient);
 
       html.querySelector("#player_name").onInput.listen((e) {
         input.name = e.target.value;
