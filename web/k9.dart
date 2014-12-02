@@ -76,21 +76,18 @@ class TestLocal extends DisplayObjectContainer {
 class TestNetClient extends DisplayObjectContainer {
   Arena arena;
   Frame pf;
+  html.WebSocket socket;
 
   TestNetClient() {
     String uri = "127.0.0.1";
     num port = 1024;
-    html.WebSocket socket = new html.WebSocket("ws://${uri}:${port}/ws");
+    socket = new html.WebSocket("ws://${uri}:${port}/ws");
     print("trying to open $socket");
 
     socket.onOpen.listen((e) {
       print("socket opened.");
       socket.send("init");
-      input.addListener((Cmd cmd) {
-        if (arena == null) return;
-        cmd.id = arena.mainId;
-        socket.send(cmd.stringify());
-      });
+      input.addListener(action);
     });
 
     socket.onMessage.listen((e) {
@@ -111,11 +108,17 @@ class TestNetClient extends DisplayObjectContainer {
       arena.updateFrame(pf);
     });
   }
+
+  void action(Cmd cmd) {
+    if (arena == null) return;
+    cmd.id = arena.mainId;
+    socket.send(cmd.stringify());
+  }
 }
 
 void setupPanel(DisplayObjectContainer panel, Function action) {
   input.removeListeners();
-  input.addListener(action);
+  if (action != null) input.addListener(action);
   stage.removeChildren();
   stage.addChild(panel);
   stage.addChild(diagnostics);
@@ -133,6 +136,7 @@ void main() {
       TestSprite sprite = new TestSprite();
       TestArena arena = new TestArena();
       TestLocal local = new TestLocal();
+      TestNetClient net = new TestNetClient();
 
       html.querySelector("#player_name").onInput.listen((e) {
         local.world.stop();
@@ -158,6 +162,11 @@ void main() {
         setupPanel(local, local.world.action);
         local.start();
         local.world.start();
+      });
+
+      html.querySelector("#net").onClick.listen((e) {
+        local.world.stop();
+        setupPanel(net, net.action);
       });
     });
   });
