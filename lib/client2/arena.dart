@@ -125,9 +125,12 @@ class Arena extends DisplayObjectContainer {
   }
 
   void miniMove() {
-    if (players[mainId] == null) return;
-    num x = players[mainId].x;
-    num y = players[mainId].y;
+    num x = sprites[0].x;
+    num y = sprites[0].y;
+    if (players[mainId] != null) {
+      x = players[mainId].x;
+      y = players[mainId].y;
+    }
     miniMain.x = x/mapScale - size/mapScale/2;
     miniMain.y = y/mapScale - size/mapScale/2;
     miniMap.x = x - stage.stageWidth/2;
