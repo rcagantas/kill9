@@ -196,6 +196,7 @@ class Bullet extends WorldObject {
   int damage;
   Map behaviors;
   Weapon fromWeapon;
+  int owner;
 
   Bullet():super(BulletProps.RADIUS,BulletProps.SPEED,0);
 
@@ -331,6 +332,7 @@ class Pistol extends Weapon {
     _pressed = true;
     var bullet = owner.myWorld.bullets.getBullet()
       ..type = BulletType.BULLET
+      ..owner = owner.hashCode
       ..init(owner.x, owner.y, owner.orientation, owner.radius, this);
 
     owner.myWorld.addObject(bullet);
@@ -376,6 +378,7 @@ class Rifle extends Weapon {
   void _fire(Timer timer) {
     var bullet = owner.myWorld.bullets.getBullet()
       ..type = BulletType.BULLET
+      ..owner = owner.hashCode
       ..init(owner.x, owner.y, owner.orientation, owner.radius, this);
 
     owner.myWorld.addObject(bullet);
@@ -410,6 +413,7 @@ class GrenadeLauncher extends Weapon {
     _pressed = true;
     var bullet = owner.myWorld.bullets.getBullet()
       ..type = BulletType.GRENADE
+      ..owner = owner.hashCode
       ..init(owner.x, owner.y, owner.orientation, owner.radius, this);
 
     owner.myWorld.addObject(bullet);
@@ -443,6 +447,7 @@ class RocketLauncher extends Weapon {
     _pressed = true;
     var bullet = owner.myWorld.bullets.getBullet()
       ..type = BulletType.ROCKET
+      ..owner = owner.hashCode
       ..init(owner.x, owner.y, owner.orientation, owner.radius, this);
 
     owner.myWorld.addObject(bullet);

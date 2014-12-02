@@ -9,7 +9,9 @@ class RandomWalker {
   RandomWalker(this.player);
 
   void start() {
-    _timer = new Timer.periodic(new Duration(milliseconds: 2000), _walkRandomly);
+    if (_timer == null) {
+      _timer = new Timer.periodic(new Duration(milliseconds: 2000), _walkRandomly);
+    }
   }
 
   void stop() {

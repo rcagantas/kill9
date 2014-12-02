@@ -34,11 +34,10 @@ class TestSprite extends DisplayObjectContainer {
       ..x = stage.stageWidth/2
       ..y = stage.stageHeight/2
       ..addTo(this);
-    input.addListener(p1.action);
-    input.addListener(action);
   }
 
   void action(Cmd c) {
+    p1.action(c);
     if (input.key[69]) p1.takeDamage(p1.hpRatio - 1, 45 * math.PI/180);
     if (input.key[82]) p1.hpRatio = 100;
   }
@@ -55,14 +54,18 @@ class TestArena extends DisplayObjectContainer {
   }
 }
 
-class TestWorld extends DisplayObjectContainer {
+class TestLocal extends DisplayObjectContainer {
   World world;
   Arena arena;
   Actor player1;
-  TestWorld() {
+  TestLocal() {
     world = new World.size(20, 20);
     arena = new Arena(20, 20, world.grid.surfaceList)
       ..addTo(this);
+  }
+
+  void start() {
+    if (player1 != null) return;
     player1 = world.addPlayerandGetReference();
     input.mainId = player1.hashCode;
     input.addListener(world.action);
@@ -73,11 +76,13 @@ class TestWorld extends DisplayObjectContainer {
 class TestNetClient extends DisplayObjectContainer {
   Arena arena;
   Frame pf;
+
   TestNetClient() {
     String uri = "127.0.0.1";
     num port = 1024;
     html.WebSocket socket = new html.WebSocket("ws://${uri}:${port}/ws");
     print("trying to open $socket");
+
     socket.onOpen.listen((e) {
       print("socket opened.");
       socket.send("init");
@@ -93,16 +98,24 @@ class TestNetClient extends DisplayObjectContainer {
         arena = new Arena(20, 20, JSON.decode(e.data))
           ..addTo(this);
       } else {
-        arena.updateFrame(new Frame.fromString(e.data));
+        pf = new Frame.fromString(e.data);
       }
     });
+
     socket.onError.listen((e) {
       print("cannot open socket");
+    });
+
+    stage.onEnterFrame.listen((e) {
+      if (pf == null) return;
+      arena.updateFrame(pf);
     });
   }
 }
 
-void setupPanel(DisplayObjectContainer panel) {
+void setupPanel(DisplayObjectContainer panel, Function action) {
+  input.removeListeners();
+  input.addListener(action);
   stage.removeChildren();
   stage.addChild(panel);
   stage.addChild(diagnostics);
@@ -116,33 +129,35 @@ void main() {
   fontLoader.load.then((_) {
     resource.load().then((_) {
 
-      TestWorld testWorld = null; //new TestWorld();
-      TestNetClient testNetClient = new TestNetClient();
-      setupPanel(testNetClient);
+      RedDot dot = new RedDot();
+      TestSprite sprite = new TestSprite();
+      TestArena arena = new TestArena();
+      TestLocal local = new TestLocal();
 
       html.querySelector("#player_name").onInput.listen((e) {
+        local.world.stop();
         input.name = e.target.value;
       });
 
       html.querySelector("#red").onClick.listen((e) {
-        input.removeListeners();
-        setupPanel(new RedDot());
+        local.world.stop();
+        setupPanel(dot, dot.action);
       });
 
       html.querySelector("#player").onClick.listen((e) {
-        input.removeListeners();
-        setupPanel(new TestSprite());
+        local.world.stop();
+        setupPanel(sprite, sprite.action);
       });
 
       html.querySelector("#arena").onClick.listen((e) {
-        input.removeListeners();
-        setupPanel(new TestArena());
+        local.world.stop();
+        setupPanel(arena, arena.arena.action);
       });
 
-      html.querySelector("#world").onClick.listen((e) {
-        input.removeListeners();;
-        input.addListener(testWorld.world.action);
-        setupPanel(testWorld);
+      html.querySelector("#local").onClick.listen((e) {
+        setupPanel(local, local.world.action);
+        local.start();
+        local.world.start();
       });
     });
   });

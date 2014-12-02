@@ -54,12 +54,15 @@ class World {
   void start() {
     if (_timer == null && actors.length == MAX_PLAYERS) {
       //initializations
+
       _weaponDropTimer = new Timer.periodic(new Duration(seconds: 5), (timer) {
-        _weaponDrop.spawn(this);
+        if (!_objects.containsValue(_weaponDrop)) {
+          _weaponDrop.spawn(this);
+        }
       });
 
       //start game
-      _timer = new Timer.periodic(new Duration(milliseconds: 10), this._goRound);
+      _timer = new Timer.periodic(new Duration(milliseconds: 16), this._goRound);
       for (RandomWalker bot in bots) {
         bot.start();
       }
@@ -70,6 +73,12 @@ class World {
     if (_timer != null) {
       _timer.cancel();
       _timer = null;
+      print("stopped game");
+    }
+
+    if (_weaponDropTimer != null) {
+      _weaponDropTimer.cancel();
+      _weaponDropTimer = null;
     }
   }
 
@@ -95,15 +104,17 @@ class World {
     print("${actors.length} ${newPlayer.hashCode}");
 
     // start the lobby timer once you add a real player
-    _lobbyTimer = new Timer.periodic(new Duration(seconds: 1), (timer) {
-      if (actors.length < MAX_PLAYERS) {
-        bots.add(new RandomWalker(addPlayerandGetReference()));
-        bots[bots.length - 1].player.name = Bots.names[bots.length - 1];
-      } else {
-        _lobbyTimer.cancel();
-        start();
-      }
-    });
+    if (_lobbyTimer == null) {
+      _lobbyTimer = new Timer.periodic(new Duration(seconds: 1), (timer) {
+        if (actors.length < MAX_PLAYERS) {
+          bots.add(new RandomWalker(addPlayerandGetReference()));
+          bots[bots.length - 1].player.name = Bots.names[bots.length - 1];
+        } else {
+          _lobbyTimer.cancel();
+          start();
+        }
+      });
+    }
 
     return newPlayer;
   }
@@ -184,6 +195,8 @@ class World {
           visiObj.hitActor = obj.hitActor;
           visiObj.hitObject = obj.hitObject;
           visiObj.timedOut = obj.timedOut;
+          visiObj.owner = obj.owner;
+          obj.owner = -1;
         } else if (obj is WeaponDrop) {
           visiObj.weaponType = obj.weaponType;
         }

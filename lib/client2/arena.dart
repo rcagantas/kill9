@@ -179,7 +179,7 @@ class Arena extends DisplayObjectContainer {
 
         players[obj.id]
           ..move(obj.x, obj.y, obj.orientation)
-          ..toggleFire(obj.isFiring)
+          //..toggleFire(obj.isFiring)
           ..walk(obj.isMoving)
           ..switchWeapon(obj.weaponType)
           ..takeDamage(obj.lifeRatio, obj.damageFrom)
@@ -205,6 +205,9 @@ class Arena extends DisplayObjectContainer {
           ..hitPlayer(obj.hitActor)
           ..type = obj.type
           ..visible = true;
+
+        if (players.containsKey(obj.owner))
+          players[obj.owner].toggleFire(true);
 
       } else if (obj is WeaponDropInFrame) {
         drops.putIfAbsent(obj.id, () {

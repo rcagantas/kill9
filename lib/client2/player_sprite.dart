@@ -154,7 +154,6 @@ class PlayerSprite extends DisplayObjectContainer {
 
   void fire() {
     if (isDead) return;
-    if (_isFiring) return;
 
     Function firingTransition = (num ratio) {
       return 0.25 < ratio && ratio < 0.85? 1.0 : 0.0;
@@ -166,7 +165,7 @@ class PlayerSprite extends DisplayObjectContainer {
     fireAni.add(new Tween(torso, time, firingTransition)..animate.y.to(3));
     fireAni.onStart = () => _isFiring = true;
     fireAni.onComplete = () => _isFiring = false;
-    stage.juggler.add(fireAni);
+    if (!_isFiring) stage.juggler.add(fireAni);
     weaponSound[currentWeapon].playSegment(0, currentWeapon == 0? .1:1, false);
   }
 

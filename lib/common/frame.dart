@@ -69,7 +69,7 @@ class ActorInFrame extends ObjectInFrame {
 }
 
 class BulletInFrame extends ObjectInFrame {
-  int type;
+  num type, owner;
   bool hitObject = false;
   bool hitActor = false;
   bool timedOut = false;
@@ -77,13 +77,12 @@ class BulletInFrame extends ObjectInFrame {
   String toString() {
     var stringBuffer = new StringBuffer()
     ..write("$id,$x,$y,$orientation,")
-    ..write("$type,$hitObject,$hitActor,$timedOut");
+    ..write("$type,$hitObject,$hitActor,$timedOut,")
+    ..write("$owner");
     return stringBuffer.toString();
   }
 
-  BulletInFrame() {
-
-  }
+  BulletInFrame() {}
 
   BulletInFrame.fromString(String s) {
     var fields = s.split(",");
@@ -96,6 +95,7 @@ class BulletInFrame extends ObjectInFrame {
     hitObject = fields[5] == "true";
     hitActor = fields[6] == "true";
     timedOut = fields[7] == "true";
+    owner = num.parse(fields[8]);
   }
 }
 
@@ -211,9 +211,9 @@ class CommandFrame {
     moveX = int.parse(fields[1]);
     moveY = int.parse(fields[2]);
     orientation = int.parse(fields[3]);
-    fire = fields[4] == "true"? true: false;
-    weaponCycle = fields[5] == "true"? true: false;
-    mouseMoved = fields[6] == "true"? true: false;
+    fire = fields[4] == "true";
+    weaponCycle = fields[5] == "true";
+    mouseMoved = fields[6] == "true";
     mouseX = num.parse(fields[7]);
     mouseY = num.parse(fields[8]);
 
