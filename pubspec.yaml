@@ -2,6 +2,6 @@ name: giggl
 description: A sample web application
 dependencies:
   browser: any
+  http_server: any
   stagexl: any
   stagexl_particle: any
-

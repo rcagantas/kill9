@@ -177,7 +177,7 @@ class Arena extends DisplayObjectContainer {
     pf.visibleObjects.forEach((obj) {
       if (obj is ActorInFrame) {
         players.putIfAbsent(obj.id, () {
-          return sprites[players.length];
+          return sprites[obj.index-1];
         });
 
         players[obj.id]

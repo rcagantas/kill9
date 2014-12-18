@@ -108,7 +108,6 @@ class Actor extends WorldObject {
   Queue<Weapon> weapons = new Queue();
   Weapon weapon;
 
-
   num _xVelocityHolder = 0;
   num _yVelocityHolder = 0;
   num _45degreeSpeed = 0;
@@ -118,6 +117,7 @@ class Actor extends WorldObject {
   int killCount = 0;
   int deathCount = 0;
   num damageFrom = 0;
+  num index = 0;
 
   Actor():
     super(ActorProps.RADIUS,

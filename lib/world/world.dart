@@ -171,12 +171,9 @@ class World {
           frame.topY + WorldConst.VIEWPORT_HEIGHT)) {
         var visiObj;
 
-        if (obj is Actor)
-          visiObj = new ActorInFrame();
-        else if (obj is Bullet)
-          visiObj = new BulletInFrame();
-        else if (obj is WeaponDrop)
-          visiObj = new WeaponDropInFrame();
+        if (obj is Actor)           visiObj = new ActorInFrame();
+        else if (obj is Bullet)     visiObj = new BulletInFrame();
+        else if (obj is WeaponDrop) visiObj = new WeaponDropInFrame();
 
         visiObj.x = obj.x;
         visiObj.y = obj.y;
@@ -190,6 +187,8 @@ class World {
           visiObj.weaponType = obj.weapon.weaponType;
           visiObj.weaponAmmo = obj.weapon.ammo;
           visiObj.name = obj.name;
+          visiObj.index = actors.indexOf(obj);
+
         } else if (obj is Bullet) {
           visiObj.type = obj.type;
           visiObj.hitActor = obj.hitActor;

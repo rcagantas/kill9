@@ -80,7 +80,7 @@ class TestNetClient extends DisplayObjectContainer {
 
   TestNetClient() {
     String uri = "127.0.0.1";
-    num port = 1024;
+    num port = 1025;
     socket = new html.WebSocket("ws://${uri}:${port}/ws");
     print("trying to open $socket");
 
