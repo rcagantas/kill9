@@ -2,8 +2,7 @@ part of gglclient2;
 
 class Arena extends DisplayObjectContainer {
   num main = 0, mainId = 0;
-  num treeScaling = 1.5;
-  static num size = 100;
+  static num size = 99;
 
   List<num> surfaces;
   List<Bitmap> surfaceBmp = [];
@@ -141,10 +140,11 @@ class Arena extends DisplayObjectContainer {
   Bitmap loadBmp(num type) {
     Bitmap bmp;
     num size = 100;
+    num treeScaling = 1.5;
     math.Random random = new math.Random();
     switch(type) {
-      case Surface.PASSABLE: bmp = new Bitmap(resource.getBitmapData("floor")); break;
       case Surface.NON_PASSABLE: bmp = new Bitmap(resource.getBitmapData("crate")); break;
+      case Surface.PASSABLE: bmp = new Bitmap(resource.getBitmapData("floor")); break;
       case Surface.OBSCURING:
         bmp = new Bitmap(resource.getBitmapData("tree"))
           ..scaleX = treeScaling
@@ -177,7 +177,7 @@ class Arena extends DisplayObjectContainer {
     pf.visibleObjects.forEach((obj) {
       if (obj is ActorInFrame) {
         players.putIfAbsent(obj.id, () {
-          return sprites[obj.index-1];
+          return sprites[obj.index];
         });
 
         players[obj.id]
