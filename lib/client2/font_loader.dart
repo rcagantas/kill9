@@ -16,9 +16,11 @@ class FontLoader {
       "inactive": () => completer.completeError("Error loading fonts"),
     });
 
-    webFont.callMethod("load", [webFontConfig]);
-    completer.future.then((_) => start());
-    load = completer.future;
+    if (webFont != null) {
+      webFont.callMethod("load", [webFontConfig]);
+      completer.future.then((_) => start());
+      load = completer.future;
+    }
   }
 
   start() { isReady = true; }

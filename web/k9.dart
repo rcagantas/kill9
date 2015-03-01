@@ -121,7 +121,7 @@ void setupPanel(DisplayObjectContainer panel, Function action) {
   if (action != null) input.addListener(action);
   stage.removeChildren();
   stage.addChild(panel);
-  stage.addChild(diagnostics);
+  //stage.addChild(diagnostics);
 }
 
 void main() {
@@ -129,45 +129,43 @@ void main() {
   renderLoop.addStage(stage);
   print(input);
   print(resLoader);
-  fontLoader.load.then((_) {
-    resource.load().then((_) {
 
-      RedDot dot = new RedDot();
-      TestSprite sprite = new TestSprite();
-      TestArena arena = new TestArena();
-      TestLocal local = new TestLocal();
-      TestNetClient net = new TestNetClient();
+  resource.load().then((_) {
+    RedDot dot = new RedDot();
+    TestSprite sprite = new TestSprite();
+    TestArena arena = new TestArena();
+    TestLocal local = new TestLocal();
+    TestNetClient net = new TestNetClient();
 
-      html.querySelector("#player_name").onInput.listen((e) {
-        local.world.stop();
-        input.name = e.target.value;
-      });
+    html.querySelector("#player_name").onInput.listen((e) {
+      local.world.stop();
+      input.name = e.target.value;
+    });
 
-      html.querySelector("#red").onClick.listen((e) {
-        local.world.stop();
-        setupPanel(dot, dot.action);
-      });
+    html.querySelector("#red").onClick.listen((e) {
+      local.world.stop();
+      setupPanel(dot, dot.action);
+    });
 
-      html.querySelector("#player").onClick.listen((e) {
-        local.world.stop();
-        setupPanel(sprite, sprite.action);
-      });
+    html.querySelector("#player").onClick.listen((e) {
+      local.world.stop();
+      setupPanel(sprite, sprite.action);
+    });
 
-      html.querySelector("#arena").onClick.listen((e) {
-        local.world.stop();
-        setupPanel(arena, arena.arena.action);
-      });
+    html.querySelector("#arena").onClick.listen((e) {
+      local.world.stop();
+      setupPanel(arena, arena.arena.action);
+    });
 
-      html.querySelector("#local").onClick.listen((e) {
-        setupPanel(local, local.world.action);
-        local.start();
-        local.world.start();
-      });
+    html.querySelector("#local").onClick.listen((e) {
+      setupPanel(local, local.world.action);
+      local.start();
+      local.world.start();
+    });
 
-      html.querySelector("#net").onClick.listen((e) {
-        local.world.stop();
-        setupPanel(net, net.action);
-      });
+    html.querySelector("#net").onClick.listen((e) {
+      local.world.stop();
+      setupPanel(net, net.action);
     });
   });
 }

@@ -32,6 +32,9 @@ class World {
     _init();
   }
 
+  // TODO: reflect on win condition.
+  bool hasEnded = false;
+
   void _init() {
     _worldWidth = grid.width() * grid.tileWidth();
     _worldHeight = grid.height() * grid.tileWidth();
@@ -166,9 +169,7 @@ class World {
 
     _objects.forEach((id,object) {
       WorldObject obj = object;
-      if (obj.isInView(frame.topX, frame.topY,
-          frame.topX + WorldConst.VIEWPORT_WIDTH,
-          frame.topY + WorldConst.VIEWPORT_HEIGHT)) {
+      if (obj.isInView(player.x, player.y, 100)) {
         var visiObj;
 
         if (obj is Actor)           visiObj = new ActorInFrame();

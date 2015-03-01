@@ -185,7 +185,7 @@ class PlayerSprite extends DisplayObjectContainer {
     reloadSound.play(false);
   }
 
-  void updateHpBar() {
+  void _updateHpBar() {
     if (hpRatio < 1) return;
     num angle = math.PI/4 * hpRatio/100;
     num color = hpRatio/100 < .4? Color.Red : Color.YellowGreen;
@@ -195,7 +195,7 @@ class PlayerSprite extends DisplayObjectContainer {
       ..graphics.strokeColor(color, 4);
   }
 
-  void setVisibility(bool b) {
+  void _setVisibility(bool b) {
     legs.visible =
     torso.visible =
     head.visible =
@@ -212,8 +212,8 @@ class PlayerSprite extends DisplayObjectContainer {
       return;
     }
     _hpRatio = hp;
-    updateHpBar();
-    setVisibility(_hpRatio > 0);
+    _updateHpBar();
+    _setVisibility(_hpRatio > 0);
   }
 
   num get hpRatio { return _hpRatio; }

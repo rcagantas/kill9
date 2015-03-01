@@ -5,6 +5,18 @@ packages:
     description: browser
     source: hosted
     version: "0.10.0+2"
+  http_server:
+    description: http_server
+    source: hosted
+    version: "0.9.5+1"
+  mime:
+    description: mime
+    source: hosted
+    version: "0.9.0+3"
+  path:
+    description: path
+    source: hosted
+    version: "1.3.0"
   stagexl:
     description: stagexl
     source: hosted

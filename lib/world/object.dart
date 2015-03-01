@@ -59,11 +59,14 @@ class WorldObject {
     //}
   }
 
-  bool isInView(num topX, num topY, num bottomX, num bottomY) {
-    return ( (x > topX - 100) &&
-         (x < bottomX + 100) &&
-         (y > topY - 100) &&
-         (y < bottomY + 100));
+  bool isInView(num ox, num oy, num length) {
+    num w = WorldConst.VIEWPORT_WIDTH/2;
+    num h = WorldConst.VIEWPORT_HEIGHT/2;
+    num minX = ox - w, maxX = ox + w;
+    num minY = oy - h, maxY = oy + h;
+    return
+          (minX - length < x) && (x < maxX + length) &&
+          (minY - length < y) && (y < maxY + length);
   }
 
   bool willBump(WorldObject object, num elapsedTime) {
@@ -93,7 +96,7 @@ class WeaponDrop extends WorldObject {
     // respawn to random location;
     myWorld.addObject(this);
     myWorld.spawnRandomly(this);
-    print("weapon drop ${this.hashCode} " +
+    print("[world ${myWorld.hashCode}] weapon drop ${this.hashCode} " +
         "of type ${weaponType} at ${this.x},${this.y}");
   }
 
@@ -293,7 +296,7 @@ class Actor extends WorldObject {
         life = 100;
 
       });
-      print ("Player ${dmgFrom.fromWeapon.owner.hashCode} (${dmgFrom.fromWeapon.owner.killCount} kills) -> Player $hashCode ($deathCount death)");
+      print ("[world ${myWorld.hashCode}] ${dmgFrom.fromWeapon.owner.hashCode} (${dmgFrom.fromWeapon.owner.killCount} kills) -> $hashCode ($deathCount death)");
     }
   }
 
@@ -309,7 +312,7 @@ class Actor extends WorldObject {
           willBump(object, elapsedTime)) {
           // pick up weapon
           object.pickedUp(this);
-          print("${this.hashCode} picked up weapon ${object.weaponType}");
+          print("[world ${myWorld.hashCode}] ${this.hashCode} picked up weapon ${object.weaponType}");
         } else if (willBump(object, elapsedTime) ) {
           _pauseLeftRightMove();
           _pauseTopDownMove();
