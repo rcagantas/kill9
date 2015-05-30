@@ -140,7 +140,11 @@ class Actor extends WorldObject {
       }
     });
 
-    if (!found) {
+    if (found) {
+      while (type > weapon.weaponType) {
+        switchWeapon();
+      }
+    } else {
       Weapon newWeapon = null;
 
       if (type == WeaponType.GRENADE_LAUNCHER)
@@ -159,7 +163,6 @@ class Actor extends WorldObject {
 
   void switchWeapon() {
     if (life == 0 || weapons.isEmpty) return;
-
     weapons.addLast(weapon);
     weapon = weapons.removeFirst();
   }

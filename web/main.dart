@@ -90,7 +90,7 @@ class TestBullet extends DisplayObjectContainer {
     nc.fire = c.fire;
     nc.swap = c.swap;
     testSprite.action(nc);
-    if (nc.fire == 1 && !testSprite._isFiring) {
+    if (nc.fire == 1 && !testSprite.isFiring) {
       math.Random random = new math.Random();
       num sign = random.nextInt(2) == 0? -1 : 1;
 

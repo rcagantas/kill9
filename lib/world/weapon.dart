@@ -323,7 +323,6 @@ class WeaponImpl extends Weapon {
   WeaponImpl(Actor owner) : super(owner);
 
   void addAmmo() {
-    print("adding $addtlAmmo of type $weaponType");
     ammo += addtlAmmo;
   }
 
@@ -383,6 +382,7 @@ class Pistol extends WeaponImpl {
     weaponType = WeaponType.PISTOL;
     bulletType = BulletType.BULLET;
     reloadTime = WeaponReloadTime.PISTOL;
+    isAutomatic = true;
   }
 }
 
@@ -416,159 +416,3 @@ class RocketLauncher extends WeaponImpl {
     addtlAmmo = WeaponAmmo.ROCKET_AMMO;
   }
 }
-
-
-class Pistol1 extends Weapon {
-
-  var name = "Pistol";
-  bool _pressed = false;
-
-  Pistol1(owner):super(owner) {
-    weaponType = WeaponType.PISTOL;
-    ammo = 0;
-  }
-
-  void fire() {
-    isFiring = false;
-    if (_pressed || owner.life == 0) return;
-    _pressed = true;
-    var bullet = owner.myWorld.bullets.getBullet()
-      ..type = BulletType.BULLET
-      ..owner = owner.hashCode
-      ..init(owner.x, owner.y, owner.orientation, owner.radius, this);
-
-    owner.myWorld.addObject(bullet);
-    isFiring = true;
-  }
-
-  void stop() {
-    _pressed = false;
-    isFiring = false;
-  }
-}
-
-class Rifle1 extends Weapon {
-
-  var name = "Rifle";
-  bool _pressed = false;
-
-  Rifle1(owner):super(owner) {
-    weaponType = WeaponType.RIFLE;
-    ammo = 200;
-  }
-
-  Timer fireTimer;
-
-  void fire() {
-    if (_pressed ||
-        ammo == 0 ||
-        owner.life == 0 ||
-        fireTimer != null) {
-      return;
-    }
-    isFiring = true;
-    _pressed = true;
-    _fire(null);
-    fireTimer = new Timer.periodic(new Duration(milliseconds:100), _fire);
-  }
-
-  void stop() {
-    if (_pressed && ammo > 0){
-      fireTimer.cancel();
-      fireTimer = null;
-    }
-    isFiring = false;
-    _pressed = false;
-  }
-
-  void _fire(Timer timer) {
-    var bullet = owner.myWorld.bullets.getBullet()
-      ..type = BulletType.BULLET
-      ..owner = owner.hashCode
-      ..init(owner.x, owner.y, owner.orientation, owner.radius, this);
-
-    owner.myWorld.addObject(bullet);
-    ammo--;
-
-    isFiring = true;
-    if (ammo == 0 && timer != null) {
-      timer.cancel();
-      isFiring = false;
-    }
-  }
-
-  void addAmmo() {
-    ammo = ammo + WeaponAmmo.RIFLE_AMMO;
-  }
-}
-
-class GrenadeLauncher1 extends Weapon {
-
-  var name = "Grenade Launcher";
-  bool _pressed = false;
-
-  GrenadeLauncher1(owner):super(owner) {
-    weaponType = WeaponType.GRENADE_LAUNCHER;
-    ammo = 10;
-  }
-
-  void fire() {
-    isFiring = false;
-    if (_pressed || owner.life == 0) return;
-
-    _pressed = true;
-    var bullet = owner.myWorld.bullets.getBullet()
-      ..type = BulletType.GRENADE
-      ..owner = owner.hashCode
-      ..init(owner.x, owner.y, owner.orientation, owner.radius, this);
-
-    owner.myWorld.addObject(bullet);
-    ammo--;
-    isFiring = true;
-  }
-
-  void stop() {
-    _pressed = false;
-    isFiring = false;
-  }
-
-  void addAmmo() {
-    ammo = ammo + WeaponAmmo.GRENADE_AMMO;
-  }
-}
-
-class RocketLauncher1 extends Weapon {
-
-  var name = "Grenade Launcher";
-  bool _pressed = false;
-
-  RocketLauncher1(owner):super(owner) {
-    weaponType = WeaponType.ROCKET_LAUNCHER;
-    ammo = 10;
-  }
-
-  void fire() {
-    isFiring = false;
-    if (_pressed || owner.life == 0) return;
-
-    _pressed = true;
-    var bullet = owner.myWorld.bullets.getBullet()
-      ..type = BulletType.ROCKET
-      ..owner = owner.hashCode
-      ..init(owner.x, owner.y, owner.orientation, owner.radius, this);
-
-    owner.myWorld.addObject(bullet);
-    ammo--;
-    isFiring = true;
-  }
-
-  void stop() {
-    _pressed = false;
-    isFiring = false;
-  }
-
-  void addAmmo() {
-    ammo = ammo + WeaponAmmo.ROCKET_AMMO;
-  }
-}
-

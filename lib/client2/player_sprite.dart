@@ -20,7 +20,7 @@ class PlayerSprite extends Sprite {
 
   num currentWeapon = 0;
   num _hpRatio = 100;
-  bool _isFiring = false;
+  bool isFiring = false;
   final List<String> weaponNames = ['pistol', 'rifle', 'grenade', 'rocket'];
   static final num maxPlayers = 10;
   num _playerNo = -1;
@@ -185,7 +185,7 @@ class PlayerSprite extends Sprite {
   }
 
   void fire() {
-    if (isDead || _isFiring) return;
+    if (isDead || isFiring) return;
 
     Function firingTransition = (num ratio) {
       return 0.25 < ratio && ratio < 0.85 ? 1.0 : 0.0;
@@ -206,10 +206,10 @@ class PlayerSprite extends Sprite {
     fireAni.add(new Tween(torso, time, firingTransition)..animate.y.to(2));
     fireAni.onStart = () {
       weaponSnd[currentWeapon].playSegment(0, .8, false);
-      _isFiring = true;
+      isFiring = true;
     };
     fireAni.onComplete = () {
-      _isFiring = false;
+      isFiring = false;
       mflash.alpha = 0;
       torso.x = 0;
       stage.juggler.remove(fireAni);
