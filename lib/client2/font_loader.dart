@@ -1,11 +1,10 @@
 part of gglclient2;
 
 class FontLoader {
-  bool isReady = false;
-  Future load;
+  async.Future load;
 
   FontLoader() {
-    var completer = new Completer();
+    var completer = new async.Completer();
     var googleFontFamilies = ['Open Sans','Montserrat','Lato','Lobster'];
 
     js.JsObject webFont = js.context["WebFont"];
@@ -23,5 +22,7 @@ class FontLoader {
     }
   }
 
-  start() { isReady = true; }
+  start() {
+    print("fonts loaded");
+  }
 }

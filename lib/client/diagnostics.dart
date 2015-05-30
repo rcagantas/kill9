@@ -1,4 +1,4 @@
-part of gglclient2;
+part of gglclient;
 
 class Diagnostics extends DisplayObjectContainer {
   num fps = null;

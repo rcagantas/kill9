@@ -78,7 +78,6 @@ class WorldObject {
 }
 
 class WeaponDrop extends WorldObject {
-  Timer _timer;
 
   int weaponType;
   math.Random random = new math.Random();
@@ -92,7 +91,7 @@ class WeaponDrop extends WorldObject {
     // roll random weapon;
     math.Random random = new math.Random();
 
-    weaponType = random.nextInt(3);
+    weaponType = random.nextInt(3) + 1;
     // respawn to random location;
     myWorld.addObject(this);
     myWorld.spawnRandomly(this);
@@ -133,32 +132,27 @@ class Actor extends WorldObject {
   }
 
   void addWeapon(int type) {
-    if (weapon.weaponType == type) {
-       weapon.addAmmo();
-    }
-    else {
-      bool found = false;
-      weapons.forEach((w) {
-        if (w.weaponType == type) {
-          weapon.addAmmo();
-          found = true;
-        }
-      });
+    bool found = false;
+    weapons.forEach((w) {
+      if (w.weaponType == type) {
+        w.addAmmo();
+        found = true;
+      }
+    });
 
-      if (!found) {
-        Weapon newWeapon = null;
+    if (!found) {
+      Weapon newWeapon = null;
 
-        if (type == WeaponType.GRENADE_LAUNCHER)
-          newWeapon = new GrenadeLauncher(this);
-        else if (type == WeaponType.RIFLE)
-          newWeapon = new Rifle(this);
-        else if (type == WeaponType.ROCKET_LAUNCHER)
-          newWeapon = new RocketLauncher(this);
+      if (type == WeaponType.GRENADE_LAUNCHER)
+        newWeapon = new GrenadeLauncher(this);
+      else if (type == WeaponType.RIFLE)
+        newWeapon = new Rifle(this);
+      else if (type == WeaponType.ROCKET_LAUNCHER)
+        newWeapon = new RocketLauncher(this);
 
-        if (newWeapon != null) {
-          weapons.addFirst(newWeapon);
-          switchWeapon();
-        }
+      if (newWeapon != null) {
+        weapons.addFirst(newWeapon);
+        switchWeapon();
       }
     }
   }

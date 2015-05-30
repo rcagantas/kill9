@@ -1,4 +1,4 @@
-part of gglclient2;
+part of gglclient;
 
 class WeaponDropSprite extends DisplayObjectContainer {
   ParticleEmitter spawn;
@@ -24,6 +24,10 @@ class WeaponDropSprite extends DisplayObjectContainer {
   }
 
   set type(num t) {
+    if (t == 0) {
+      print("got a weapon drop of type 0. something wrong");
+      return;
+    }
     drops[_type].visible = false;
     _type = t;
     drops[_type].visible = true;

@@ -1,6 +1,7 @@
 part of gglclient2;
 
 class ParticleLoader {
+
   static Map splatter =
     {
      "maxParticles":30,
@@ -12,7 +13,7 @@ class ParticleLoader {
      "emitterType":0,
      "location":{"x":0, "y":0},
      "locationVariance":{"x":0, "y":0},
-     "speed":200, "speedVariance":10,
+     "speed":200, "speedVariance":100,
      "angle":-90, "angleVariance":20,
      "gravity":{"x":0, "y":0},
      "radialAcceleration":20, "radialAccelerationVariance":0,
@@ -68,7 +69,7 @@ class ParticleLoader {
     };
   static Map explode =
     {
-      "maxParticles":400,
+      "maxParticles":75,
       "duration":0,
       "lifeSpan":0.9, "lifespanVariance":0.4,
       "startSize":70, "startSizeVariance":20,
@@ -76,7 +77,7 @@ class ParticleLoader {
       "shape":"circle",
       "emitterType":0,
       "location":{"x":0, "y":0}, "locationVariance":{"x":0, "y":0},
-      "speed":300, "speedVariance":300,
+      "speed":100, "speedVariance":70,
       "angle":0, "angleVariance":360,
       "gravity":{"x":0, "y":0},
       "radialAcceleration":100, "radialAccelerationVariance":10,
@@ -87,7 +88,7 @@ class ParticleLoader {
       "startColor":{"red":1, "green":0.75, "blue":0, "alpha":1},
       "finishColor":{"red":1, "green":0, "blue":0, "alpha":0}
     };
-  static Map bulletSplash =
+  static Map bulletHit =
     {
       "maxParticles":5,
       "duration":0,

@@ -191,6 +191,24 @@ class Frame {
   }
 }
 
+class Cmd {
+  num id;
+  num ms, tr, moveX, moveY, moveR, fire, swap, mouseX, mouseY;
+  String name;
+
+  Cmd() {
+    ms = 5;
+    tr = .10;
+    moveX = moveY = moveR = fire = swap = swap = 0;
+    mouseX = mouseY = -1;
+  }
+
+  String toString() {
+    return "[X:$moveX,Y:$moveY,R:$moveR,F:$fire,S:$swap,MX:$mouseX,MR:$mouseY]";
+  }
+}
+
+
 class CommandFrame {
   int id = 0, moveX = 0, moveY = 0, orientation = 0;
   bool fire = false, weaponCycle = false, mouseMoved = false;
@@ -222,7 +240,7 @@ class CommandFrame {
   }
 }
 
-class Cmd {
+class CmdOld {
   num ms = 10, tr = .10;
   num dmg = 0;
   num id = 0;
@@ -246,9 +264,9 @@ class Cmd {
     return sb.toString();
   }
 
-  Cmd() {}
+  CmdOld() {}
 
-  Cmd.fromString(String s) {
+  CmdOld.fromString(String s) {
     var fields = s.split(",");
     if (fields[0] == null) return;
     id = num.parse(fields[0]);
@@ -262,7 +280,7 @@ class Cmd {
     swap = fields[8] == "true"? true: false;
   }
 
-  bool equals(Cmd c) {
+  bool equals(CmdOld c) {
     return this.toString() == c.toString();
   }
 }

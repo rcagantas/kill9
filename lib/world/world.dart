@@ -14,8 +14,8 @@ class World {
   WeaponDrop _weaponDrop;
 
   int _tileWidth;
-  int _worldWidth;
-  int _worldHeight;
+  //int _worldWidth;
+  //int _worldHeight;
   Timer _timer = null, _readyTimer = null,
       _weaponDropTimer = null, _lobbyTimer = null;
   Stopwatch watch = new Stopwatch();
@@ -36,8 +36,8 @@ class World {
   bool hasEnded = false;
 
   void _init() {
-    _worldWidth = grid.width() * grid.tileWidth();
-    _worldHeight = grid.height() * grid.tileWidth();
+    //_worldWidth = grid.width() * grid.tileWidth();
+    //_worldHeight = grid.height() * grid.tileWidth();
 
     _bulletBehaviors[BulletType.BULLET] = new BulletBehavior();
     _bulletBehaviors[BulletType.GRENADE] = new GrenadeBehavior();
@@ -58,7 +58,7 @@ class World {
     if (_timer == null && actors.length == MAX_PLAYERS) {
       //initializations
 
-      _weaponDropTimer = new Timer.periodic(new Duration(seconds: 5), (timer) {
+      _weaponDropTimer = new Timer.periodic(new Duration(seconds: 3), (timer) {
         if (!_objects.containsValue(_weaponDrop)) {
           _weaponDrop.spawn(this);
         }
@@ -108,15 +108,17 @@ class World {
 
     // start the lobby timer once you add a real player
     if (_lobbyTimer == null) {
-      _lobbyTimer = new Timer.periodic(new Duration(seconds: 1), (timer) {
-        if (actors.length < MAX_PLAYERS) {
-          bots.add(new RandomWalker(addPlayerandGetReference()));
-          bots[bots.length - 1].player.name = Bots.names[bots.length - 1];
-        } else {
-          _lobbyTimer.cancel();
-          start();
-        }
-      });
+      _lobbyTimer = new Timer.periodic(
+        new Duration(milliseconds: 200),
+        (timer) {
+          if (actors.length < MAX_PLAYERS) {
+            bots.add(new RandomWalker(addPlayerandGetReference()));
+            bots[bots.length - 1].player.name = Bots.names[bots.length - 1];
+          } else {
+            _lobbyTimer.cancel();
+            start();
+          }
+        });
     }
 
     return newPlayer;
@@ -136,7 +138,7 @@ class World {
       loc = rand.nextInt(grid.surfaceList.length);
       for (int y = 0; y < grid.height(); y++) {
         for (int x = 0; x < grid.width(); x++) {
-          if (count == loc &&
+          if (count >= loc &&
               grid.surfaceList[loc] == Surface.PASSABLE) {
             object.x = x * grid.tileWidth() + grid.tileWidth()/2;
             object.y = y * grid.tileWidth() + grid.tileWidth()/2;
@@ -248,7 +250,7 @@ class World {
     _update(elapsed);
   }
 
-  void action(Cmd c) {
+  void action(CmdOld c) {
     if (_timer == null) return;
     for (Actor a in actors) {
       if (a.hashCode == c.id) {
@@ -268,6 +270,38 @@ class World {
         else if (!c.fire) a.weapon.stop();
 
         if (c.swap) a.switchWeapon();
+
+        if (c.mouseX != -1 && c.mouseY != -1) {
+          a.turnToPoint(c.mouseX + a.x, c.mouseY + a.y);
+        }
+
+        if (c.name != a.name) { a.name = c.name; }
+      }
+    }
+  }
+
+  void action2(Cmd c) {
+    if (_timer == null) return;
+    for (Actor a in actors) {
+      if (a.hashCode == c.id) {
+        if (c.moveX == -1) a.moveLeft();
+        else if (c.moveX == 1) a.moveRight();
+        else if (c.moveX == 0) a.stopLeftRightMove();
+
+        if (c.moveY == -1) a.moveUp();
+        else if (c.moveY == 1) a.moveDown();
+        else if (c.moveY == 0) a.stopTopDownMove();
+
+        if (c.moveR == -1) a.turnCounterClockwise();
+        else if (c.moveR == 1) a.turnClockwise();
+        else if (c.moveR == 0) a.stopTurn();
+
+        if (c.fire == 1) {
+          a.weapon.fire();
+        }
+        else if (c.fire == 0) a.weapon.stop();
+
+        if (c.swap == 1) a.switchWeapon();
 
         if (c.mouseX != -1 && c.mouseY != -1) {
           a.turnToPoint(c.mouseX + a.x, c.mouseY + a.y);

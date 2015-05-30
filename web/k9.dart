@@ -1,7 +1,7 @@
 import 'dart:html' as html;
 import 'dart:math' as math;
 import 'package:stagexl/stagexl.dart';
-import 'package:giggl/gglclient2.dart';
+import 'package:giggl/gglclient.dart';
 import 'package:giggl/gglworld.dart';
 import 'package:giggl/gglcommon.dart';
 import 'dart:convert';
@@ -19,7 +19,7 @@ class RedDot extends DisplayObjectContainer {
     this.addChild(shape);
   }
 
-  void action(Cmd c) {
+  void action(CmdOld c) {
     num ms = 5, tr = .10;
     shape.x += c.moveX * ms;
     shape.y += c.moveY * ms;
@@ -36,7 +36,7 @@ class TestSprite extends DisplayObjectContainer {
       ..addTo(this);
   }
 
-  void action(Cmd c) {
+  void action(CmdOld c) {
     p1.action(c);
     if (input.key[69]) p1.takeDamage(p1.hpRatio - 1, 45 * math.PI/180);
     if (input.key[82]) p1.hpRatio = 100;
@@ -109,7 +109,7 @@ class TestNetClient extends DisplayObjectContainer {
     });
   }
 
-  void action(Cmd cmd) {
+  void action(CmdOld cmd) {
     if (arena == null) return;
     cmd.id = arena.mainId;
     socket.send(cmd.stringify());

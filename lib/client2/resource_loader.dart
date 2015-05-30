@@ -1,47 +1,63 @@
 part of gglclient2;
 
+
+/**
+ * web colors of players
+0 3366FF
+1 66FFCC
+2 990099
+3 FFFF33
+4 FF6600
+5 FF66CC
+6 999933
+7 66CCFF
+8 006600
+9 996600
+ */
 class ResourceLoader {
-  final num playerMax = 10;
-  final List<String> weaponNames = ['rifle','grenade','rocket','pistol'];
-  final List<String> bulletNames = ['bullet', 'grenade', 'rocket'];
-  ResourceLoader() {
-    String sprites = "assets/sprites";
-    String sounds = "assets/sounds";
-    String tiles = "assets/tiles";
+  ResourceLoader() {}
+
+  void load() {
+    String sprites = "assets/sprites2";
+    String sounds = "assets/sounds2";
+    String tiles = "assets/tiles2";
 
     for (num i = 0; i < 6; i++)
-      resource.addBitmapData("ac_stride$i", "$sprites/ac_stride$i.png");
+      resource.addBitmapData("p_stride$i", "$sprites/p_stride$i.png");
 
-    for (num i = 0; i < playerMax; i++) {
-      resource.addBitmapData("ac${i}_torso", "$sprites/ac${i}_torso.png");
-      resource.addBitmapData("ac${i}_death0", "$sprites/ac${i}_death0.png");
-      resource.addBitmapData("ac${i}_death1", "$sprites/ac${i}_death1.png");
-    }
+    resource.addBitmapData("w_pistol", "$sprites/w_pistol.png");
+    resource.addBitmapData("w_rifle", "$sprites/w_rifle.png");
+    resource.addBitmapData("w_grenade", "$sprites/w_grenade.png");
+    resource.addBitmapData("w_rocket", "$sprites/w_rocket.png");
 
-    resource.addBitmapData("ac_head", "$sprites/ac_head.png");
+    resource.addBitmapData("p_torso", "$sprites/p_torso.png");
+    resource.addBitmapData("p_dead", "$sprites/p_dead.png");
+    resource.addBitmapData("p_head", "$sprites/p_head.png");
+    resource.addBitmapData("p_mflash", "$sprites/p_mflash.png");
 
-    for (String weaponName in weaponNames) {
-      resource.addBitmapData("ac_$weaponName", "$sprites/ac_$weaponName.png");
-      resource.addSound("snd_$weaponName", "$sounds/$weaponName.ogg");
-    }
-    resource.addSound("snd_reload", "$sounds/reload.ogg");
-    SoundMixer.soundTransform = new SoundTransform(0.3);
+    resource.addBitmapData("wb_bullet", "$sprites/wb_bullet.png");
+    resource.addBitmapData("wb_grenade", "$sprites/wb_grenade.png");
+    resource.addBitmapData("wb_rocket", "$sprites/wb_rocket.png");
 
-    resource.addBitmapData("crate", "$tiles/crate.png");
-    resource.addBitmapData("tree", "$tiles/tree.png");
-    resource.addBitmapData("floor", "$tiles/floor5.png");
+    resource.addSound("ws_reload", "$sounds/ws_reload.wav");
+    resource.addSound("ws_pistol", "$sounds/ws_pistol.wav");
+    resource.addSound("ws_rifle", "$sounds/ws_rifle.wav");
+    resource.addSound("ws_grenade", "$sounds/ws_grenade.wav");
+    resource.addSound("ws_rocket", "$sounds/ws_rocket.wav");
+    resource.addSound("ws_hit", "$sounds/ws_hit.wav");
+    resource.addSound("ws_explode", "$sounds/ws_explode.wav");
 
-    for (String bulletName in bulletNames) {
-      resource.addBitmapData(bulletName, "$sprites/bu_$bulletName.png");
+    resource.addBitmapData("wd_rifle", "$sprites/wd_rifle.png");
+    resource.addBitmapData("wd_grenade", "$sprites/wd_grenade.png");
+    resource.addBitmapData("wd_rocket", "$sprites/wd_rocket.png");
+
+    resource.addBitmapData("t_crate", "$tiles/crate.png");
+    resource.addBitmapData("t_tree", "$tiles/tree.png");
+    resource.addBitmapData("t_floor", "$tiles/floor.png");
+
+    for (int i = 0; i < 10; i++) {
+      resource.addBitmapData("c_$i", "$sprites/c_$i.png");
+      resource.addBitmapData("cd_$i", "$sprites/cd_$i.png");
     }
   }
-
-  FlipBook flipbookDeath(num playerNo, num frameRate) {
-    List<BitmapData> death = [];
-    death.add(resource.getBitmapData("ac${playerNo}_death0"));
-    death.add(resource.getBitmapData("ac${playerNo}_death1"));
-    return new FlipBook(death, frameRate);
-  }
-
 }
-

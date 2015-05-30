@@ -54,7 +54,7 @@ class K9Server {
         worlds.add(new World.size(worldWidth, worldHeight));
 
       if (sockets.containsValue(websocket)) {
-        actionHandlers[websocket](new Cmd.fromString(e));
+        actionHandlers[websocket](new CmdOld.fromString(e));
       } else {
         Actor a = worlds.last.addPlayerandGetReference();
         sockets[a.hashCode] = websocket;

@@ -50,16 +50,13 @@ class GrenadeBehavior implements AmmoBehavior {
       if (!(object is Actor)) {}
       else if (object is Actor && object.life == 0) {}
       else  {
-        // 300 aoe
-        ref.radius = 300;
+        ref.radius = GrenadeProps.AOE;
         if (ref.willBump(object, elapsedTime)) {
           (object as Actor).takeDamage(GrenadeProps.DAMAGE, bullet);
-          //200 aoe
-          ref.radius = 200;
+          ref.radius -= 50;
           if (ref.willBump(object, elapsedTime)) {
             (object as Actor).takeDamage(GrenadeProps.DAMAGE, bullet);
-            //100 aoe
-            ref.radius = 100;
+            ref.radius -= 50;
             if (ref.willBump(object, elapsedTime)) {
               (object as Actor).takeDamage(GrenadeProps.DAMAGE, bullet);
             }
@@ -98,8 +95,8 @@ class GrenadeBehavior implements AmmoBehavior {
 
       // bumped walls?
 
-      var p1 = new math.Point(bullet.x,bullet.y);
-      var p2 = new math.Point(bullet.startX,bullet.startY);
+      //var p1 = new math.Point(bullet.x,bullet.y);
+      //var p2 = new math.Point(bullet.startX,bullet.startY);
 
       var newLoc = bullet.projectLocation(elapsedTime);
 
@@ -131,16 +128,13 @@ class RocketBehavior implements AmmoBehavior {
       if (!(object is Actor)) {}
       else if (object is Actor && object.life == 0) {}
       else  {
-        // 300 aoe
-        ref.radius = 300;
+        ref.radius = RocketProps.AOE;
         if (ref.willBump(object, elapsedTime)) {
           (object as Actor).takeDamage(GrenadeProps.DAMAGE, bullet);
-          //200 aoe
-          ref.radius = 200;
+          ref.radius -= 50;
           if (ref.willBump(object, elapsedTime)) {
             (object as Actor).takeDamage(GrenadeProps.DAMAGE, bullet);
-            //100 aoe
-            ref.radius = 100;
+            ref.radius -= 50;
             if (ref.willBump(object, elapsedTime)) {
               (object as Actor).takeDamage(GrenadeProps.DAMAGE, bullet);
             }
@@ -299,6 +293,7 @@ class Weapon {
   Actor owner;
   Weapon(this.owner);
   bool isFiring = false;
+  bool isPressed = false;
   int weaponType;
   num ammo;
 
@@ -316,12 +311,119 @@ class Weapon {
   }
 }
 
-class Pistol extends Weapon {
+class WeaponImpl extends Weapon {
+  Timer reloader;
+  num ammo = 0;
+  num weaponType = WeaponType.PISTOL;
+  num bulletType = BulletType.BULLET;
+  num addtlAmmo = 0;
+  num reloadTime = 1000 * .20;
+  bool isAutomatic = false;
+
+  WeaponImpl(Actor owner) : super(owner);
+
+  void addAmmo() {
+    print("adding $addtlAmmo of type $weaponType");
+    ammo += addtlAmmo;
+  }
+
+  void fire() {
+    if (owner.life == 0) return;
+    if (!isAutomatic) _fireSingle();
+    else _fireAuto();
+  }
+
+  void _fireSingle() {
+    if (isPressed) {
+      isFiring = false;
+      return;
+    }
+    isPressed = true;
+    if (reloader != null) return;
+    shootProjectile();
+  }
+
+  void _fireAuto() {
+    if (reloader != null) return;
+    shootProjectile();
+  }
+
+  void stop() {
+    isFiring = false;
+    isPressed = false;
+  }
+
+  void shootProjectile() {
+    if (ammo == 0) return;
+    isFiring = true;
+    var bullet = owner.myWorld.bullets.getBullet()
+      ..type = bulletType
+      ..owner = owner.hashCode
+      ..init(owner.x, owner.y,
+          owner.orientation, owner.radius + 5, this);
+
+    owner.myWorld.addObject(bullet);
+    if (weaponType != WeaponType.PISTOL && ammo > 0) ammo--;
+
+    reloader = new Timer(
+        new Duration(milliseconds: reloadTime),
+        _reload);
+  }
+
+  void _reload() {
+    reloader.cancel();
+    reloader = null;
+  }
+}
+
+
+class Pistol extends WeaponImpl {
+  Pistol(Actor owner) : super(owner) {
+    ammo = -1;
+    weaponType = WeaponType.PISTOL;
+    bulletType = BulletType.BULLET;
+    reloadTime = WeaponReloadTime.PISTOL;
+  }
+}
+
+class Rifle extends WeaponImpl {
+  Rifle(Actor owner) : super(owner) {
+    ammo = WeaponAmmo.RIFLE_AMMO;
+    weaponType = WeaponType.RIFLE;
+    bulletType = BulletType.BULLET;
+    reloadTime = WeaponReloadTime.RIFLE;
+    addtlAmmo = WeaponAmmo.RIFLE_AMMO;
+    isAutomatic = true;
+  }
+}
+
+class GrenadeLauncher extends WeaponImpl {
+  GrenadeLauncher(Actor owner) : super(owner) {
+    ammo = WeaponAmmo.GRENADE_AMMO;
+    weaponType = WeaponType.GRENADE_LAUNCHER;
+    bulletType = BulletType.GRENADE;
+    reloadTime = WeaponReloadTime.GRENADE_LAUNCHER;
+    addtlAmmo = WeaponAmmo.GRENADE_AMMO;
+  }
+}
+
+class RocketLauncher extends WeaponImpl {
+  RocketLauncher(Actor owner) : super(owner) {
+    ammo = WeaponAmmo.ROCKET_AMMO;
+    weaponType = WeaponType.ROCKET_LAUNCHER;
+    bulletType = BulletType.ROCKET;
+    reloadTime = WeaponReloadTime.ROCKET_LAUNCHER;
+    addtlAmmo = WeaponAmmo.ROCKET_AMMO;
+  }
+}
+
+
+class Pistol1 extends Weapon {
 
   var name = "Pistol";
   bool _pressed = false;
 
-  Pistol(owner):super(owner) {
+  Pistol1(owner):super(owner) {
     weaponType = WeaponType.PISTOL;
     ammo = 0;
   }
@@ -345,12 +447,12 @@ class Pistol extends Weapon {
   }
 }
 
-class Rifle extends Weapon {
+class Rifle1 extends Weapon {
 
   var name = "Rifle";
   bool _pressed = false;
 
-  Rifle(owner):super(owner) {
+  Rifle1(owner):super(owner) {
     weaponType = WeaponType.RIFLE;
     ammo = 200;
   }
@@ -358,18 +460,22 @@ class Rifle extends Weapon {
   Timer fireTimer;
 
   void fire() {
-    if (_pressed || ammo == 0 || owner.life == 0) return;
+    if (_pressed ||
+        ammo == 0 ||
+        owner.life == 0 ||
+        fireTimer != null) {
+      return;
+    }
     isFiring = true;
     _pressed = true;
     _fire(null);
     fireTimer = new Timer.periodic(new Duration(milliseconds:100), _fire);
   }
 
-
-
   void stop() {
     if (_pressed && ammo > 0){
       fireTimer.cancel();
+      fireTimer = null;
     }
     isFiring = false;
     _pressed = false;
@@ -382,7 +488,7 @@ class Rifle extends Weapon {
       ..init(owner.x, owner.y, owner.orientation, owner.radius, this);
 
     owner.myWorld.addObject(bullet);
-    ammo = ammo - 1;
+    ammo--;
 
     isFiring = true;
     if (ammo == 0 && timer != null) {
@@ -396,12 +502,12 @@ class Rifle extends Weapon {
   }
 }
 
-class GrenadeLauncher extends Weapon {
+class GrenadeLauncher1 extends Weapon {
 
   var name = "Grenade Launcher";
   bool _pressed = false;
 
-  GrenadeLauncher(owner):super(owner) {
+  GrenadeLauncher1(owner):super(owner) {
     weaponType = WeaponType.GRENADE_LAUNCHER;
     ammo = 10;
   }
@@ -417,6 +523,7 @@ class GrenadeLauncher extends Weapon {
       ..init(owner.x, owner.y, owner.orientation, owner.radius, this);
 
     owner.myWorld.addObject(bullet);
+    ammo--;
     isFiring = true;
   }
 
@@ -430,12 +537,12 @@ class GrenadeLauncher extends Weapon {
   }
 }
 
-class RocketLauncher extends Weapon {
+class RocketLauncher1 extends Weapon {
 
   var name = "Grenade Launcher";
   bool _pressed = false;
 
-  RocketLauncher(owner):super(owner) {
+  RocketLauncher1(owner):super(owner) {
     weaponType = WeaponType.ROCKET_LAUNCHER;
     ammo = 10;
   }
@@ -451,6 +558,7 @@ class RocketLauncher extends Weapon {
       ..init(owner.x, owner.y, owner.orientation, owner.radius, this);
 
     owner.myWorld.addObject(bullet);
+    ammo--;
     isFiring = true;
   }
 
@@ -463,5 +571,4 @@ class RocketLauncher extends Weapon {
     ammo = ammo + WeaponAmmo.ROCKET_AMMO;
   }
 }
-
 

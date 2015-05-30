@@ -1,88 +1,89 @@
 part of gglclient;
 
 class InputHandler {
-  Map<num, bool> keyState = new Map<num, bool>();
-  num mouseX = 0, mouseY = 0;
-  bool mouseL = false, mouseR = false, mouseMoved = false;
+  Map<num, bool> key = new Map<num, bool>();
+  List<Function> _cbList = [];
   TextField dbg;
-  Function cbStateChange = null;
-  CommandFrame _cmdFrame = new CommandFrame();
+
+  bool mouseL = false;
+  num mainId = 0;
+  String name = "";
+  CmdOld cmd = new CmdOld();
+
+  void addListener(void action(Cmd)) {
+    _cbList.add(action);
+  }
 
   InputHandler() {
-    stage.focus = stage;
-    stage.onKeyDown.listen(_keyHandler);
-    stage.onKeyUp.listen(_keyHandler);
-    stage.onMouseMove.listen((e) {
-      mouseMoved = true;
-      mouseX = e.stageX - stage.stageWidth/2;
-      mouseY = e.stageY - stage.stageHeight/2;
-    });
-    stage.onMouseDown.listen((e) { mouseL = true; });
-    stage.onMouseRightClick.listen((e) {
-      mouseR =
-      _cmdFrame.weaponCycle = true;
-      _sc();
-    });
-    stage.onMouseUp.listen((e) { mouseL = false; });
-    stage.onEnterFrame.listen((e) => _sc());
+    for (num i = 0; i < 255; i++) key[i] = false;
 
-    for(num i = 0; i < 255; i++) keyState[i] = false;
-
-    var fps = null;
-    stage.onEnterFrame.listen((EnterFrameEvent e) {
-      String keyPressed = "keypressed: ";
-      for (num i = 0; i < 255; i++)
-        if (keyState[i]) keyPressed += "$i ";
-
-      fps = fps == null
-          ? 1.00 / e.passedTime
-          : 0.05 / e.passedTime + 0.95 * fps;
-
-      dbg.text = "fps: ${fps.round()}\n" +
-          keyPressed;
-    });
-
-    TextFormat tf = new TextFormat('Open Sans', 14, Color.Black);
     dbg = new TextField()
-      ..defaultTextFormat = tf
-      ..x = 30
-      ..y = 30
-      ..width = 200
-      ..height = 200
-      ..wordWrap = true
-      ..addTo(stage);
+        ..defaultTextFormat = diagnostics.font11
+        ..x = 300
+        ..y = 30
+        ..width = 200
+        ..height = 200
+        ..wordWrap = true;
+
+    stage.focus = stage;
+    stage.onKeyDown.listen(_process);
+    stage.onKeyUp.listen(_process);
+    stage.onMouseDown.listen((e) { mouseL = true; makeCmd(); });
+    stage.onMouseUp.listen((e) { mouseL = false; makeCmd(); });
+    stage.onMouseRightClick.listen((e) { cmd.swap = true; });
+    stage.onMouseMove.listen((e) {
+      cmd.mouseX = e.stageX - stage.stageWidth/2;
+      cmd.mouseY = e.stageY - stage.stageHeight/2;
+      makeCmd();
+    });
+    stage.onExitFrame.listen(_updater);
+    print("loading input handler");
   }
 
-  void _keyHandler(KeyboardEvent e) {
-    keyState[e.keyCode] = e.type == KeyboardEvent.KEY_DOWN? true: false;
-    if (e.keyCode == 40 && e.type == KeyboardEvent.KEY_UP)
-      _cmdFrame.weaponCycle = true;
+  void _process(KeyboardEvent e) {
+    key[e.keyCode] = e.type == KeyboardEvent.KEY_DOWN ? true : false;
+    makeCmd();
   }
 
-  void _sc() {
-    _cmdFrame.mouseMoved = mouseMoved;
-    _cmdFrame.mouseX = mouseX;
-    _cmdFrame.mouseY = mouseY;
+  num trival(num neg, num pos) {
+    if (key[pos] && key[neg]) return 0;
+    else if (key[pos]) return 1;
+    else if (key[neg]) return -1;
+    return 0;
+  }
 
-    if (keyState[87]) _cmdFrame.moveY = -1;
-    else if (keyState[83]) _cmdFrame.moveY = 1;
-    else _cmdFrame.moveY = 0;
+  void makeCmd() {
+    cmd.id = mainId;
+    cmd.name = name;
+    cmd.moveY = trival(87, 83);   // down, up
+    cmd.moveX = trival(65, 68);   // left, right
+    cmd.rotate = trival(37, 39);  // turn left, right
+    cmd.fire = key[38] || mouseL; // fire
+    cmd.swap = key[40];           // swap weapon
+    dbg.text = "${cmd}\n" + "pressed:${pressed()}";
+  }
 
-    if (keyState[65]) _cmdFrame.moveX = -1;
-    else if (keyState[68]) _cmdFrame.moveX = 1;
-    else _cmdFrame.moveX = 0;
+  String pressed() {
+    String s = "";
+    for (num k in key.keys) {
+      if (key[k]) s += "$k ";
+    }
+    return s;
+  }
 
-    if (keyState[37]) _cmdFrame.orientation = -1;
-    else if (keyState[39]) _cmdFrame.orientation = 1;
-    else _cmdFrame.orientation = 0;
+  void removeListeners() { _cbList.clear(); }
 
-    if (keyState[38] || mouseL) _cmdFrame.fire = true;
-    else if (!keyState[38] && !mouseL) _cmdFrame.fire = false;
+  bool alternate = false;
 
-    if (cbStateChange != null) cbStateChange(_cmdFrame);
-
-    _cmdFrame.weaponCycle = false;
-    mouseMoved = false;
+  void _updater(ExitFrameEvent e) {
+    alternate = !alternate;
+    if (alternate) return;
+    diagnostics.addChild(dbg);
+    for (Function f in _cbList) {
+      f(cmd);
+    }
+    cmd.swap = false;
+    cmd.mouseX = -1;
+    cmd.mouseY = -1;
   }
 }
-

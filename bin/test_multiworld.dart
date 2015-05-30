@@ -81,7 +81,7 @@ void main() {
       for (Actor a in w.actors) {
         if (a.hashCode == playerId) {
           while (w.actors.length < World.MAX_PLAYERS) {
-            Actor a = w.addPlayerandGetReference();
+            w.addPlayerandGetReference();
           }
           return;
         }

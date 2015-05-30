@@ -1,232 +1,115 @@
 part of gglclient;
 
 class PlayerSprite extends DisplayObjectContainer {
-  static const num CENTER = 48.5; //center of player tile
-  static const num OFFSET = 8;
-  static const num HPRADIUS = 33;
+  static const num center = 48.5; //center of player tile
+  static const num offset = 8;
   static num totalPlayers = -1;
+  static num hpRadius = 33;
 
-  Bitmap head;
-  Bitmap torso;
-  String pre = ResourceHandler.pre;
-  Map<String, Bitmap> weapons = new Map<String, Bitmap>();
-  Map<String, Sound> weaponSound = new Map<String, Sound>();
-  List<String> weaponNames = ['pistol','rifle','grenade','rocket'];
-  String weapon = "pistol";
-  FlipBook hip;
-  FlipBook death;
-  Shape arcHealth;
-  TextField dbg, nameDisplay;
-  bool dbgmode = false;
-  num hp = 100;
-  ParticleEmitter splatter, splatterAoe, spawnParts;
-  Shape bloodPool;
-  num playerNo = -1;
-  bool _animatingFiring = false;
+  TextField dbg, playerName;
+  FlipBook legs, death;
+  Bitmap torso, head;
+  List<Bitmap> weapon = [];
+  List<Sound> weaponSound = [];
+  Sound reloadSound;
+  Shape hpBar;
+  ParticleEmitter splatter, spawn;
 
-  PlayerSprite() {
-    playerNo = totalPlayers + 1 < ResourceHandler.MAX_PLAYERS ? ++totalPlayers : ResourceHandler.MAX_PLAYERS;
+  num playerNo;
+  num currentWeapon = 0;
+  bool _isFiring = false;
+  num _hpRatio = 100;
+  static num player = 0;
+  static num maxPlayers = 10;
 
-    splatter = new ParticleEmitter(ResourceHandler.jsonBloodSplat)
+  PlayerSprite(this.playerNo) {
+
+    dbg = new TextField()
+      ..defaultTextFormat = diagnostics.font11
+      ..width = 200
+      ..height = 200
+      ..wordWrap = true
+      ..text = "p:"
+      ..addTo(this);
+
+    playerName = new TextField()
+      ..defaultTextFormat = new TextFormat('Lato', 15, Color.WhiteSmoke, bold:true, align:"center")
+      ..width = 200
+      ..height = 100
+      ..pivotX = 100
+      ..pivotY = -30
+      ..wordWrap = false
+      ..text = ""
+      ..addTo(this);
+
+    splatter = new ParticleEmitter(ParticleLoader.splatter)
       ..stop(true)
       ..addTo(this);
     stage.juggler.add(splatter);
 
-    splatterAoe = new ParticleEmitter(ResourceHandler.jsonBloodSplatAoe)
-      ..stop(true)
-      ..addTo(this);
-    stage.juggler.add(splatterAoe);
+    List<BitmapData> bmpStride = [];
+    for (num i = 0; i < 6; i++)
+      bmpStride.add(resource.getBitmapData("ac_stride$i"));
 
-    arcHealth = new Shape()
-      ..pivotX = CENTER
-      ..pivotY = CENTER
+    hpBar = new Shape()
+      ..pivotX = center
+      ..pivotY = center
       ..rotation = math.PI/2
-      ..graphics.arc(CENTER, CENTER, HPRADIUS, -math.PI/4, math.PI/4, false)
+      ..graphics.arc(center, center, hpRadius, -math.PI/4, math.PI/4, false)
       ..graphics.strokeColor(Color.YellowGreen, 4)
       ..addTo(this);
 
-    hip = new FlipBook(ResourceHandler.ac_stride, 10)
-      ..addTo(this)
-      ..x = -OFFSET
-      ..y = OFFSET
-      ..pivotX = CENTER - OFFSET
-      ..pivotY = CENTER + OFFSET
-      ..gotoAndStop(0);
-    stage.juggler.add(hip);
+    legs = new FlipBook(bmpStride, 10)
+      ..x = -offset
+      ..y = offset
+      ..pivotX = center - offset
+      ..pivotY = center + offset
+      ..gotoAndStop(0)
+      ..addTo(this);
+    stage.juggler.add(legs);
 
-    torso = new Bitmap(resMgr.getBitmapData("${pre}${playerNo}_torso"))
-      ..pivotX = CENTER
-      ..pivotY = CENTER
+    torso = new Bitmap(resource.getBitmapData("ac${playerNo}_torso"))
+      ..pivotX = center
+      ..pivotY = center
       ..addTo(this);
 
-    for (String weaponName in weaponNames) {
-      Bitmap bmp = new Bitmap(resMgr.getBitmapData("${pre}_${weaponName}"))
-        ..visible = weaponName == "pistol"? true: false
-        ..pivotX = CENTER
-        ..pivotY = CENTER
-        ..addTo(this);
-      weapons[weaponName] = bmp;
-      weaponSound[weaponName] = resMgr.getSound("snd_${weaponName}");
+    reloadSound = resource.getSound("snd_reload");
+    for (String weaponName in resLoader.weaponNames) {
+      weapon.add(
+        new Bitmap(resource.getBitmapData("ac_$weaponName"))
+          ..pivotX = center
+          ..pivotY = center
+          ..visible = weapon.isEmpty? true: false
+          ..addTo(this)
+      );
+      weaponSound.add(resource.getSound("snd_$weaponName"));
     }
 
-    weaponSound['reload'] = resMgr.getSound('snd_reload');
-
-    head = new Bitmap(resMgr.getBitmapData("${pre}_head"))
-      ..pivotX = CENTER
-      ..pivotY = CENTER
+    head = new Bitmap(resource.getBitmapData("ac_head"))
+      ..pivotX = center
+      ..pivotY = center
       ..addTo(this);
 
-    bloodPool = new Shape()
-      ..x = 5
-      ..y = 20
-      ..visible = false
-      ..graphics.circle(0, 0, 1)
-      ..graphics.fillColor(Color.Maroon)
-      ..addTo(this);
-
-    death = ResourceHandler.flipbookDeath(playerNo, 10)
-      ..x = -OFFSET
-      ..y = OFFSET
-      ..pivotX = CENTER - OFFSET
-      ..pivotY = CENTER + OFFSET
+    death = resLoader.flipbookDeath(playerNo, 10)
+      ..x = -offset
+      ..y = offset
+      ..pivotX = center - offset
+      ..pivotY = center + offset
       ..visible = false
       ..loop = false
       ..addTo(this)
       ..play();
     stage.juggler.add(death);
 
-    spawnParts = new ParticleEmitter(ResourceHandler.jsonSpawn)
+    spawn = new ParticleEmitter(ParticleLoader.spawn)
       ..stop(true)
       ..addTo(this);
-    stage.juggler.add(spawnParts);
-
-
-    x = stage.stageWidth/2;
-    y = stage.stageHeight/2;
-
-    TextFormat tf = new TextFormat('Open Sans', 10, Color.Black);
-    dbg = new TextField()
-      ..defaultTextFormat = tf
-      ..x = 30
-      ..y = 30
-      ..width = 200
-      ..height = 200
-      ..wordWrap = true
-      ..addTo(this);
-
-    TextFormat tfn = new TextFormat('Open Sans', 15, Color.White);
-    nameDisplay = new TextField()
-      ..defaultTextFormat = tfn
-      ..x = 0
-      ..y = 30
-      ..width = 200
-      ..height = 50
-      ..wordWrap = true
-      ..addTo(this);
+    stage.juggler.add(spawn);
   }
 
-  void move(num x, num y) {
-    if (!hip.playing) hip.play();
-    fixHipRotation(x, y);
-    this.x = x;
-    this.y = y;
-  }
+  void set name(String n) { playerName.text = n == null? "" : "$n"; }
 
-  void stopMoving() {
-    hip.gotoAndStop(0);
-    return;
-  }
-
-  void modHitPoints(num hpMod, num dmgFrom) {
-    if (hp == hpMod) return;
-
-    _setVisible(hpMod > 0);
-    _arcUpdate(hpMod);
-    if (hpMod == 0) _deathAnimation();
-    else if (hpMod == 100) spawnParts.start(.5);
-    else _bleedAnimation(dmgFrom);
-    hp = hpMod;
-  }
-
-  void _arcUpdate(num hp) {
-    num angle = math.PI/4 * hp/100;
-    num color = hp/100 < .4? Color.Red : Color.YellowGreen;
-    arcHealth.graphics.clear();
-    arcHealth
-      ..graphics.arc(CENTER, CENTER, HPRADIUS, -angle, angle, false)
-      ..graphics.strokeColor(color, 4);
-  }
-
-  void _bleedAnimation(num dmgFrom) {
-    if (dmgFrom == -1) splatterAoe.start(.3);
-    else {
-      splatter.rotation = peg180(dmgFrom - this.rotation - math.PI);
-      splatter.start(.3);
-    }
-  }
-
-  void _deathAnimation() {
-    death.visible = true;
-    bloodPool.visible = true;
-    bloodPool.scaleX = bloodPool.scaleY = 1.0;
-    death.gotoAndPlay(0);
-
-    math.Random rand = new math.Random();
-    num scale1 = 15 + rand.nextInt(10);
-    Tween poolAni = new Tween(bloodPool, 3.0, TransitionFunction.linear)
-      ..animate.scaleX.to(scale1)
-      ..animate.scaleY.to(scale1 + 5)
-      ..animate.rotation.to(rand.nextDouble());
-    Tween fadeAni = new Tween(this, 3.0, TransitionFunction.linear)
-      ..animate.alpha.to(0);
-    AnimationChain c = new AnimationChain();
-    c.add(poolAni);
-    c.add(fadeAni);
-    stage.juggler.add(c);
-  }
-
-  void _setVisible(bool b) {
-    alpha = 1.0;
-    weapons[weapon].visible =
-    head.visible =
-    torso.visible =
-    hip.visible =
-    arcHealth.visible = b;
-    death.visible =
-    bloodPool.visible = !b;
-  }
-
-  void fixHipRotation(num x, num y) {
-    num dx = x - this.x;
-    num dy = y - this.y;
-    if (dx == 0 && dy == 0) return;
-    num hrad = math.atan2(dy, dx) + math.PI/2;
-    num trad = this.rotation;
-
-    num val = peg180(hrad - trad);
-    val = val.abs() > math.PI/2? val - math.PI: val;
-    hip.rotation = peg180(val);
-    displayAngles();
-  }
-
-  void turn(num r) {
-    if (this.rotation == r) return;
-    this.rotation = peg180(r);
-    dbg.rotation = -this.rotation;
-    nameDisplay.rotation = -this.rotation;
-    fixHipRotation(this.x, this.y);
-    displayAngles();
-  }
-
-  void turnToPoint(num dx, num dy) {
-    turn(math.PI - math.atan2(dx - x, dy - y));
-  }
-
-  void turnFromCenter(num dx, num dy) {
-    turn(math.PI - math.atan2(dx - stage.stageWidth/2, dy - stage.stageHeight/2));
-  }
-
-  void turnAdd(num r) { turn(this.rotation + r); }
+  bool get isDead { return _hpRatio < 1; }
 
   /** there's probably easier ways to do this. */
   num peg180(num val) {
@@ -241,83 +124,131 @@ class PlayerSprite extends DisplayObjectContainer {
     return val;
   }
 
-  void displayAngles() {
-    if (!dbgmode) return;
-    dbg.text = "all: ${(this.rotation * 180/math.PI).toStringAsFixed(2)}\n" +
-      "hip: ${(hip.rotation * 180/math.PI).toStringAsFixed(2)}\n" +
-      "spatter: ${(splatter.rotation * 180/math.PI).toStringAsFixed(2)}";
+  void fixLegRotation(num x, num y) {
+    num dx = x - this.x;
+    num dy = y - this.y;
+    if (dx == 0 && dy == 0) return;
+    num hrad = math.atan2(dy, dx) + math.PI/2;
+    num trad = this.rotation;
+
+    num val = peg180(hrad - trad);
+    val = val.abs() > math.PI/2? val - math.PI: val;
+    legs.rotation = peg180(val);
   }
 
-  String cycleWeapon() {
-    num index = weaponNames.indexOf(weapon);
-    String newWeapon = weaponNames[index + 1 >= weaponNames.length? 0 : index + 1];
-    setWeaponStr(newWeapon);
-    return newWeapon;
+  void move(num x, num y, num r) {
+    if (isDead) return;
+    fixLegRotation(x, y);
+    splatter.rotation = peg180(splatter.rotation + (rotation - r));
+    this.x = x; this.y = y; rotation = peg180(r);
+    playerName.rotation = -rotation;
+    debug();
   }
 
-  bool setWeapon(num weaponType) {
-    String newWeapon;
-    switch(weaponType) {
-      case WeaponType.PISTOL: newWeapon = "pistol"; break;
-      case WeaponType.RIFLE: newWeapon = "rifle"; break;
-      case WeaponType.GRENADE_LAUNCHER: newWeapon = "grenade"; break;
-      case WeaponType.ROCKET_LAUNCHER: newWeapon = "rocket"; break;
-    }
-    return setWeaponStr(newWeapon);
+  void walk(bool go) {
+    if (go && !legs.playing) legs.play();
+    else if (!go) legs.gotoAndStop(0);
   }
 
-  bool setWeaponStr(String newWeapon) {
-    if (newWeapon == weapon) return false;
-    if (weaponNames.contains(newWeapon)) {
-      weapons[weapon].visible = false;
-      weapon = newWeapon;
-      weapons[weapon].visible = true;
-      weaponSound['reload'].play(false);
-      return true;
-    }
-    return false;
-  }
-
-  void firingAnimation() {
-    num time = .08;
-    var transition = (ratio) {
-      if (ratio < .45) return 0;
-      else if (ratio > .95) return 0;
-      else return 1;
-    };
-
-    AnimationGroup fireAni = new AnimationGroup();
-    fireAni.add(new Tween(weapons[weapon], time, transition)..animate.y.to(3));
-    fireAni.add(new Tween(torso, time, transition)..animate.y.to(3));
-    fireAni.onStart = () => _animatingFiring = true;
-    fireAni.onComplete = () => _animatingFiring = false;
-    stage.juggler.add(fireAni);
-  }
-
-  void firingAnimation1() {
-    num time = 0.02;
-
-    AnimationGroup pull = new AnimationGroup();
-    pull.add(new Tween(torso, time, TransitionFunction.linear)..animate.y.to(3));
-    pull.add(new Tween(weapons[weapon], time, TransitionFunction.linear)..animate.y.to(3));
-
-    AnimationGroup push = new AnimationGroup();
-    push.add(new Tween(torso, time, TransitionFunction.linear)..animate.y.to(0));
-    push.add(new Tween(weapons[weapon], time, TransitionFunction.linear)..animate.y.to(0));
-
-    AnimationChain fireAni = new AnimationChain();
-    pull.delay = time;
-    fireAni.add(pull);
-    push.delay = time;
-    fireAni.add(push);
-    fireAni.onStart = () => _animatingFiring = true;
-    fireAni.onComplete = () => _animatingFiring = false;
-    stage.juggler.add(fireAni);
+  void toggleFire(bool b) {
+    if (b) fire();
   }
 
   void fire() {
-    if (_animatingFiring) return;
-    firingAnimation();
-    weaponSound[weapon].play(false);
+    if (isDead) return;
+
+    Function firingTransition = (num ratio) {
+      return 0.25 < ratio && ratio < 0.85? 1.0 : 0.0;
+    };
+
+    num time = .10;
+    AnimationGroup fireAni = new AnimationGroup();
+    fireAni.add(new Tween(weapon[currentWeapon], time, firingTransition)..animate.y.to(3));
+    fireAni.add(new Tween(torso, time, firingTransition)..animate.y.to(3));
+    fireAni.onStart = () => _isFiring = true;
+    fireAni.onComplete = () => _isFiring = false;
+    if (!_isFiring) stage.juggler.add(fireAni);
+    weaponSound[currentWeapon].playSegment(0, currentWeapon == 0? .1:1, false);
+  }
+
+  void swapWeapon() {
+    if (isDead) return;
+    weapon[currentWeapon].visible = false;
+    currentWeapon = currentWeapon < resLoader.weaponNames.length - 1? currentWeapon + 1: 0;
+    weapon[currentWeapon].visible = true;
+    reloadSound.play(false);
+  }
+
+  void switchWeapon(int weaponType) {
+    if (weaponType == currentWeapon) return;
+    weapon[currentWeapon].visible = false;
+    currentWeapon = weaponType;
+    weapon[currentWeapon].visible = true;
+    reloadSound.play(false);
+  }
+
+  void _updateHpBar() {
+    if (hpRatio < 1) return;
+    num angle = math.PI/4 * hpRatio/100;
+    num color = hpRatio/100 < .4? Color.Red : Color.YellowGreen;
+    hpBar.graphics.clear();
+    hpBar
+      ..graphics.arc(center, center, hpRadius, -angle, angle, false)
+      ..graphics.strokeColor(color, 4);
+  }
+
+  void _setVisibility(bool b) {
+    legs.visible =
+    torso.visible =
+    head.visible =
+    hpBar.visible =
+    weapon[currentWeapon].visible = b;
+    death.visible = !b;
+  }
+
+  void set hpRatio(num hp) {
+    if (_hpRatio < 1 && hp == 100) {
+      spawn.start(.5);
+    } else if (_hpRatio < 1 && hp > 1) {
+      death.gotoAndPlay(0);
+      return;
+    }
+    _hpRatio = hp;
+    _updateHpBar();
+    _setVisibility(_hpRatio > 0);
+  }
+
+  num get hpRatio { return _hpRatio; }
+
+  void takeDamage(num hp, num from) {
+    if (hp == hpRatio) return;
+    hpRatio = hp;
+    if (hpRatio > 0 && hpRatio != 100) {
+      splatter.rotation = peg180(from - rotation + math.PI);
+      splatter.start(.2);
+    }
+  }
+
+  void action(CmdOld c) {
+    num x = this.x + c.moveX * c.ms;
+    num y = this.y + c.moveY * c.ms;
+    num r = rotation + c.rotate * c.tr;
+    if (c.mouseX != -1 && c.mouseY != -1) {
+      r = math.PI - math.atan2(c.mouseX, c.mouseY);
+    }
+
+    walk(this.x != x || this.y != y || this.rotation != peg180(r));
+    move(x, y, r);
+    if (c.fire) fire();
+    if (c.swap) swapWeapon();
+  }
+
+  void debug() {
+    if (!diagnostics.isLogging) dbg.removeFromParent();
+    dbg.rotation = -rotation;
+    dbg.text = "\n\np: x:$x y:$y\n" +
+        "r:${(rotation * 180/math.PI).toStringAsFixed(2)} " +
+        "l:${(legs.rotation * 180/math.PI).toStringAsFixed(2)}";
   }
 }
+

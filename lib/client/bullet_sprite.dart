@@ -1,96 +1,65 @@
 part of gglclient;
 
 class BulletSprite extends DisplayObjectContainer {
-  int _type;
-  bool _visible;
-  Shape bulletShape;
-  ParticleEmitter bulletSplash;
-  Bitmap grenade, rocket;
-  ParticleEmitter grenadeParticles, rocketParticles, explosion;
+  num center = 7;
+  num _type = 0;
+  List<Bitmap> types = [];
+  Sprite bulletLayer;
+  ParticleEmitter bulletSplash, explode;
 
   BulletSprite() {
-    type = BulletType.BULLET;
+    bulletLayer = new Sprite()
+      ..addTo(this);
+
+    for (num i = 0; i < resLoader.bulletNames.length; i++) {
+      types.add(new Bitmap(resource.getBitmapData(resLoader.bulletNames[i]))
+        ..pivotX = center
+        ..pivotY = center
+        ..visible = _type == i? true : false
+        ..addTo(bulletLayer));
+    }
+    bulletSplash = new ParticleEmitter(ParticleLoader.bulletSplash)
+        ..stop(true)
+        ..addTo(this);
+    stage.juggler.add(bulletSplash);
+    explode = new ParticleEmitter(ParticleLoader.explode)
+        ..stop(true)
+        ..addTo(this);
+    stage.juggler.add(explode);
+
   }
 
-  void set type(int t) {
-    if (_type == t) return;
-    this.removeChildren();
-    switch(t) {
-      case BulletType.BULLET:
-        bulletSplash = new ParticleEmitter(
-            ResourceHandler.jsonBulletSplash)
-          ..stop(true)
-          ..addTo(this);
-        stage.juggler.add(bulletSplash);
+  set visible(bool b) { bulletLayer.visible = b; }
 
-        bulletShape = new Shape()
-          ..graphics.ellipse(0, 0, 3, 6)
-          ..graphics.fillColor(Color.White)
-          ..addTo(this);
-        break;
-      case BulletType.GRENADE:
-        explosion = new ParticleEmitter(
-            ResourceHandler.jsonExplode)
-          ..stop(true)
-          ..addTo(this);
-        stage.juggler.add(explosion);
-
-        grenadeParticles = new ParticleEmitter(
-            ResourceHandler.jsonGrenade)
-          ..addTo(this);
-        stage.juggler.add(grenadeParticles);
-
-        grenade = new Bitmap(resMgr.getBitmapData("grenade"))
-          ..pivotX = 7
-          ..pivotY = 7
-          ..addTo(this);
-        break;
-      case BulletType.ROCKET:
-        explosion = new ParticleEmitter(
-            ResourceHandler.jsonExplode)
-          ..stop(true)
-          ..addTo(this);
-        stage.juggler.add(explosion);
-
-        rocketParticles = new ParticleEmitter(ResourceHandler.jsonRocket)
-          ..pivotX = 0
-          ..pivotY = -10
-          ..addTo(this);
-        stage.juggler.add(rocketParticles);
-
-        rocket = new Bitmap(resMgr.getBitmapData("rocket"))
-          ..pivotX = 7
-          ..pivotY = 7
-          ..addTo(this);
-        break;
-    }
+  set type(num t) {
+    if (t == _type) return;
+    types[_type].visible = false;
     _type = t;
+    types[_type].visible = true;
   }
 
-  int get type{ return _type; }
-
-  void set visible(bool b) {
-    if (_visible == b) return;
-    switch(type) {
-      case BulletType.BULLET:
-        bulletShape.visible = b;
-        break;
-      case BulletType.GRENADE:
-        grenade.visible =
-        grenadeParticles.visible = b;
-        break;
-      case BulletType.ROCKET:
-        rocket.visible =
-        rocketParticles.visible = b;
-        break;
+  void hitPlayer(bool b) {
+    if (b) {
+      switch(_type) {
+        case BulletType.GRENADE:
+        case BulletType.ROCKET:
+          explode.start(.5);
+          break;
+      }
     }
   }
 
-  void explode() {
-    switch(type) {
-      case BulletType.BULLET: bulletSplash.start(0.3); break;
-      case BulletType.GRENADE:
-      case BulletType.ROCKET: explosion.start(0.5); break;
+  void hitObject(bool b) {
+    if (b) {
+      switch (_type) {
+        case BulletType.BULLET:
+          bulletSplash.start(.3);
+          break;
+        case BulletType.GRENADE:
+        case BulletType.ROCKET:
+          explode.start(.5);
+          break;
+      }
     }
   }
 }

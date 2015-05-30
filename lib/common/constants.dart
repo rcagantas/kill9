@@ -18,10 +18,17 @@ class ActorProps {
 }
 
 class WeaponType {
-  static const int RIFLE = 0;
-  static const int GRENADE_LAUNCHER = 1;
-  static const int ROCKET_LAUNCHER = 2;
-  static const int PISTOL = 3;
+  static const int PISTOL = 0;
+  static const int RIFLE = 1;
+  static const int GRENADE_LAUNCHER = 2;
+  static const int ROCKET_LAUNCHER = 3;
+}
+
+class WeaponReloadTime {
+  static const int PISTOL = 200;
+  static const int RIFLE = 100;
+  static const int GRENADE_LAUNCHER = 500;
+  static const int ROCKET_LAUNCHER = 600;
 }
 
 class WeaponAmmo {
@@ -40,12 +47,13 @@ class WorldConst {
 
 class BulletProps {
   static const num RADIUS = 2;
-  static const num SPEED = 1500;
+  static const num SPEED = 600;
   static const num DISTANCE = 1000;
   static const num DAMAGE = 10;
 }
 
 class GrenadeProps {
+  static const num AOE = 150;
   static const num RADIUS = 2;
   static const num SPEED = 300;
   static const num DAMAGE = 10;
@@ -53,6 +61,7 @@ class GrenadeProps {
 }
 
 class RocketProps {
+  static const num AOE = 150;
   static const num RADIUS = 2;
   static const num SPEED = 500;
   static const num DAMAGE = 15;
