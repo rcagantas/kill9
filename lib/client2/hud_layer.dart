@@ -67,7 +67,7 @@ class HudLayer extends DisplayObjectContainer {
         }
       } else if (obj is WeaponDropInFrame) {
         drops.putIfAbsent(obj.id, () {
-          return shapeFactory(0, 0, Color.Black);
+          return shapeFactory(0, 0, Color.DarkRed);
         });
         drops[obj.id].visible = true;
         miniMove(drops[obj.id], obj.x, obj.y);
