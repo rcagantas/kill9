@@ -5,7 +5,7 @@ class Arena extends DisplayObjectContainer {
   final List<String> pnlNames =
       ['floor', 'death', 'player', 'collision', 'crate', 'tree'];
   Map<String, Sprite> panel = new Map<String, Sprite>();
-  Sprite miniMap;
+  HudLayer hud;
 
   Map<int, PlayerSprite> players = new Map();
   Map<int, BulletSprite> bullets = new Map();
@@ -73,15 +73,18 @@ class Arena extends DisplayObjectContainer {
         players[obj.id]
           ..move(obj.x, obj.y, obj.orientation)
           ..walk(obj.isMoving)
-          //..toggleFire(obj.isFiring, obj.weaponAmmo)
           ..takeDamage(obj.lifeRatio, obj.damageFrom)
           ..switchWeapon(obj.weaponType)
-          ..visible = true;
+          ..ammoCount = obj.weaponAmmo
+          // only for empty clips
+          ..toggleFire(obj.isFiring && obj.weaponAmmo == 0)
+          ..visible = true
           ;
 
         if (obj.id == pf.playerId) {
           x = stage.stageWidth/2 - obj.x;
           y = stage.stageHeight/2 - obj.y;
+          //if (hud != null) hud.miniMove(obj.x, obj.y);
         }
       } else if (obj is BulletInFrame) {
         bullets.putIfAbsent(obj.id, () {
@@ -100,7 +103,8 @@ class Arena extends DisplayObjectContainer {
           ;
 
         if (players.containsKey(obj.owner))
-          players[obj.owner].toggleFire(true, 1);
+          players[obj.owner].toggleFire(true);
+
       } else if (obj is WeaponDropInFrame) {
         drops.putIfAbsent(obj.id, () {
           return new DropSprite()..addTo(panel['player']);
@@ -112,5 +116,7 @@ class Arena extends DisplayObjectContainer {
           ..visible = true;
       }
     });
+
+    if (hud != null) hud.updateFrame(pf);
   }
 }

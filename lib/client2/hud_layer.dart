@@ -4,6 +4,7 @@ class HudLayer extends DisplayObjectContainer {
   List<num> surfaces;
   Sprite miniMap;
   Shape miniMain;
+  Map<num, Shape> drops = new Map<num, Shape>();
 
   static final num mapScale = 20;
   static final num size = 100;
@@ -14,8 +15,6 @@ class HudLayer extends DisplayObjectContainer {
 
   void createMiniMap(num width, num height) {
     miniMap = new Sprite();
-    num startx = 0;
-    num starty = 0;
     num count = 0;
 
     for (num h = 0; h < height; h++) {
@@ -25,18 +24,7 @@ class HudLayer extends DisplayObjectContainer {
           case Surface.NON_PASSABLE: c = Color.Beige; break;
           case Surface.OBSCURING: c = Color.Green; break;
         }
-
-        new Shape()
-          ..graphics.rect(
-              startx + (w * size/mapScale),
-              starty + (h * size/mapScale),
-              size/mapScale, size/mapScale)
-          ..graphics.fillColor(c)
-          ..alpha = .7
-          ..pivotX = size/mapScale/2
-          ..pivotY = size/mapScale/2
-          ..addTo(miniMap);
-
+        shapeFactory(w, h, c);
         count++;
       }
     }
@@ -45,19 +33,46 @@ class HudLayer extends DisplayObjectContainer {
     miniMap.x = 10;
     miniMap.y = stage.stageHeight - miniMap.height - 8;
 
-    miniMain = new Shape()
-        ..graphics.rect(
-            startx, starty,
-            size/mapScale, size/mapScale)
-        ..graphics.fillColor(Color.Fuchsia)
-        ..alpha = .7
-        ..pivotX = size/mapScale/2
-        ..pivotY = size/mapScale/2
-        ..addTo(miniMap);
+    miniMain = shapeFactory(x, y, Color.Fuchsia);
   }
 
-  void miniMove(num x, num y) {
-    miniMain.x = x/mapScale - size/mapScale/2;
-    miniMain.y = y/mapScale - size/mapScale/2;
+  Shape shapeFactory(num x, num y, num color) {
+    return
+        new Shape()
+                ..graphics.rect(
+                    x * size/mapScale,
+                    y * size/mapScale,
+                    size/mapScale, size/mapScale)
+                ..graphics.fillColor(color)
+                ..alpha = .7
+                ..pivotX = size/mapScale/2
+                ..pivotY = size/mapScale/2
+                ..addTo(miniMap);
+  }
+
+  void miniMove(Shape s, num x, num y) {
+    s.x = x/mapScale - size/mapScale/2;
+    s.y = y/mapScale - size/mapScale/2;
+  }
+
+  void updateFrame(Frame pf) {
+    num mainId = pf.playerId;
+
+    for (Shape d in drops.values) d.visible = false;
+
+    pf.visibleObjects.forEach((obj) {
+      if (obj is ActorInFrame) {
+        if (obj.id == mainId) {
+          miniMove(miniMain, obj.x, obj.y);
+        }
+      } else if (obj is WeaponDropInFrame) {
+        drops.putIfAbsent(obj.id, () {
+          return shapeFactory(0, 0, Color.Black);
+        });
+        drops[obj.id].visible = true;
+        miniMove(drops[obj.id], obj.x, obj.y);
+      }
+
+    });
   }
 }

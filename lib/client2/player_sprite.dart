@@ -14,11 +14,13 @@ class PlayerSprite extends Sprite {
   List<Bitmap> weapon = [];
   static List<Sound> weaponSnd = [];
   static Sound reloadSnd;
+  static Sound emptySnd;
 
   Sprite pnlAlive = new Sprite();
   Sprite pnlDead = new Sprite();
 
   num currentWeapon = 0;
+  num ammoCount = 0;
   num _hpRatio = 100;
   bool isFiring = false;
   final List<String> weaponNames = ['pistol', 'rifle', 'grenade', 'rocket'];
@@ -107,6 +109,7 @@ class PlayerSprite extends Sprite {
       ..addTo(pnlAlive);
 
     reloadSnd = resource.getSound("ws_reload");
+    emptySnd = resource.getSound("ws_empty");
     for (String weaponName in weaponNames) {
       weapon.add(new Bitmap(resource.getBitmapData("w_$weaponName"))
         ..pivotX = center
@@ -177,11 +180,8 @@ class PlayerSprite extends Sprite {
     else if (!walk) legs.gotoAndStop(0);
   }
 
-  void toggleFire(bool b, num weaponAmmo) {
-    if (b) {
-      if (weaponAmmo != 0) fire();
-      else reloadSnd.playSegment(0, .8, false);
-    }
+  void toggleFire(bool b) {
+    if (b) fire();
   }
 
   void fire() {
@@ -200,12 +200,16 @@ class PlayerSprite extends Sprite {
     }
 
     AnimationGroup fireAni = new AnimationGroup();
-    fireAni.add(new Tween(mflash, .1, firingTransition)..animate.alpha.to(100));
+    if (ammoCount != 0)
+      fireAni.add(new Tween(mflash, .1, firingTransition)..animate.alpha.to(100));
     fireAni.add(new Tween(weapon[currentWeapon], time, firingTransition)
       ..animate.y.to(4));
     fireAni.add(new Tween(torso, time, firingTransition)..animate.y.to(2));
     fireAni.onStart = () {
-      weaponSnd[currentWeapon].playSegment(0, .8, false);
+      if (ammoCount != 0)
+        weaponSnd[currentWeapon].playSegment(0, .8, false);
+      else
+        emptySnd.playSegment(0, .8, false);
       isFiring = true;
     };
     fireAni.onComplete = () {

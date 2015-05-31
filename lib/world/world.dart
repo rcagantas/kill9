@@ -296,9 +296,7 @@ class World {
         else if (c.moveR == 1) a.turnClockwise();
         else if (c.moveR == 0) a.stopTurn();
 
-        if (c.fire == 1) {
-          a.weapon.fire();
-        }
+        if (c.fire == 1) a.weapon.fire();
         else if (c.fire == 0) a.weapon.stop();
 
         if (c.swap == 1) a.switchWeapon();

@@ -353,8 +353,8 @@ class WeaponImpl extends Weapon {
   }
 
   void shootProjectile() {
-    if (ammo == 0) return;
     isFiring = true;
+    if (ammo == 0) return;
     var bullet = owner.myWorld.bullets.getBullet()
       ..type = bulletType
       ..owner = owner.hashCode

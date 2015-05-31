@@ -132,7 +132,7 @@ class TestArena extends DisplayObjectContainer {
   void action(Cmd c) {
     arena.action(c);
     p.action(c);
-    hud.miniMove(p.x, p.y);
+    hud.miniMove(hud.miniMain, p.x, p.y);
   }
 }
 
@@ -147,6 +147,7 @@ class TestLocalWorld extends DisplayObjectContainer {
     world = new World.size(w, h);
     arena = new Arena(w, h, world.grid.surfaceList)..addTo(this);
     hud = new HudLayer(w, h, world.grid.surfaceList)..addTo(this);
+    arena.hud = hud;
   }
 
   void action(Cmd c) {
