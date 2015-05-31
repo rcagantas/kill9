@@ -53,10 +53,10 @@ class GrenadeBehavior implements AmmoBehavior {
         ref.radius = GrenadeProps.AOE;
         if (ref.willBump(object, elapsedTime)) {
           (object as Actor).takeDamage(GrenadeProps.DAMAGE, bullet);
-          ref.radius -= 50;
+          ref.radius = GrenadeProps.AOE/3 * 2;
           if (ref.willBump(object, elapsedTime)) {
             (object as Actor).takeDamage(GrenadeProps.DAMAGE, bullet);
-            ref.radius -= 50;
+            ref.radius = GrenadeProps.AOE/3;
             if (ref.willBump(object, elapsedTime)) {
               (object as Actor).takeDamage(GrenadeProps.DAMAGE, bullet);
             }
@@ -131,10 +131,10 @@ class RocketBehavior implements AmmoBehavior {
         ref.radius = RocketProps.AOE;
         if (ref.willBump(object, elapsedTime)) {
           (object as Actor).takeDamage(GrenadeProps.DAMAGE, bullet);
-          ref.radius -= 50;
+          ref.radius = RocketProps.AOE/3 * 2;
           if (ref.willBump(object, elapsedTime)) {
             (object as Actor).takeDamage(GrenadeProps.DAMAGE, bullet);
-            ref.radius -= 50;
+            ref.radius = RocketProps.AOE/3;
             if (ref.willBump(object, elapsedTime)) {
               (object as Actor).takeDamage(GrenadeProps.DAMAGE, bullet);
             }

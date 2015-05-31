@@ -13,7 +13,7 @@ class GglEvent {
 
 class ActorProps {
   static const num SPEED = 300;
-  static const num TURN_RATE = 2;
+  static const num TURN_RATE = 3;
   static const num RADIUS = 20;
 }
 
@@ -56,15 +56,15 @@ class GrenadeProps {
   static const num AOE = 150;
   static const num RADIUS = 2;
   static const num SPEED = 300;
-  static const num DAMAGE = 10;
+  static const num DAMAGE = 15;
   static const num EXPIRE_SEC = 2;
 }
 
 class RocketProps {
-  static const num AOE = 150;
+  static const num AOE = 200;
   static const num RADIUS = 2;
   static const num SPEED = 500;
-  static const num DAMAGE = 15;
+  static const num DAMAGE = 20;
   static const num DISTANCE = 1000;
 }
 
