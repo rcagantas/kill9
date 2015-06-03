@@ -71,12 +71,13 @@ class Arena extends DisplayObjectContainer {
         });
 
         players[obj.id]
+          ..playerName.text = obj.name == null? "" : obj.name
           ..move(obj.x, obj.y, obj.orientation)
           ..walk(obj.isMoving)
           ..takeDamage(obj.lifeRatio, obj.damageFrom)
           ..switchWeapon(obj.weaponType)
-          ..ammoCount = obj.weaponAmmo
           // only for empty clips
+          ..ammoCount = obj.weaponAmmo
           ..toggleFire(obj.isFiring && obj.weaponAmmo == 0)
           ..visible = true
           ;
@@ -84,7 +85,6 @@ class Arena extends DisplayObjectContainer {
         if (obj.id == pf.playerId) {
           x = stage.stageWidth/2 - obj.x;
           y = stage.stageHeight/2 - obj.y;
-          //if (hud != null) hud.miniMove(obj.x, obj.y);
         }
       } else if (obj is BulletInFrame) {
         bullets.putIfAbsent(obj.id, () {

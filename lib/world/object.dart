@@ -133,15 +133,20 @@ class Actor extends WorldObject {
 
   void addWeapon(int type) {
     bool found = false;
+    if (weapon.weaponType == type) {
+      found = true;
+      weapon.addAmmo();
+    }
+
     weapons.forEach((w) {
       if (w.weaponType == type) {
-        w.addAmmo();
         found = true;
+        w.addAmmo();
       }
     });
 
     if (found) {
-      while (type > weapon.weaponType) {
+      while (weapon.weaponType != type) {
         switchWeapon();
       }
     } else {
@@ -283,7 +288,8 @@ class Actor extends WorldObject {
 
   void takeDamage(int damage, Bullet dmgFrom) {
     life = life - damage;
-    damageFrom = dmgFrom.orientation;
+    damageFrom = math.atan2(dmgFrom.y - y, dmgFrom.x - x) - math.PI/2;
+
     if (life <= 0) {
       deathCount = deathCount + 1;
       dmgFrom.fromWeapon.owner.killCount = dmgFrom.fromWeapon.owner.killCount + 1;

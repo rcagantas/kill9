@@ -13,8 +13,8 @@ class PlayerSprite extends Sprite {
 
   List<Bitmap> weapon = [];
   static List<Sound> weaponSnd = [];
-  static Sound reloadSnd;
-  static Sound emptySnd;
+  static Sound reloadSnd, emptySnd, walkSnd;
+  static SoundChannel walkSndCh;
 
   Sprite pnlAlive = new Sprite();
   Sprite pnlDead = new Sprite();
@@ -68,6 +68,7 @@ class PlayerSprite extends Sprite {
       ..addTo(pnlAlive);
     stage.juggler.add(splatter);
 
+    walkSnd = resource.getSound("ws_footsteps");
     List<BitmapData> bmpStride = [];
     for (num i = 0;
         i < 6;
@@ -175,9 +176,21 @@ class PlayerSprite extends Sprite {
     }
   }
 
+
   void walk(bool walk) {
-    if (walk && !legs.playing) legs.play();
-    else if (!walk) legs.gotoAndStop(0);
+
+    // walk animation
+    if (walk) {
+      if (!legs.playing) legs.play();
+    } else {
+      legs.gotoAndStop(0);
+    }
+
+    // walk sound
+    /*
+    if (playerNo != 0) return;
+    if (walk) walkSndCh = walkSnd.play(true);
+    else if (walkSndCh != null) walkSndCh.stop();*/
   }
 
   void toggleFire(bool b) {

@@ -172,7 +172,10 @@ class World {
     _objects.forEach((id,object) {
       WorldObject obj = object;
       if (obj.isInView(player.x, player.y, 100) ||
-          obj is WeaponDrop) {
+          obj is WeaponDrop ||
+          (obj is Bullet &&
+              obj.type != BulletType.BULLET &&
+              obj.hitObject)) {
         var visiObj;
 
         if (obj is Actor)           visiObj = new ActorInFrame();
