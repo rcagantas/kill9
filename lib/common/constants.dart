@@ -76,7 +76,7 @@ class BulletType {
 
 class Bots {
   static List<String> names =
-      ['Retroel bot',
+      ['Yutani bot',
        'Happyslurpy bot',
        'Vilatra bot',
        'Bournick bot',
@@ -85,7 +85,12 @@ class Bots {
        'Dendi bot',
        'Puppey bot',
        'Iceiceice bot',
-       'Singsing bot'];
+       'Sing2x bot'];
+}
+
+class WinConditions {
+  static const int KILLCOUNT = 20;
+  static const int TIMELIMIT = 120;
 }
 
 class Comm {

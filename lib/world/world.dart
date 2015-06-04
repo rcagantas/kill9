@@ -14,12 +14,11 @@ class World {
   WeaponDrop _weaponDrop;
 
   int _tileWidth;
-  //int _worldWidth;
-  //int _worldHeight;
   Timer _timer = null, _readyTimer = null,
       _weaponDropTimer = null, _lobbyTimer = null;
   Stopwatch watch = new Stopwatch();
   List<RandomWalker> bots = [];
+  num totalTime = 0;
 
   World.size(num height, num width) {
     List<num> surface = MapGenerator.createSimpleRandomSurface(width, height);
@@ -31,9 +30,6 @@ class World {
     this.grid = grid;
     _init();
   }
-
-  // TODO: reflect on win condition.
-  bool hasEnded = false;
 
   void _init() {
     //_worldWidth = grid.width() * grid.tileWidth();
@@ -217,10 +213,6 @@ class World {
     return frame;
   }
 
-  void _processInput() {
-    // process input
-  }
-
   void _update(num elapsed) {
 
     // AI stuff
@@ -246,12 +238,27 @@ class World {
     watch.stop();
 
     num elapsed = watch.elapsedMilliseconds/1000;
+    totalTime += elapsed;
 
     watch.reset();
     watch.start();
 
-    _processInput();
     _update(elapsed);
+    _checkWin();
+  }
+
+  void _checkWin() {
+    bool reachedKillCount = false;
+    actors.forEach((a) {
+      if (a.killCount == WinConditions.KILLCOUNT)
+        reachedKillCount = true;
+    });
+
+    print ("[world $hashCode] elapsed $totalTime");
+    if (totalTime > WinConditions.TIMELIMIT ||
+        reachedKillCount) {
+      stop();
+    }
   }
 
   void action(CmdOld c) {
