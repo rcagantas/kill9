@@ -49,6 +49,7 @@ class ResourceLoader {
     resource.addSound("ws_empty", "$sounds/ws_empty.wav");
     resource.addSound("ws_footsteps", "$sounds/ws_footsteps.wav");
 
+    resource.addBitmapData("wd_pistol", "$sprites/wd_pistol.png");
     resource.addBitmapData("wd_rifle", "$sprites/wd_rifle.png");
     resource.addBitmapData("wd_grenade", "$sprites/wd_grenade.png");
     resource.addBitmapData("wd_rocket", "$sprites/wd_rocket.png");

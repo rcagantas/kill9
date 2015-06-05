@@ -254,7 +254,6 @@ class World {
         reachedKillCount = true;
     });
 
-    print ("[world $hashCode] elapsed $totalTime");
     if (totalTime > WinConditions.TIMELIMIT ||
         reachedKillCount) {
       stop();
