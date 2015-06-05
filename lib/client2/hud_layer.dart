@@ -6,6 +6,7 @@ class HudLayer extends DisplayObjectContainer {
   List<String> weaponNames = ['pistol', 'rifle', 'grenade', 'rocket'];
   //Map<String, Bitmap> weapon = new Map<String, Bitmap>();
   List<Bitmap> weapons = new List<Bitmap>();
+  List<TextField> ammo = new List<TextField>();
   Shape miniMain;
   Map<num, Shape> drops = new Map<num, Shape>();
 
@@ -19,6 +20,7 @@ class HudLayer extends DisplayObjectContainer {
 
     num buffer = -20;
     num currentx = 60;
+    num currenty = stage.stageHeight - center;
     weaponNames.forEach((name) {
       currentx += (center * 2) + buffer;
       weapons.add(new Bitmap(resource.getBitmapData("wd_$name"))
@@ -27,8 +29,20 @@ class HudLayer extends DisplayObjectContainer {
         ..alpha = weaponAlpha
         ..rotation = -.785
         ..x = currentx
-        ..y = stage.stageHeight - (center)
-        ..addTo(this));
+        ..y = currenty
+        ..addTo(this)
+      );
+
+      ammo.add(new TextField()
+        ..defaultTextFormat = new TextFormat('Lato', 25, Color.White)
+        ..height = size
+        ..width = size
+        ..pivotX = center
+        ..pivotY = center
+        ..x = currentx + center/2
+        ..y = currenty + center
+        ..addTo(this)
+      );
     });
 
   }
@@ -86,6 +100,10 @@ class HudLayer extends DisplayObjectContainer {
         if (obj.id == mainId) {
           miniMove(miniMain, obj.x, obj.y);
           weapons[obj.weaponType].alpha = 1;
+          ammo[obj.weaponType].text =
+              obj.weaponAmmo == -1?
+                  "999" :
+                  "${obj.weaponAmmo}";
         }
       } else if (obj is WeaponDropInFrame) {
         drops.putIfAbsent(obj.id, () {
