@@ -6,6 +6,7 @@ class HudLayer extends DisplayObjectContainer {
   List<String> weaponNames = ['pistol', 'rifle', 'grenade', 'rocket'];
   List<Sprite> container = new List<Sprite>();
   List<TextField> ammoText = new List<TextField>();
+  TextField killCount;
 
   Shape miniMain;
   Map<num, Shape> drops = new Map<num, Shape>();
@@ -24,9 +25,7 @@ class HudLayer extends DisplayObjectContainer {
       ammoText.add(
           new TextField()
             ..defaultTextFormat = tf
-            ..x = 50
-            ..height = 30
-            ..width = 50);
+            ..x = 50);
       Sprite s = new Sprite()
           ..addChild(
               new Bitmap(resource.getBitmapData("wd_${weaponNames[i]}"))
@@ -36,6 +35,12 @@ class HudLayer extends DisplayObjectContainer {
           ..alpha = weaponAlpha;
       container.add(s);
     }
+
+    killCount = new TextField()
+      ..defaultTextFormat = tf
+      ..x = stage.stageWidth - 100
+      ..y = 50
+      ..addTo(this);
   }
 
   void createMiniMap(num width, num height) {
@@ -97,6 +102,7 @@ class HudLayer extends DisplayObjectContainer {
           });
           container[obj.weaponType].alpha = 1;
           ammoText[obj.weaponType].text = "${obj.weaponAmmo}";
+          killCount.text = "${obj.killCount}";
         }
       } else if (obj is WeaponDropInFrame) {
         drops.putIfAbsent(obj.id, () {

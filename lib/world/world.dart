@@ -191,6 +191,7 @@ class World {
           visiObj.weaponAmmo = obj.weapon.ammo;
           visiObj.name = obj.name;
           visiObj.index = actors.indexOf(obj);
+          visiObj.killCount = obj.killCount;
 
         } else if (obj is Bullet) {
           visiObj.type = obj.type;
