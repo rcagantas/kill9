@@ -160,7 +160,6 @@ class Actor extends WorldObject {
 
       if (newWeapon != null) {
         weapons.add(newWeapon);
-        print(weapons.length);
         switchWeaponTo(type);
       }
     }
