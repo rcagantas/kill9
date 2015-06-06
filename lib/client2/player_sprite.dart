@@ -20,7 +20,7 @@ class PlayerSprite extends Sprite {
   Sprite pnlDead = new Sprite();
 
   num currentWeapon = 0;
-  num ammoCount = 0;
+  num _ammoCount = 0;
   num _hpRatio = 100;
   bool isFiring = false;
   final List<String> weaponNames = ['pistol', 'rifle', 'grenade', 'rocket'];
@@ -28,7 +28,12 @@ class PlayerSprite extends Sprite {
   num _playerNo = -1;
 
   num get playerNo { return _playerNo; }
-
+  num get ammoCount { return _ammoCount; }
+  set ammoCount(num c) {
+    if (_ammoCount < c)
+      reloadSnd.playSegment(0, .8, false);
+    _ammoCount = c;
+  }
 
   PlayerSprite(num n) {
     _playerNo = n;
