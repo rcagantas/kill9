@@ -319,6 +319,7 @@ class WeaponImpl extends Weapon {
   num addtlAmmo = 0;
   num reloadTime = 1000 * .20;
   bool isAutomatic = false;
+  bool limited = true;
 
   WeaponImpl(Actor owner) : super(owner);
 
@@ -362,7 +363,7 @@ class WeaponImpl extends Weapon {
           owner.orientation, owner.radius + 5, this);
 
     owner.myWorld.addObject(bullet);
-    if (weaponType != WeaponType.PISTOL && ammo > 0) ammo--;
+    if (limited && ammo > 0) ammo--;
 
     reloader = new Timer(
         new Duration(milliseconds: reloadTime),
@@ -378,11 +379,12 @@ class WeaponImpl extends Weapon {
 
 class Pistol extends WeaponImpl {
   Pistol(Actor owner) : super(owner) {
-    ammo = -1;
+    ammo = 999;
     weaponType = WeaponType.PISTOL;
     bulletType = BulletType.BULLET;
     reloadTime = WeaponReloadTime.PISTOL;
     isAutomatic = true;
+    limited = false;
   }
 }
 

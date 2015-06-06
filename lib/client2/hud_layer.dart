@@ -114,9 +114,7 @@ class HudLayer extends DisplayObjectContainer {
           miniMove(miniMain, obj.x, obj.y);
           weapons[obj.weaponType].alpha = 1;
           ammo[obj.weaponType].text =
-              obj.weaponAmmo == -1?
-                  "999" :
-                  "${obj.weaponAmmo}";
+              obj.weaponAmmo = "${obj.weaponAmmo}";
         }
       } else if (obj is WeaponDropInFrame) {
         drops.putIfAbsent(obj.id, () {

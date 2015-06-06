@@ -6,7 +6,6 @@ class DropSprite extends DisplayObjectContainer {
   Bitmap rifle, grenade, rocket;
   static final num center = 50;
   DropSprite() {
-    drop.addTo(this);
     rifle = new Bitmap(resource.getBitmapData("wd_rifle"))
       ..pivotX = center
       ..pivotY = center
@@ -22,6 +21,7 @@ class DropSprite extends DisplayObjectContainer {
     spawn = new ParticleEmitter(ParticleLoader.spawn)
       ..stop(true)
       ..addTo(this);
+    drop.addTo(this);
     stage.juggler.add(spawn);
   }
 
