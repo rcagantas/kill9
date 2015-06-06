@@ -106,8 +106,8 @@ class WeaponDrop extends WorldObject {
 }
 
 class Actor extends WorldObject {
-
-  Queue<Weapon> weapons = new Queue();
+  List<Weapon> weapons = new List<Weapon>();
+  num weaponIndex = 0;
   Weapon weapon;
 
   num _xVelocityHolder = 0;
@@ -127,6 +127,7 @@ class Actor extends WorldObject {
         ActorProps.TURN_RATE)
   {
     weapon = new Pistol(this);
+    weapons.add(weapon);
 
     _45degreeSpeed = speed * math.sin(math.PI/4);
   }
@@ -146,9 +147,7 @@ class Actor extends WorldObject {
     });
 
     if (found) {
-      while (weapon.weaponType != type) {
-        switchWeapon();
-      }
+      switchWeaponTo(type);
     } else {
       Weapon newWeapon = null;
 
@@ -160,16 +159,24 @@ class Actor extends WorldObject {
         newWeapon = new RocketLauncher(this);
 
       if (newWeapon != null) {
-        weapons.addFirst(newWeapon);
-        switchWeapon();
+        weapons.add(newWeapon);
+        print(weapons.length);
+        switchWeaponTo(type);
       }
+    }
+  }
+
+  void switchWeaponTo(num type) {
+    while (weapon.weaponType != type) {
+      switchWeapon();
     }
   }
 
   void switchWeapon() {
     if (life == 0 || weapons.isEmpty) return;
-    weapons.addLast(weapon);
-    weapon = weapons.removeFirst();
+    weaponIndex++;
+    if (weaponIndex >= weapons.length) weaponIndex = 0;
+    weapon = weapons[weaponIndex];
   }
 
   void moveLeft() {

@@ -4,12 +4,12 @@ class HudLayer extends DisplayObjectContainer {
   List<num> surfaces;
   Sprite miniMap;
   List<String> weaponNames = ['pistol', 'rifle', 'grenade', 'rocket'];
-  //Map<String, Bitmap> weapon = new Map<String, Bitmap>();
-  List<Bitmap> weapons = new List<Bitmap>();
-  List<TextField> ammo = new List<TextField>();
-  List<Shape> border = new List<Shape>();
+  List<Sprite> container = new List<Sprite>();
+  List<TextField> ammoText = new List<TextField>();
+
   Shape miniMain;
   Map<num, Shape> drops = new Map<num, Shape>();
+  Map<num, Sprite> slots = new Map<num, Sprite>();
 
   static final num mapScale = 20;
   static final num size = 100;
@@ -19,45 +19,23 @@ class HudLayer extends DisplayObjectContainer {
   HudLayer(num width, num height, this.surfaces) {
     createMiniMap(width, height);
 
-    num buffer = -20;
-    num currentx = 60;
-    num currenty = stage.stageHeight - center;
-    weaponNames.forEach((name) {
-      currentx += (center * 2) + buffer;
-      weapons.add(new Bitmap(resource.getBitmapData("wd_$name"))
-        ..pivotX = center
-        ..pivotY = center
-        ..alpha = weaponAlpha
-        ..rotation = -.785
-        ..x = currentx
-        ..y = currenty
-        ..addTo(this)
-      );
-
-      /*
-      border.add(new Shape()
-        ..graphics.rect(currentx + 30, currenty + center, 50, 30)
-        ..graphics.fillColor(Color.Azure)
-        ..alpha = .5
-        ..pivotX = center
-        ..pivotY = center
-        ..addTo(this)
-      );*/
-
-      ammo.add(new TextField()
-        ..defaultTextFormat
-          = new TextFormat('Lato', 25, Color.White, align:TextFormatAlign.CENTER)
-        ..height = 30
-        ..width = 50
-        ..pivotX = center
-        ..pivotY = center
-        ..x = currentx + 30
-        ..y = currenty + center
-        ..addTo(this)
-      );
-
-    });
-
+    TextFormat tf = new TextFormat('Lato', 25, Color.White, align:TextFormatAlign.CENTER);
+    for (int i = 0; i < weaponNames.length; i++) {
+      ammoText.add(
+          new TextField()
+            ..defaultTextFormat = tf
+            ..x = 50
+            ..height = 30
+            ..width = 50);
+      Sprite s = new Sprite()
+          ..addChild(
+              new Bitmap(resource.getBitmapData("wd_${weaponNames[i]}"))
+                  ..rotation = -.785)
+          ..addChild(ammoText[i])
+          ..y = stage.stageHeight - center
+          ..alpha = weaponAlpha;
+      container.add(s);
+    }
   }
 
   void createMiniMap(num width, num height) {
@@ -106,15 +84,19 @@ class HudLayer extends DisplayObjectContainer {
     num mainId = pf.playerId;
 
     for (Shape d in drops.values) d.visible = false;
-    for (Bitmap b in weapons) b.alpha = weaponAlpha;
+    for (Sprite s in container) s.alpha = weaponAlpha;
 
     pf.visibleObjects.forEach((obj) {
       if (obj is ActorInFrame) {
         if (obj.id == mainId) {
           miniMove(miniMain, obj.x, obj.y);
-          weapons[obj.weaponType].alpha = 1;
-          ammo[obj.weaponType].text =
-              obj.weaponAmmo = "${obj.weaponAmmo}";
+          slots.putIfAbsent(obj.weaponType, () {
+            container[obj.weaponType].x = 65 + (slots.length * 80);
+            container[obj.weaponType].addTo(this);
+            return container[obj.weaponType];
+          });
+          container[obj.weaponType].alpha = 1;
+          ammoText[obj.weaponType].text = "${obj.weaponAmmo}";
         }
       } else if (obj is WeaponDropInFrame) {
         drops.putIfAbsent(obj.id, () {
