@@ -7,6 +7,7 @@ class HudLayer extends DisplayObjectContainer {
   //Map<String, Bitmap> weapon = new Map<String, Bitmap>();
   List<Bitmap> weapons = new List<Bitmap>();
   List<TextField> ammo = new List<TextField>();
+  List<Shape> border = new List<Shape>();
   Shape miniMain;
   Map<num, Shape> drops = new Map<num, Shape>();
 
@@ -33,16 +34,28 @@ class HudLayer extends DisplayObjectContainer {
         ..addTo(this)
       );
 
-      ammo.add(new TextField()
-        ..defaultTextFormat = new TextFormat('Lato', 25, Color.White)
-        ..height = size
-        ..width = size
+      /*
+      border.add(new Shape()
+        ..graphics.rect(currentx + 30, currenty + center, 50, 30)
+        ..graphics.fillColor(Color.Azure)
+        ..alpha = .5
         ..pivotX = center
         ..pivotY = center
-        ..x = currentx + center/2
+        ..addTo(this)
+      );*/
+
+      ammo.add(new TextField()
+        ..defaultTextFormat
+          = new TextFormat('Lato', 25, Color.White, align:TextFormatAlign.CENTER)
+        ..height = 30
+        ..width = 50
+        ..pivotX = center
+        ..pivotY = center
+        ..x = currentx + 30
         ..y = currenty + center
         ..addTo(this)
       );
+
     });
 
   }

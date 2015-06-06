@@ -20,7 +20,7 @@ part 'client2/drop_sprite.dart';
 part 'client2/arena.dart';
 part 'client2/hud_layer.dart';
 
-final Stage stage = new Stage(html.querySelector("#maincanvas"));
+final Stage stage = new Stage(html.querySelector("#maincanvas"), color:Color.Black);
 final ResourceManager resource = new ResourceManager();
 final ResourceLoader resourceLoader = new ResourceLoader();
 final FontLoader fonts = new FontLoader();
