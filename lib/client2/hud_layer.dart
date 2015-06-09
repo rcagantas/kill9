@@ -38,8 +38,8 @@ class HudLayer extends DisplayObjectContainer {
 
     killCount = new TextField()
       ..defaultTextFormat = tf
-      ..x = stage.stageWidth - 100
-      ..y = 50
+      ..x = stage.stageWidth - 200
+      ..y = stage.stageHeight - center
       ..addTo(this);
   }
 
@@ -102,7 +102,7 @@ class HudLayer extends DisplayObjectContainer {
           });
           container[obj.weaponType].alpha = 1;
           ammoText[obj.weaponType].text = "${obj.weaponAmmo}";
-          killCount.text = "${obj.killCount}";
+          killCount.text = "kills: ${obj.killCount}";
         }
       } else if (obj is WeaponDropInFrame) {
         drops.putIfAbsent(obj.id, () {

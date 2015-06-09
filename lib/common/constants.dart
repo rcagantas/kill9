@@ -25,15 +25,15 @@ class WeaponType {
 }
 
 class WeaponReloadTime {
-  static const int PISTOL = 200;
+  static const int PISTOL = 300;
   static const int RIFLE = 100;
   static const int GRENADE_LAUNCHER = 500;
   static const int ROCKET_LAUNCHER = 600;
 }
 
 class WeaponAmmo {
-  static const int GRENADE_AMMO = 5;
-  static const int ROCKET_AMMO = 5;
+  static const int GRENADE_AMMO = 12;
+  static const int ROCKET_AMMO = 10;
   static const int RIFLE_AMMO = 200;
 }
 
@@ -55,7 +55,7 @@ class BulletProps {
 class GrenadeProps {
   static const num AOE = 150;
   static const num RADIUS = 2;
-  static const num SPEED = 300;
+  static const num SPEED = 400;
   static const num DAMAGE = 15;
   static const num EXPIRE_SEC = 2;
 }

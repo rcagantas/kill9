@@ -24,7 +24,6 @@ class DebugWindow extends DisplayObjectContainer {
     String eol = "\n";
     inputField.text =
         input.cmd.toString() + eol +
-        BulletPool.debug() + eol +
         fpsText;
   }
 }

@@ -14,10 +14,6 @@ class BulletPool {
   static void returnBullet(BulletSprite b) {
     if (!_bullets.contains(b)) _bullets.add(b);
   }
-
-  static String debug() {
-    return "bullet pool count: ${_bullets.length}";
-  }
 }
 
 class BulletSprite extends Sprite {

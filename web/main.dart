@@ -166,7 +166,7 @@ void setupStage(Map stages, String s) {
   stage.removeChildren();
   stage.addChild(stages[s]);
   input.addListener(stages[s].action);
-  stage.addChild(debugWindow);
+  //stage.addChild(debugWindow);
 }
 
 void main() {

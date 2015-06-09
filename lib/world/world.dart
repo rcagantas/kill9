@@ -244,8 +244,8 @@ class World {
     watch.reset();
     watch.start();
 
-    _update(elapsed);
     _checkWin();
+    _update(elapsed);
   }
 
   void _checkWin() {
