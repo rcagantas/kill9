@@ -4,10 +4,11 @@ class World {
   Grid grid;
   Map _objects = new Map();
   List _removals = new List();
-  Map _listeners = new Map();
   List<Actor> actors = new List();
   Map<int, Frame> _playerFrames = new Map();
   Map<int, AmmoBehavior> _bulletBehaviors = new Map();
+  Map<num, Function> _listeners = new Map<num, Function>();
+
   BulletFactory bullets;
   Function onReady;
   static const int MAX_PLAYERS = 10;
@@ -19,6 +20,7 @@ class World {
   Stopwatch watch = new Stopwatch();
   List<RandomWalker> bots = [];
   num totalTime = 0;
+  bool worldEnded = false;
 
   World.size(num height, num width) {
     List<num> surface = MapGenerator.createSimpleRandomSurface(width, height);
@@ -162,6 +164,7 @@ class World {
     frame.playerId = playerId;
     frame.topX = player.x - (WorldConst.VIEWPORT_WIDTH/2);
     frame.topY = player.y - (WorldConst.VIEWPORT_HEIGHT/2);
+    frame.time = totalTime;
 
     frame.visibleObjects.clear();
 
@@ -248,6 +251,10 @@ class World {
     _update(elapsed);
   }
 
+  void reset() {
+
+  }
+
   void _checkWin() {
     bool reachedKillCount = false;
     actors.forEach((a) {
@@ -258,6 +265,7 @@ class World {
     if (totalTime > WinConditions.TIMELIMIT ||
         reachedKillCount) {
       stop();
+      worldEnded = true;
     }
   }
 

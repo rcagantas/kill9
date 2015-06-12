@@ -6,6 +6,7 @@ class HudLayer extends DisplayObjectContainer {
   List<String> weaponNames = ['pistol', 'rifle', 'grenade', 'rocket'];
   List<Sprite> container = new List<Sprite>();
   List<TextField> ammoText = new List<TextField>();
+  TextField currentTime;
   TextField killCount;
 
   Shape miniMain;
@@ -20,7 +21,7 @@ class HudLayer extends DisplayObjectContainer {
   HudLayer(num width, num height, this.surfaces) {
     createMiniMap(width, height);
 
-    TextFormat tf = new TextFormat('Lato', 25, Color.White, align:TextFormatAlign.CENTER);
+    TextFormat tf = new TextFormat('Lato', 25, Color.Azure, align:TextFormatAlign.CENTER);
     for (int i = 0; i < weaponNames.length; i++) {
       ammoText.add(
           new TextField()
@@ -40,6 +41,13 @@ class HudLayer extends DisplayObjectContainer {
       ..defaultTextFormat = tf
       ..x = stage.stageWidth - 200
       ..y = stage.stageHeight - center
+      ..addTo(this);
+
+    currentTime = new TextField()
+      ..defaultTextFormat = tf
+      ..x = stage.stageWidth/2 - 150
+      ..y = 10
+      ..width = 300
       ..addTo(this);
   }
 
@@ -74,7 +82,7 @@ class HudLayer extends DisplayObjectContainer {
                     y * size/mapScale,
                     size/mapScale, size/mapScale)
                 ..graphics.fillColor(color)
-                ..alpha = .7
+                ..alpha = .9
                 ..pivotX = size/mapScale/2
                 ..pivotY = size/mapScale/2
                 ..addTo(miniMap);
@@ -87,6 +95,8 @@ class HudLayer extends DisplayObjectContainer {
 
   void updateFrame(Frame pf) {
     num mainId = pf.playerId;
+    num t = pf.time;
+    currentTime.text = "${t~/60}:${(t%60).toInt().toString().padLeft(2, "0")}";
 
     for (Shape d in drops.values) d.visible = false;
     for (Sprite s in container) s.alpha = weaponAlpha;

@@ -107,7 +107,7 @@ class Frame {
   int playerId;
 
   // Viewport
-  num topX,topY;
+  num topX,topY,time;
 
   // Player stats;
   Map killStats = new Map();
@@ -118,7 +118,7 @@ class Frame {
 
   String toString() {
     var stringBuffer = new StringBuffer()
-    ..write("$playerId,$topX,$topY")
+    ..write("$playerId,$topX,$topY,$time")
     ..write("~");
     //playerStats
     killStats.forEach((key, value) {
@@ -160,6 +160,7 @@ class Frame {
     playerId = int.parse(fields[0]);
     topX = num.parse(fields[1]);
     topY = num.parse(fields[2]);
+    time = num.parse(fields[3]);
 
 
     if (main[1] !=  "") {
@@ -208,9 +209,18 @@ class Cmd {
   String toString() {
     return "[X:$moveX,Y:$moveY,R:$moveR,F:$fire,S:$swap,MX:$mouseX,MR:$mouseY]";
   }
+
+  String toData() {
+    return "$moveX,$moveY,$moveR," +
+        "$fire,$swap,$mouseX,$mouseY";
+  }
+
+  Cmd.fromData(String s) {
+    //var fields = s.split(",");
+  }
 }
 
-
+/*
 class CommandFrame {
   int id = 0, moveX = 0, moveY = 0, orientation = 0;
   bool fire = false, weaponCycle = false, mouseMoved = false;
@@ -241,7 +251,7 @@ class CommandFrame {
 
   }
 }
-
+*/
 class CmdOld {
   num ms = 10, tr = .10;
   num dmg = 0;
