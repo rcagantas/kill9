@@ -97,6 +97,9 @@ class HudLayer extends DisplayObjectContainer {
     num mainId = pf.playerId;
     num t = pf.time;
     currentTime.text = "${t~/60}:${(t%60).toInt().toString().padLeft(2, "0")}";
+    if (pf.endGame == 1) {
+      print("world ended on client");
+    }
 
     for (Shape d in drops.values) d.visible = false;
     for (Sprite s in container) s.alpha = weaponAlpha;
@@ -112,7 +115,7 @@ class HudLayer extends DisplayObjectContainer {
           });
           container[obj.weaponType].alpha = 1;
           ammoText[obj.weaponType].text = "${obj.weaponAmmo}";
-          killCount.text = "kills: ${obj.killCount}";
+          //killCount.text = "kills: ${obj.killCount}";
         }
       } else if (obj is WeaponDropInFrame) {
         drops.putIfAbsent(obj.id, () {

@@ -74,7 +74,7 @@ class World {
     if (_timer != null) {
       _timer.cancel();
       _timer = null;
-      print("stopped game");
+      print("[world ${this.hashCode}] stopped game");
     }
 
     if (_weaponDropTimer != null) {
@@ -165,6 +165,7 @@ class World {
     frame.topX = player.x - (WorldConst.VIEWPORT_WIDTH/2);
     frame.topY = player.y - (WorldConst.VIEWPORT_HEIGHT/2);
     frame.time = totalTime;
+    frame.endGame = worldEnded? 1 : 0;
 
     frame.visibleObjects.clear();
 
@@ -194,7 +195,6 @@ class World {
           visiObj.weaponAmmo = obj.weapon.ammo;
           visiObj.name = obj.name;
           visiObj.index = actors.indexOf(obj);
-          visiObj.killCount = obj.killCount;
 
         } else if (obj is Bullet) {
           visiObj.type = obj.type;
