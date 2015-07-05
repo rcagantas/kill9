@@ -59,7 +59,10 @@ class PlayerSprite extends Sprite {
 
     playerName = new TextField()
       ..defaultTextFormat =
-      new TextFormat('Lato', 15, Color.WhiteSmoke, bold: true, align: "center")
+      new TextFormat('Lato', 15, Color.WhiteSmoke,
+          bold: true, align: "center",
+          strokeColor: Color.Black,
+          strokeWidth: 2)
       ..width = 200
       ..height = 100
       ..pivotX = 100

@@ -21,6 +21,7 @@ class World {
   List<RandomWalker> bots = [];
   num totalTime = 0;
   bool worldEnded = false;
+  List<Actor> topScore = new List<Actor>();
 
   World.size(num height, num width) {
     List<num> surface = MapGenerator.createSimpleRandomSurface(width, height);
@@ -34,9 +35,6 @@ class World {
   }
 
   void _init() {
-    //_worldWidth = grid.width() * grid.tileWidth();
-    //_worldHeight = grid.height() * grid.tileWidth();
-
     _bulletBehaviors[BulletType.BULLET] = new BulletBehavior();
     _bulletBehaviors[BulletType.GRENADE] = new GrenadeBehavior();
     _bulletBehaviors[BulletType.ROCKET] = new RocketBehavior();
@@ -165,7 +163,7 @@ class World {
     frame.topX = player.x - (WorldConst.VIEWPORT_WIDTH/2);
     frame.topY = player.y - (WorldConst.VIEWPORT_HEIGHT/2);
     frame.time = totalTime;
-    frame.endGame = worldEnded? 1 : 0;
+    frame.kills = player.killCount;
 
     frame.visibleObjects.clear();
 
@@ -195,6 +193,7 @@ class World {
           visiObj.weaponAmmo = obj.weapon.ammo;
           visiObj.name = obj.name;
           visiObj.index = actors.indexOf(obj);
+          evaluateScore(obj);
 
         } else if (obj is Bullet) {
           visiObj.type = obj.type;
@@ -208,19 +207,27 @@ class World {
         }
         frame.visibleObjects.add(visiObj);
       }
-      if (obj is Actor) {
-        frame.killStats[obj.hashCode] = obj.killCount;
-        frame.deathStats[obj.hashCode] = obj.deathCount;
+
+      num c = 0;
+      frame.stats = "";
+      for (Actor a in topScore) {
+        if (c == 3) break;
+        frame.stats += "${a.name}:\t\t${a.killCount}\n";
+        c++;
       }
     });
 
     return frame;
   }
 
+  void evaluateScore(Actor actor) {
+    if (!topScore.contains(actor)) topScore.add(actor);
+    topScore.sort((a, b) {
+      return b.killCount.compareTo(a.killCount);
+    });
+  }
+
   void _update(num elapsed) {
-
-    // AI stuff
-
     // physics stuff (collision etc.)
     _objects.forEach((k,v)=>v.doPhysics(elapsed,_objects));
     // individal object updates
@@ -249,10 +256,6 @@ class World {
 
     _checkWin();
     _update(elapsed);
-  }
-
-  void reset() {
-
   }
 
   void _checkWin() {

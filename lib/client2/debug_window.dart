@@ -1,7 +1,7 @@
 part of gglclient2;
 
 class DebugWindow extends DisplayObjectContainer {
-  TextFormat font = new TextFormat('Lato', 11, Color.Black);
+  TextFormat font = new TextFormat('Lato', 11, Color.Azure, strokeColor:Color.Black, strokeWidth:2);
   TextField inputField;
   num fps = null;
 

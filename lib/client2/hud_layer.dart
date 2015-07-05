@@ -8,6 +8,7 @@ class HudLayer extends DisplayObjectContainer {
   List<TextField> ammoText = new List<TextField>();
   TextField currentTime;
   TextField killCount;
+  TextField stats;
 
   Shape miniMain;
   Map<num, Shape> drops = new Map<num, Shape>();
@@ -21,11 +22,14 @@ class HudLayer extends DisplayObjectContainer {
   HudLayer(num width, num height, this.surfaces) {
     createMiniMap(width, height);
 
-    TextFormat tf = new TextFormat('Lato', 25, Color.Azure, align:TextFormatAlign.CENTER);
+    TextFormat tfweapon = new TextFormat('Lato', 25, Color.Azure,
+        align:TextFormatAlign.CENTER,
+        strokeColor: Color.Black, strokeWidth: 2);
+
     for (int i = 0; i < weaponNames.length; i++) {
       ammoText.add(
           new TextField()
-            ..defaultTextFormat = tf
+            ..defaultTextFormat = tfweapon
             ..x = 50);
       Sprite s = new Sprite()
           ..addChild(
@@ -38,16 +42,24 @@ class HudLayer extends DisplayObjectContainer {
     }
 
     killCount = new TextField()
-      ..defaultTextFormat = tf
+      ..defaultTextFormat = tfweapon
       ..x = stage.stageWidth - 200
       ..y = stage.stageHeight - center
       ..addTo(this);
 
     currentTime = new TextField()
-      ..defaultTextFormat = tf
+      ..defaultTextFormat = tfweapon
       ..x = stage.stageWidth/2 - 150
       ..y = 10
       ..width = 300
+      ..addTo(this);
+
+    stats = new TextField()
+      ..defaultTextFormat = new TextFormat('Lato', 11, Color.Azure,
+          align:TextFormatAlign.LEFT,
+          strokeColor: Color.Black, strokeWidth: 2)
+      ..x = stage.stageWidth - 200
+      ..y = center
       ..addTo(this);
   }
 
@@ -97,9 +109,8 @@ class HudLayer extends DisplayObjectContainer {
     num mainId = pf.playerId;
     num t = pf.time;
     currentTime.text = "${t~/60}:${(t%60).toInt().toString().padLeft(2, "0")}";
-    if (pf.endGame == 1) {
-      print("world ended on client");
-    }
+    stats.text = pf.stats;
+    killCount.text = "Kills: ${pf.kills}";
 
     for (Shape d in drops.values) d.visible = false;
     for (Sprite s in container) s.alpha = weaponAlpha;
@@ -115,7 +126,6 @@ class HudLayer extends DisplayObjectContainer {
           });
           container[obj.weaponType].alpha = 1;
           ammoText[obj.weaponType].text = "${obj.weaponAmmo}";
-          //killCount.text = "kills: ${obj.killCount}";
         }
       } else if (obj is WeaponDropInFrame) {
         drops.putIfAbsent(obj.id, () {

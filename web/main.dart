@@ -156,6 +156,7 @@ class TestLocalWorld extends DisplayObjectContainer {
       if (player1 != null) return;
       player1 = world.addPlayerandGetReference();
       c.id = player1.hashCode;
+      c.name = "Player1";
       world.addPlayerFrameListener(c.id, arena.updateFrame);
     }
   }
@@ -166,7 +167,7 @@ void setupStage(Map stages, String s) {
   stage.removeChildren();
   stage.addChild(stages[s]);
   input.addListener(stages[s].action);
-  //stage.addChild(debugWindow);
+  stage.addChild(debugWindow);
 }
 
 void main() {

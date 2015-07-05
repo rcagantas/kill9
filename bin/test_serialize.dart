@@ -7,12 +7,7 @@ void main() {
   a.playerId = 12345;
   a.topX = 10.123;
   a.topY = 10.456;
-  a.killStats[100] = 5;
-  a.killStats[101] = 7;
-  a.deathStats[100] = 1;
-  a.deathStats[101] = 2;
   a.visibleObjects = new List();
-
 
   ActorInFrame b = new ActorInFrame();
 

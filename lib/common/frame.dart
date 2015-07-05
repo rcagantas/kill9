@@ -105,29 +105,16 @@ class Frame {
   int playerId;
 
   // Viewport
-  num topX,topY,time,endGame;
-
-  // Player stats;
-  Map killStats = new Map();
-  Map deathStats = new Map();
+  num topX,topY,time,kills;
+  String stats = "";
 
   // Objects visible in the world
   List<ObjectInFrame> visibleObjects = new List();
 
   String toString() {
     var stringBuffer = new StringBuffer()
-    ..write("$playerId,$topX,$topY,$time,$endGame")
+    ..write("$playerId,$topX,$topY,$time,$kills,$stats")
     ..write("~");
-    //playerStats
-    killStats.forEach((key, value) {
-      stringBuffer.write("$key,$value,");
-    });
-
-    stringBuffer.write("~");
-
-    deathStats.forEach((key, value) {
-      stringBuffer.write("$key,$value,");
-    });
 
     stringBuffer.write("~");
 
@@ -159,24 +146,10 @@ class Frame {
     topX = num.parse(fields[1]);
     topY = num.parse(fields[2]);
     time = num.parse(fields[3]);
-    endGame = num.parse(fields[4]);
+    kills = num.parse(fields[4]);
+    stats = fields[5];
 
-
-    if (main[1] !=  "") {
-      var kills = main[1].split(",");
-      for (int i = 0; i < kills.length-1; i = i+2) {
-        killStats[int.parse(kills[i])] = int.parse(kills[i+1]);
-      }
-    }
-    if (main[2] !=  "") {
-      var deaths = main[1].split(",");
-      for (int i = 0; i < deaths.length-1; i = i+2) {
-        deathStats[int.parse(deaths[i])] = int.parse(deaths[i+1]);
-      }
-    }
-
-
-    var objects = main[3].split("|");
+    var objects = main[2].split("|");
 
     objects.forEach( (str) {
       if (str == "") return;
@@ -189,7 +162,6 @@ class Frame {
       else
         visibleObjects.add(new WeaponDropInFrame.fromString(obj[1]));
     });
-
   }
 }
 
