@@ -3,9 +3,9 @@
 
 import 'dart:html' as html;
 import 'dart:math' as math;
+import 'dart:async' as async;
 import 'package:stagexl/stagexl.dart';
 import 'package:giggl/gglclient2.dart';
-import 'dart:async' as async;
 import 'package:giggl/gglcommon.dart';
 import 'package:giggl/gglworld.dart';
 

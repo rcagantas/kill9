@@ -1,7 +1,7 @@
 import 'dart:html' as html;
 import 'dart:math' as math;
 import 'package:stagexl/stagexl.dart';
-import 'package:giggl/gglclient.dart';
+import 'package:giggl/gglclient2.dart';
 import 'package:giggl/gglworld.dart';
 import 'package:giggl/gglcommon.dart';
 import 'dart:convert';
@@ -37,7 +37,7 @@ class TestSprite extends DisplayObjectContainer {
   }
 
   void action(CmdOld c) {
-    p1.action(c);
+    p1.actionOld(c);
     if (input.key[69]) p1.takeDamage(p1.hpRatio - 1, 45 * math.PI/180);
     if (input.key[82]) p1.hpRatio = 100;
   }
@@ -67,9 +67,9 @@ class TestLocal extends DisplayObjectContainer {
   void start() {
     if (player1 != null) return;
     player1 = world.addPlayerandGetReference();
-    input.mainId = player1.hashCode;
+    //input.mainId = player1.hashCode;
     input.addListener(world.action);
-    world.addPlayerFrameListener(input.mainId, arena.updateFrame);
+    //world.addPlayerFrameListener(input.mainId, arena.updateFrame);
   }
 }
 
@@ -111,13 +111,13 @@ class TestNetClient extends DisplayObjectContainer {
 
   void action(CmdOld cmd) {
     if (arena == null) return;
-    cmd.id = arena.mainId;
+    //cmd.id = arena.mainId;
     socket.send(cmd.stringify());
   }
 }
 
 void setupPanel(DisplayObjectContainer panel, Function action) {
-  input.removeListeners();
+  //input.removeListeners();
   if (action != null) input.addListener(action);
   stage.removeChildren();
   stage.addChild(panel);
@@ -128,7 +128,7 @@ void main() {
   RenderLoop renderLoop = new RenderLoop();
   renderLoop.addStage(stage);
   print(input);
-  print(resLoader);
+  //print(resLoader);
 
   resource.load().then((_) {
     RedDot dot = new RedDot();
@@ -139,7 +139,7 @@ void main() {
 
     html.querySelector("#player_name").onInput.listen((e) {
       local.world.stop();
-      input.name = e.target.value;
+      //input.name = e.target.value;
     });
 
     html.querySelector("#red").onClick.listen((e) {

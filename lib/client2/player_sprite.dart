@@ -286,6 +286,8 @@ class PlayerSprite extends Sprite {
     }
   }
 
+  void actionOld(CmdOld c) {}
+
   void action(Cmd c) {
     if (c == null) return;
     num x = this.x + c.moveX * c.ms;
