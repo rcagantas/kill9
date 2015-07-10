@@ -8,6 +8,8 @@ import 'package:stagexl/stagexl.dart';
 import 'package:giggl/gglclient2.dart';
 import 'package:giggl/gglcommon.dart';
 import 'package:giggl/gglworld.dart';
+import 'dart:html';
+import 'dart:async';
 
 class RedDot extends DisplayObjectContainer {
   Shape shape;
@@ -162,6 +164,39 @@ class TestLocalWorld extends DisplayObjectContainer {
   }
 }
 
+class TestSocket extends DisplayObjectContainer {
+  WebSocket ws;
+
+  TestSocket() {
+    initWebSocket();
+  }
+
+  void initWebSocket() {
+    ws = new WebSocket("ws://127.0.0.1:4040/ws");
+    ws.onOpen.listen((e) { print("opened."); });
+    ws.onClose.listen((e) { print("closed."); tryReconnect(); });
+    ws.onError.listen((e) { print("error."); tryReconnect(); });
+    ws.onMessage.listen((e) { print("${e.data}"); });
+    reconnecting = false;
+  }
+
+  bool reconnecting = false;
+  void tryReconnect() {
+    if (reconnecting) return;
+    print("reconnecting...");
+    reconnecting = true;
+    new Timer(new Duration(milliseconds: 1000), () => initWebSocket());
+  }
+
+  void action(Cmd c) {
+    c.id = c.hashCode;
+    c.name = "Socket Test";
+    if (ws.readyState == WebSocket.OPEN) {
+      ws.send(c.toData());
+    }
+  }
+}
+
 void setupStage(Map stages, String s) {
   input.removeAllListeners();
   stage.removeChildren();
@@ -185,13 +220,15 @@ void main() {
     stages.putIfAbsent("bullet", () { return new TestBullet(); });
     stages.putIfAbsent("arena", () { return new TestArena(); });
     stages.putIfAbsent("local", () { return new TestLocalWorld(); });
+    stages.putIfAbsent("socket", () { return new TestSocket(); });
 
-    setupStage(stages, "local");
+    setupStage(stages, "socket");
 
     html.querySelector("#red").onClick.listen((e) { setupStage(stages, "red"); });
     html.querySelector("#player").onClick.listen((e) { setupStage(stages, "player"); });
     html.querySelector("#bullet").onClick.listen((e) { setupStage(stages, "bullet"); });
     html.querySelector("#arena").onClick.listen((e) { setupStage(stages, "arena"); });
     html.querySelector("#local").onClick.listen((e) { setupStage(stages, "local"); });
+    html.querySelector("#socket").onClick.listen((e) { setupStage(stages, "socket"); });
   });
 }

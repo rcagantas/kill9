@@ -173,7 +173,7 @@ class Cmd {
   Cmd() {
     ms = 5;
     tr = .10;
-    moveX = moveY = moveR = fire = swap = swap = 0;
+    moveX = moveY = moveR = fire = swap = 0;
     mouseX = mouseY = -1;
   }
 
@@ -182,12 +182,31 @@ class Cmd {
   }
 
   String toData() {
-    return "$moveX,$moveY,$moveR," +
-        "$fire,$swap,$mouseX,$mouseY";
+    return "$id,$ms,$tr," +
+        "$moveX,$moveY,$moveR," +
+        "$fire,$swap," +
+        "$mouseX,$mouseY," +
+        "$name";
   }
 
   Cmd.fromData(String s) {
-    //var fields = s.split(",");
+    var fields = s.split(",");
+
+    id = num.parse(fields[0]);
+    ms = num.parse(fields[1]);
+    tr = num.parse(fields[2]);
+
+    moveX = num.parse(fields[3]);
+    moveY = num.parse(fields[4]);
+    moveR = num.parse(fields[5]);
+
+    fire = num.parse(fields[6]);
+    swap = num.parse(fields[7]);
+
+    mouseX = num.parse(fields[8]);
+    mouseY = num.parse(fields[9]);
+
+    name = fields[10];
   }
 }
 
