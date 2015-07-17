@@ -15,10 +15,9 @@ class World {
   WeaponDrop _weaponDrop;
 
   int _tileWidth;
-  Timer _timer = null, _readyTimer = null,
-      _weaponDropTimer = null, _lobbyTimer = null;
+  Timer _timer = null, _weaponDropTimer = null;
   Stopwatch watch = new Stopwatch();
-  List<RandomWalker> bots = [];
+
   num totalTime = 0;
   bool worldEnded = false;
   List<Actor> topScore = new List<Actor>();
@@ -38,16 +37,40 @@ class World {
     _bulletBehaviors[BulletType.BULLET] = new BulletBehavior();
     _bulletBehaviors[BulletType.GRENADE] = new GrenadeBehavior();
     _bulletBehaviors[BulletType.ROCKET] = new RocketBehavior();
-
+    
     bullets = new BulletFactory(200, _bulletBehaviors);
-    _readyTimer = new Timer.periodic(new Duration(milliseconds: 10), (timer) {
-      if (actors.length == MAX_PLAYERS) {
-        if (onReady != null) onReady();
-        _readyTimer.cancel();
-      }
-    });
-
+    start();
+    while (actors.length < MAX_PLAYERS) {
+      addPlayerAndGetReference(bot: true);
+    }
     _weaponDrop = new WeaponDrop(this);
+  }
+    
+  int removeActor(Actor a) {
+    int index = actors.indexOf(a);
+    actors.remove(a);
+    removeObject(a);
+    return index;
+  }
+    
+  int indexOfBot() {
+    for (Actor a in actors) {
+      if (a is RandomWalker) return actors.indexOf(a);
+    }
+    return -1;
+  }
+  
+  int countHumans() {
+    int count = 0;
+    for (Actor a in actors) {
+      if (!(a is RandomWalker)) count++;
+    }
+    return count;
+  }
+  
+  void removeActorAndReplaceWithBot(Actor a) {
+    int i = removeActor(a);
+    addPlayerAndGetReference(bot : true, index : i);
   }
 
   void start() {
@@ -59,14 +82,16 @@ class World {
           _weaponDrop.spawn(this);
         }
       });
-
+      
       //start game
       _timer = new Timer.periodic(new Duration(milliseconds: 16), this._goRound);
-      for (RandomWalker bot in bots) {
-        bot.start();
+      for (Actor a in actors) {
+        if (a is RandomWalker) a.start();
       }
     }
   }
+  
+  bool hasSpace() { return true; }
 
   void stop() {
     if (_timer != null) {
@@ -85,43 +110,50 @@ class World {
     _objects[object.hashCode] = object;
     object.myWorld = this;
   }
-
+  
   void addPlayerFrameListener(int playerId, void listener(Frame pf)) {
     if (_objects.containsKey(playerId)) {
       _listeners[playerId] = listener;
     }
   }
+  
+  Actor addPlayerAndGetReference({bot:false,index:-1}) {
+    index = index == -1? actors.length: index;
 
-  Actor addPlayerandGetReference() {
-    if (actors.length >= MAX_PLAYERS)
-      return null;
-
-    var newPlayer = new Actor();
-    addObject(newPlayer);
-    actors.add(newPlayer);
-    spawnRandomly(newPlayer);
-    print("${actors.length} ${newPlayer.hashCode}");
-
-    // start the lobby timer once you add a real player
-    if (_lobbyTimer == null) {
-      _lobbyTimer = new Timer.periodic(
-        new Duration(milliseconds: 200),
-        (timer) {
-          if (actors.length < MAX_PLAYERS) {
-            bots.add(new RandomWalker(addPlayerandGetReference()));
-            bots[bots.length - 1].player.name = Bots.names[bots.length - 1];
-          } else {
-            _lobbyTimer.cancel();
-            start();
-          }
-        });
+    int botIndex = indexOfBot();
+    if (actors.length == MAX_PLAYERS) {
+      if (botIndex == -1) {
+        print("[world $hashCode] everyone is a player!");
+        return null; // server full (no bots)
+      } else {
+        RandomWalker bot = actors[botIndex];
+        bot.stop();
+        removeActor(bot);
+        print("[world $hashCode] attempt to replace bot $botIndex");
+        index = botIndex;
+      }      
     }
+    
+    var newPlayer = bot? new RandomWalker() : new Actor();
+    addObject(newPlayer);
+    actors.insert(index, newPlayer);
+    spawnRandomly(newPlayer);
+    newPlayer.name = bot? "[$index]" + Bots.names[index]: "";
+    print("[world ${this.hashCode}] added " + 
+        (bot? "bot" : "actor") + 
+        " ${actors.indexOf(newPlayer)}\t${newPlayer.hashCode}");
+    
+    if (actors.length == MAX_PLAYERS && countHumans() == 0) {
+      print("[world $hashCode] no humans. stopping.");
+      stop();
+    }
+    else start();
 
     return newPlayer;
   }
 
   int addPlayer() {
-    Actor newPlayer = addPlayerandGetReference();
+    Actor newPlayer = addPlayerAndGetReference();
     return newPlayer.hashCode;
   }
 
@@ -147,11 +179,13 @@ class World {
   }
 
   void removeObject(WorldObject object) {
-    _removals.add(object);
     object.myWorld = null;
+    _removals.add(object);
+    _objects.remove(object);
   }
 
   Frame getFrameDetail(int playerId) {
+    if (!_objects.containsKey(playerId)) return null;
     if (!_playerFrames.containsKey(playerId)) {
       _playerFrames[playerId] = new Frame();
     }
@@ -244,8 +278,7 @@ class World {
     _removals.clear();
   }
 
-  void _goRound(Timer timer) {
-
+  void _goRound(Timer timer) {    
     watch.stop();
 
     num elapsed = watch.elapsedMilliseconds/1000;
@@ -254,7 +287,7 @@ class World {
     watch.reset();
     watch.start();
 
-    _checkWin();
+    //_checkWin();
     _update(elapsed);
   }
 

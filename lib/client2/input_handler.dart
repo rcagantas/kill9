@@ -5,8 +5,8 @@ class InputHandler {
   Map<num, bool> key = new Map<num, bool>();
   List<Function> _cbList = [];
 
-  bool mouseL;
-  bool mouseR;
+  bool mouseL = false;
+  bool mouseR = false;
   num mouseX = -1;
   num mouseY = -1;
   Cmd cmd = new Cmd();

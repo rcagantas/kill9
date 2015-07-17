@@ -1,15 +1,14 @@
 // Copyright (c) 2015, Roel Cagantas. All rights reserved. Use of this source code
 // is governed by a BSD-style license that can be found in the LICENSE file.
 
-import 'dart:html' as html;
+import 'dart:html';
 import 'dart:math' as math;
-import 'dart:async' as async;
+import 'dart:async';
+import 'dart:convert';
 import 'package:stagexl/stagexl.dart';
 import 'package:giggl/gglclient2.dart';
 import 'package:giggl/gglcommon.dart';
 import 'package:giggl/gglworld.dart';
-import 'dart:html';
-import 'dart:async';
 
 class RedDot extends DisplayObjectContainer {
   Shape shape;
@@ -106,7 +105,7 @@ class TestBullet extends DisplayObjectContainer {
         ..animate.y.to(10)
         ..onComplete = () {
           if (b.y < 11) b.collide();
-          new async.Timer(new Duration(seconds: 1), () {
+          new Timer(new Duration(seconds: 1), () {
             BulletPool.returnBullet(b);
           });
         };
@@ -156,7 +155,7 @@ class TestLocalWorld extends DisplayObjectContainer {
     world.action2(c);
     if (input.key[32]) {
       if (player1 != null) return;
-      player1 = world.addPlayerandGetReference();
+      player1 = world.addPlayerAndGetReference();
       c.id = player1.hashCode;
       c.name = "Player1";
       world.addPlayerFrameListener(c.id, arena.updateFrame);
@@ -166,6 +165,10 @@ class TestLocalWorld extends DisplayObjectContainer {
 
 class TestSocket extends DisplayObjectContainer {
   WebSocket ws;
+  Arena arena;
+  HudLayer hud;
+  bool reconnecting = false;
+  bool connected = false;
 
   TestSocket() {
     initWebSocket();
@@ -173,17 +176,30 @@ class TestSocket extends DisplayObjectContainer {
 
   void initWebSocket() {
     ws = new WebSocket("ws://127.0.0.1:4040/ws");
-    ws.onOpen.listen((e) { print("opened."); });
-    ws.onClose.listen((e) { print("closed."); tryReconnect(); });
-    ws.onError.listen((e) { print("error."); tryReconnect(); });
-    ws.onMessage.listen((e) { print("${e.data}"); });
+    ws.onOpen.listen((e) { connected = true; });
+    ws.onClose.listen((e) { tryReconnect(); });
+    ws.onError.listen((e) { tryReconnect(); });
+    ws.onMessage.listen((e) {
+      if (!connected) return;
+      if (arena == null) {
+        num w = 20, h = 20;
+        List<num> grid = JSON.decode(e.data);
+        arena = new Arena(w, h, grid)..addTo(this);
+        hud = new HudLayer(w, h, grid)..addTo(this);
+      } else {
+        Frame pf = new Frame.fromString(e.data);
+        arena.updateFrame(pf);
+        hud.updateFrame(pf);
+      }
+    });
     reconnecting = false;
+    debugWindow.serverMessage = "connected.";
   }
 
-  bool reconnecting = false;
   void tryReconnect() {
+    connected = false;
     if (reconnecting) return;
-    print("reconnecting...");
+    debugWindow.serverMessage = "reconnecting...";
     reconnecting = true;
     new Timer(new Duration(milliseconds: 1000), () => initWebSocket());
   }
@@ -191,7 +207,7 @@ class TestSocket extends DisplayObjectContainer {
   void action(Cmd c) {
     c.id = c.hashCode;
     c.name = "Socket Test";
-    if (ws.readyState == WebSocket.OPEN) {
+    if (ws != null && ws.readyState == WebSocket.OPEN) {
       ws.send(c.toData());
     }
   }
@@ -224,11 +240,11 @@ void main() {
 
     setupStage(stages, "socket");
 
-    html.querySelector("#red").onClick.listen((e) { setupStage(stages, "red"); });
-    html.querySelector("#player").onClick.listen((e) { setupStage(stages, "player"); });
-    html.querySelector("#bullet").onClick.listen((e) { setupStage(stages, "bullet"); });
-    html.querySelector("#arena").onClick.listen((e) { setupStage(stages, "arena"); });
-    html.querySelector("#local").onClick.listen((e) { setupStage(stages, "local"); });
-    html.querySelector("#socket").onClick.listen((e) { setupStage(stages, "socket"); });
+    querySelector("#red").onClick.listen((e) { setupStage(stages, "red"); });
+    querySelector("#player").onClick.listen((e) { setupStage(stages, "player"); });
+    querySelector("#bullet").onClick.listen((e) { setupStage(stages, "bullet"); });
+    querySelector("#arena").onClick.listen((e) { setupStage(stages, "arena"); });
+    querySelector("#local").onClick.listen((e) { setupStage(stages, "local"); });
+    querySelector("#socket").onClick.listen((e) { setupStage(stages, "socket"); });
   });
 }

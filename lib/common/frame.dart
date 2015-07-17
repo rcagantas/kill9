@@ -44,7 +44,7 @@ class ActorInFrame extends ObjectInFrame {
     var stringBuffer = new StringBuffer()
     ..write("$id,$x,$y,$orientation,")
     ..write("$lifeRatio,$weaponType,$weaponAmmo,$damageFrom,$isFiring,$isMoving,")
-    ..write("$name,$index");
+    ..write("$index,$name");
     return stringBuffer.toString();
   }
 
@@ -63,10 +63,10 @@ class ActorInFrame extends ObjectInFrame {
     weaponType = num.parse(fields[5]);
     weaponAmmo = num.parse(fields[6]);
     damageFrom = num.parse(fields[7]);
-    isFiring = fields[9] == "true";
-    isMoving = fields[10] == "true";
+    isFiring = fields[8] == "true";
+    isMoving = fields[9] == "true";
+    index = num.parse(fields[10]);
     name = fields[11];
-    index = num.parse(fields[12]);
   }
 }
 
@@ -202,46 +202,12 @@ class Cmd {
 
     fire = num.parse(fields[6]);
     swap = num.parse(fields[7]);
-
     mouseX = num.parse(fields[8]);
     mouseY = num.parse(fields[9]);
-
     name = fields[10];
   }
 }
 
-/*
-class CommandFrame {
-  int id = 0, moveX = 0, moveY = 0, orientation = 0;
-  bool fire = false, weaponCycle = false, mouseMoved = false;
-  num mouseX = 0.0, mouseY = 0.0;
-
-  String toString() {
-    var stringBuffer = new StringBuffer()
-      ..write("$id,$moveX,$moveY,$orientation,")
-      ..write("$fire,$weaponCycle,$mouseMoved,")
-      ..write("$mouseX, $mouseY");
-    return stringBuffer.toString();
-  }
-
-  CommandFrame() {}
-
-  CommandFrame.fromString(String s) {
-    var fields = s.split(",");
-    if (fields[0] == null) return;
-    id = int.parse(fields[0]);
-    moveX = int.parse(fields[1]);
-    moveY = int.parse(fields[2]);
-    orientation = int.parse(fields[3]);
-    fire = fields[4] == "true";
-    weaponCycle = fields[5] == "true";
-    mouseMoved = fields[6] == "true";
-    mouseX = num.parse(fields[7]);
-    mouseY = num.parse(fields[8]);
-
-  }
-}
-*/
 class CmdOld {
   num ms = 10, tr = .10;
   num dmg = 0;
@@ -286,4 +252,3 @@ class CmdOld {
     return this.toString() == c.toString();
   }
 }
-

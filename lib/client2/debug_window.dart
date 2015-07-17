@@ -4,6 +4,7 @@ class DebugWindow extends DisplayObjectContainer {
   TextFormat font = new TextFormat('Lato', 11, Color.Azure, strokeColor:Color.Black, strokeWidth:2);
   TextField inputField;
   num fps = null;
+  String serverMessage = "";
 
   DebugWindow() {
     inputField = new TextField()
@@ -24,6 +25,6 @@ class DebugWindow extends DisplayObjectContainer {
     String eol = "\n";
     inputField.text =
         input.cmd.toString() + eol +
-        fpsText;
+        fpsText + eol + serverMessage;
   }
 }

@@ -1,12 +1,12 @@
 part of gglworld;
 
-class RandomWalker {
+class RandomWalker extends Actor{
 
-  Actor player;
+  //Actor player;
   math.Random random = new math.Random();
-  Timer _timer, _fireTimer = null, _stopTimer;
+  Timer _timer = null, _fireTimer = null, _stopTimer = null;
 
-  RandomWalker(this.player);
+  RandomWalker();
 
   void start() {
     if (_timer == null) {
@@ -15,25 +15,25 @@ class RandomWalker {
   }
 
   void stop() {
-    _timer.cancel();
-    _fireTimer.cancel();
-    _stopTimer.cancel();
+    if (_timer != null)     _timer.cancel();
+    if (_fireTimer != null) _fireTimer.cancel();
+    if (_stopTimer != null) _stopTimer.cancel();
   }
 
   void _stopFiring(Timer timer) {
-    player.weapon.stop();
+    this.weapon.stop();
   }
 
   void _fire(Timer timer) {
-    if (player.life == 0) return;
+    if (this.life == 0) return;
     var fire = random.nextInt(2);
-    if (fire == 0) player.weapon.fire();
+    if (fire == 0) this.weapon.fire();
   }
 
   void _walkRandomly(Timer timer)  {
-    player.stopLeftRightMove();
-    player.stopTopDownMove();
-    player.stopTurn();
+    this.stopLeftRightMove();
+    this.stopTopDownMove();
+    this.stopTurn();
 
     if (_fireTimer == null) {
       _fireTimer = new Timer.periodic(new Duration(milliseconds: 200), _fire);
@@ -43,25 +43,25 @@ class RandomWalker {
     var move = random.nextInt(3);
 
     if (move == 0) {
-      player.moveLeft();
+      this.moveLeft();
     } else if (move == 1) {
-      player.moveRight();
+      this.moveRight();
     }
 
     move = random.nextInt(3);
 
     if (move == 0) {
-      player.moveUp();
+      this.moveUp();
     } else if (move == 1) {
-      player.moveDown();
+      this.moveDown();
     }
 
     move = random.nextInt(3);
 
     if (move == 0) {
-      player.turnClockwise();
+      this.turnClockwise();
     } else if (move == 1) {
-      player.turnCounterClockwise();
+      this.turnCounterClockwise();
     }
   }
 }

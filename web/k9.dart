@@ -66,7 +66,7 @@ class TestLocal extends DisplayObjectContainer {
 
   void start() {
     if (player1 != null) return;
-    player1 = world.addPlayerandGetReference();
+    player1 = world.addPlayerAndGetReference();
     //input.mainId = player1.hashCode;
     input.addListener(world.action);
     //world.addPlayerFrameListener(input.mainId, arena.updateFrame);

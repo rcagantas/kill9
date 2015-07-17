@@ -310,8 +310,8 @@ class Actor extends WorldObject {
   }
 
   void doPhysics(num elapsedTime, Map objects) {
-
-    if (life == 0) return;
+    
+    if (life == 0 || myWorld == null) return;
 
     objects.forEach((key,object) {
       if (key != this.hashCode) {
