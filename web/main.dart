@@ -1,4 +1,4 @@
-import 'dart:html';
+import 'dart:html' as html;
 import 'dart:async';
 import 'dart:convert';
 import 'package:stagexl/stagexl.dart';
@@ -7,18 +7,19 @@ import 'package:giggl/gglcommon.dart';
 
 
 class GameClient extends DisplayObjectContainer {
-  WebSocket ws;
+  html.WebSocket ws;
   Arena arena;
   HudLayer hud;
   bool reconnecting = false;
   bool connected = false;
+  String name = "";
 
   GameClient() {
     initWebSocket();
   }
 
   void initWebSocket() {
-    ws = new WebSocket("ws://127.0.0.1:4040/ws");
+    ws = new html.WebSocket("ws://127.0.0.1:4040/ws");
     ws.onOpen.listen((e) { connected = true; });
     ws.onClose.listen((e) { tryReconnect(); });
     ws.onError.listen((e) { tryReconnect(); });
@@ -49,10 +50,15 @@ class GameClient extends DisplayObjectContainer {
 
   void action(Cmd c) {
     c.id = c.hashCode;
-    c.name = "Socket Test";
-    if (ws != null && ws.readyState == WebSocket.OPEN) {
+    c.name = name == ""? "${ws.hashCode}" : name;
+    if (ws != null && ws.readyState == html.WebSocket.OPEN) {
       ws.send(c.toData());
     }
+  }
+  
+  void nameUpdateHandler(html.Event e) {
+    name = (e.target as html.InputElement).value;
+    print("setting name to $name");
   }
 }
 
@@ -76,5 +82,6 @@ void main() {
     input.init();
     stages.putIfAbsent("socket", () { return new GameClient(); });
     setupStage(stages, "socket");
+    html.querySelector('#inputName').onInput.listen(stages["socket"].nameUpdateHandler);
   });
 }
