@@ -6,6 +6,7 @@ import 'package:giggl/gglworld.dart';
 
 List<World> worlds = new List<World>();
 List<WebSocket> sockets = new List<WebSocket>();
+num w = 20, h = 20;
 
 void insertPlayer(World world, WebSocket socket) {
   socket.add(JSON.encode(world.grid.surfaceList));
@@ -22,7 +23,7 @@ void insertPlayer(World world, WebSocket socket) {
     c.id = a.hashCode;
     world.action2(c);
   }, onDone: () {
-    print("[socket ${socket.hashCode}] disconnected.");
+    print("[server] ${socket.hashCode} disconnected.");
     world.removeActorAndReplaceWithBot(a);
   });
 }
@@ -31,22 +32,28 @@ void handleWebSocket(WebSocket socket) {
   
   if (!sockets.contains(socket)) {
     sockets.add(socket);
-    print("attempt to add socket ${socket.hashCode}");
+    print("[server] attempt to add socket ${socket.hashCode}");
 
+    World worldWithSpace = null;
     // search for an available world
     worlds.forEach((world) {
       // check if we have space for player in world
       if (world.hasSpace()) {
-        insertPlayer(world, socket);
+        worldWithSpace = world;
       }
     });
+    if (worldWithSpace == null) {
+      worlds.add(new World.size(w, h));
+      worlds.last.start();
+      worldWithSpace = worlds.last;
+      print("[server] created new world");
+    }
+    insertPlayer(worldWithSpace, socket);
   }
 }
 
 void main() {
-  num w = 20, h = 20;
   worlds.add(new World.size(w, h));
-  worlds.last.start();
 
   runZoned(() async {
     var server = await HttpServer.bind(InternetAddress.LOOPBACK_IP_V4, 4040);
@@ -58,6 +65,6 @@ void main() {
       }
     }
   },
-  onError: (e) => print("An error occur.")
+  onError: (e) => print("[server] error occurred on async handWebSocket. ${e.toString()}")
   );
 }

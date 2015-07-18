@@ -301,9 +301,9 @@ class Actor extends WorldObject {
       dmgFrom.fromWeapon.owner.killCount = dmgFrom.fromWeapon.owner.killCount + 1;
       life = 0;
       new Timer(new Duration(seconds: 10), () {
+        if (myWorld == null) return;
         myWorld.spawnRandomly(this);
         life = 100;
-
       });
       print ("[world ${myWorld.hashCode}] ${dmgFrom.fromWeapon.owner.hashCode} (${dmgFrom.fromWeapon.owner.killCount} kills) -> $hashCode ($deathCount death)");
     }

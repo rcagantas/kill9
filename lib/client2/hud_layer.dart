@@ -47,19 +47,20 @@ class HudLayer extends DisplayObjectContainer {
       ..y = stage.stageHeight - center
       ..addTo(this);
 
-    currentTime = new TextField()
+    /*currentTime = new TextField()
       ..defaultTextFormat = tfweapon
       ..x = stage.stageWidth/2 - 150
       ..y = 10
       ..width = 300
-      ..addTo(this);
+      ..addTo(this);*/
 
     stats = new TextField()
       ..defaultTextFormat = new TextFormat('Lato', 11, Color.Azure,
           align:TextFormatAlign.LEFT,
           strokeColor: Color.Black, strokeWidth: 2)
-      ..x = stage.stageWidth - 200
-      ..y = center
+      ..x = 10
+      ..y = 10
+      ..width = 400
       ..addTo(this);
   }
 
@@ -108,7 +109,7 @@ class HudLayer extends DisplayObjectContainer {
   void updateFrame(Frame pf) {
     num mainId = pf.playerId;
     num t = pf.time;
-    currentTime.text = "${t~/60}:${(t%60).toInt().toString().padLeft(2, "0")}";
+    //currentTime.text = "${t~/60}:${(t%60).toInt().toString().padLeft(2, "0")}";
     stats.text = pf.stats;
     killCount.text = "Kills: ${pf.kills}";
 

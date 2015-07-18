@@ -9,7 +9,7 @@ class DebugWindow extends DisplayObjectContainer {
   DebugWindow() {
     inputField = new TextField()
       ..defaultTextFormat = font
-      ..x = 10
+      ..x = stage.stageWidth - 250
       ..y = 10
       ..width = 500
       ..height = 300

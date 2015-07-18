@@ -18,7 +18,7 @@ class World {
   Timer _timer = null, _weaponDropTimer = null;
   Stopwatch watch = new Stopwatch();
 
-  num totalTime = 0;
+  //num totalTime = 0;
   bool worldEnded = false;
   List<Actor> topScore = new List<Actor>();
 
@@ -39,7 +39,6 @@ class World {
     _bulletBehaviors[BulletType.ROCKET] = new RocketBehavior();
     
     bullets = new BulletFactory(200, _bulletBehaviors);
-    start();
     while (actors.length < MAX_PLAYERS) {
       addPlayerAndGetReference(bot: true);
     }
@@ -91,7 +90,7 @@ class World {
     }
   }
   
-  bool hasSpace() { return true; }
+  bool hasSpace() { return countHumans() != MAX_PLAYERS; }
 
   void stop() {
     if (_timer != null) {
@@ -196,7 +195,7 @@ class World {
     frame.playerId = playerId;
     frame.topX = player.x - (WorldConst.VIEWPORT_WIDTH/2);
     frame.topY = player.y - (WorldConst.VIEWPORT_HEIGHT/2);
-    frame.time = totalTime;
+    frame.time = 0;
     frame.kills = player.killCount;
 
     frame.visibleObjects.clear();
@@ -282,7 +281,7 @@ class World {
     watch.stop();
 
     num elapsed = watch.elapsedMilliseconds/1000;
-    totalTime += elapsed;
+    //totalTime += elapsed;
 
     watch.reset();
     watch.start();
@@ -291,6 +290,7 @@ class World {
     _update(elapsed);
   }
 
+  /*
   void _checkWin() {
     bool reachedKillCount = false;
     actors.forEach((a) {
@@ -303,7 +303,7 @@ class World {
       stop();
       worldEnded = true;
     }
-  }
+  }*/
 
   void action(CmdOld c) {
     if (_timer == null) return;
