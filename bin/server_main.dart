@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:giggl/gglcommon.dart';
 import 'package:giggl/gglworld.dart';
+import 'package:http_server/http_server.dart';
 
 List<World> worlds = new List<World>();
 List<WebSocket> sockets = new List<WebSocket>();
@@ -32,7 +33,7 @@ void handleWebSocket(WebSocket socket) {
   
   if (!sockets.contains(socket)) {
     sockets.add(socket);
-    print("[server] attempt to add socket ${socket.hashCode}");
+    print("[socket] attempt to add socket ${socket.hashCode}");
 
     World worldWithSpace = null;
     // search for an available world
@@ -46,7 +47,7 @@ void handleWebSocket(WebSocket socket) {
       worlds.add(new World.size(w, h));
       worlds.last.start();
       worldWithSpace = worlds.last;
-      print("[server] created new world");
+      print("[socket] created new world");
     }
     insertPlayer(worldWithSpace, socket);
   }
@@ -54,6 +55,18 @@ void handleWebSocket(WebSocket socket) {
 
 void main() {
   worlds.add(new World.size(w, h));
+  
+  var staticFiles = new VirtualDirectory("./build/web")
+      ..allowDirectoryListing = true;
+  
+  runZoned(() {
+      HttpServer.bind(InternetAddress.LOOPBACK_IP_V4, 7777).then((server) {
+        print("[web] serving");
+        server.listen(staticFiles.serveRequest);
+      });
+    },
+    onError: (e, stackTrace) => print("$e $stackTrace")
+  );
 
   runZoned(() async {
     var server = await HttpServer.bind(InternetAddress.LOOPBACK_IP_V4, 4040);
@@ -65,6 +78,6 @@ void main() {
       }
     }
   },
-  onError: (e) => print("[server] error occurred on async handWebSocket. ${e.toString()}")
+  onError: (e, stackTrace) => print("[socket] websocket error. $e $stackTrace")
   );
 }

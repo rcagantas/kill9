@@ -10,3 +10,5 @@ packages/
 .settings/
 
 .DS_Store
+build/web
+
