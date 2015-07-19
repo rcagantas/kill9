@@ -8,6 +8,9 @@ import 'package:http_server/http_server.dart';
 List<World> worlds = new List<World>();
 List<WebSocket> sockets = new List<WebSocket>();
 num w = 20, h = 20;
+String hostname = "0.0.0.0";
+num port = 7777;
+num wsport = 4040;
 
 void insertPlayer(World world, WebSocket socket) {
   socket.add(JSON.encode(world.grid.surfaceList));
@@ -60,7 +63,7 @@ void main() {
       ..allowDirectoryListing = true;
   
   runZoned(() {
-      HttpServer.bind(InternetAddress.LOOPBACK_IP_V4, 7777).then((server) {
+      HttpServer.bind(hostname, port).then((server) {
         print("[web] serving");
         server.listen(staticFiles.serveRequest);
       });
@@ -69,7 +72,7 @@ void main() {
   );
 
   runZoned(() async {
-    var server = await HttpServer.bind(InternetAddress.LOOPBACK_IP_V4, 4040);
+    var server = await HttpServer.bind(hostname, wsport);
     await for (var req in server) {
       if (req.uri.path == '/ws') {
         //Upgrade HTTP request to a WebSocket connection.

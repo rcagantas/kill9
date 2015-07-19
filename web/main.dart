@@ -5,6 +5,7 @@ import 'package:stagexl/stagexl.dart';
 import 'package:giggl/gglclient2.dart';
 import 'package:giggl/gglcommon.dart';
 
+String hostname = "127.0.0,1";
 
 class GameClient extends DisplayObjectContainer {
   html.WebSocket ws;
@@ -19,7 +20,7 @@ class GameClient extends DisplayObjectContainer {
   }
 
   void initWebSocket() {
-    ws = new html.WebSocket("ws://127.0.0.1:4040/ws");
+    ws = new html.WebSocket("ws://" + hostname + ":4040/ws");
     ws.onOpen.listen((e) { connected = true; });
     ws.onClose.listen((e) { tryReconnect(); });
     ws.onError.listen((e) { tryReconnect(); });

@@ -34,7 +34,7 @@ class InputHandler {
       mouseY = e.stageY - stage.stageHeight/2;
     });
     stage.onExitFrame.listen(_updater);
-    new async.Timer.periodic(new Duration(milliseconds: 16), makeCmd);
+    new async.Timer.periodic(new Duration(milliseconds: Frame.rate), makeCmd);
   }
 
   void _processKeyboard(KeyboardEvent e) {

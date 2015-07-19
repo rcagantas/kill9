@@ -83,7 +83,7 @@ class World {
       });
       
       //start game
-      _timer = new Timer.periodic(new Duration(milliseconds: 16), this._goRound);
+      _timer = new Timer.periodic(new Duration(milliseconds: Frame.rate), this._goRound);
       for (Actor a in actors) {
         if (a is RandomWalker) a.start();
       }

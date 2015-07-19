@@ -102,6 +102,7 @@ class BulletInFrame extends ObjectInFrame {
 }
 
 class Frame {
+  static final int rate = 32;
   int playerId;
 
   // Viewport
