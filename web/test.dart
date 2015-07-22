@@ -143,10 +143,9 @@ class TestLocalWorld extends DisplayObjectContainer {
   Actor player1;
 
   TestLocalWorld() {
-    num w = 20, h = 20;
-    world = new World.size(w, h);
-    arena = new Arena(w, h, world.grid.surfaceList)..addTo(this);
-    hud = new HudLayer(w, h, world.grid.surfaceList)..addTo(this);
+    world = new World.size(Meta.w, Meta.h);
+    arena = new Arena(Meta.w, Meta.h, world.grid.surfaceList)..addTo(this);
+    hud = new HudLayer(Meta.w, Meta.h, world.grid.surfaceList)..addTo(this);
     arena.hud = hud;
   }
 

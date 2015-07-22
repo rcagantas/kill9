@@ -273,7 +273,6 @@ class World {
     _objects.forEach((k,v)=>v.update(elapsed));
 
     nextChat = chatLogs.isNotEmpty? chatLogs.removeAt(0).replaceAll(";;;", ",") : "";
-    if (nextChat.isNotEmpty) print("chat: $nextChat");
     
     //generate frame for each player
     _listeners.forEach((playerId,listener){
