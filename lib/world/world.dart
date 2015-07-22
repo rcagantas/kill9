@@ -18,7 +18,7 @@ class World {
   Timer _timer = null, _weaponDropTimer = null;
   Stopwatch watch = new Stopwatch();
 
-  //num totalTime = 0;
+  num totalTime = 0;
   bool worldEnded = false;
   List<Actor> topScore = new List<Actor>();
   List<String> chatLogs = new List<String>();
@@ -135,7 +135,10 @@ class World {
       }      
     }
     
-    var newPlayer = bot? new RandomWalker() : new Actor();
+    var newPlayer;
+    if (bot) { newPlayer = new RandomWalker(); newPlayer.start(); }
+    else { newPlayer = new Actor(); }
+    
     addObject(newPlayer);
     actors.insert(index, newPlayer);
     spawnRandomly(newPlayer);
@@ -287,7 +290,7 @@ class World {
     watch.stop();
 
     num elapsed = watch.elapsedMilliseconds/1000;
-    //totalTime += elapsed;
+    totalTime += elapsed;
 
     watch.reset();
     watch.start();
@@ -296,7 +299,6 @@ class World {
     _update(elapsed);
   }
 
-  /*
   void _checkWin() {
     bool reachedKillCount = false;
     actors.forEach((a) {
@@ -309,7 +311,7 @@ class World {
       stop();
       worldEnded = true;
     }
-  }*/
+  }
 
   void action(CmdOld c) {
     if (_timer == null) return;
@@ -367,7 +369,7 @@ class World {
         }
 
         if (c.name != a.name) { a.name = c.name; }
-        if (c.chat != "") { chatLogs.add(c.chat); }
+        if (c.chat != "") { chatLogs.add("${c.name}: ${c.chat}"); }
       }
     }
   }
