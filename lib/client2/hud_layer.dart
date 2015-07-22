@@ -108,7 +108,7 @@ class HudLayer extends DisplayObjectContainer {
 
   void updateFrame(Frame pf) {
     num mainId = pf.playerId;
-    num t = pf.time;
+    //num t = pf.time;
     //currentTime.text = "${t~/60}:${(t%60).toInt().toString().padLeft(2, "0")}";
     stats.text = pf.stats;
     killCount.text = "Kills: ${pf.kills}";

@@ -1,5 +1,12 @@
 part of gglcommon;
 
+class Meta {
+  static String host = "0.0.0.0";
+  static num httpPort = 7777;
+  static num wsPort = 4040;
+  static num w = 20, h = 20;
+}
+
 class Surface {
   static const int PASSABLE = 0;
   static const int NON_PASSABLE = 1;

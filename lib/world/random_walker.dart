@@ -1,6 +1,6 @@
 part of gglworld;
 
-class RandomWalker extends Actor{
+class RandomWalker extends Actor {
 
   //Actor player;
   math.Random random = new math.Random();
@@ -27,7 +27,10 @@ class RandomWalker extends Actor{
   void _fire(Timer timer) {
     if (this.life == 0) return;
     var fire = random.nextInt(2);
-    if (fire == 0) this.weapon.fire();
+    if (fire == 0) {
+      while (this.weapon.ammo == 0) this.switchWeapon();
+      this.weapon.fire();
+    }
   }
 
   void _walkRandomly(Timer timer)  {

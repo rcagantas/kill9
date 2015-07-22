@@ -107,7 +107,7 @@ class Frame {
 
   // Viewport
   num topX,topY,time,kills;
-  String stats = "";
+  String stats = "", chat = "";
 
   // Objects visible in the world
   List<ObjectInFrame> visibleObjects = new List();
@@ -117,7 +117,7 @@ class Frame {
     ..write("$playerId,$topX,$topY,$time,$kills,$stats")
     ..write("~");
 
-    stringBuffer.write("~");
+    //stringBuffer.write("~");
 
     visibleObjects.forEach( (obj) {
 
@@ -131,6 +131,8 @@ class Frame {
       stringBuffer.write(obj.toString());
       stringBuffer.write("|");
     });
+    
+    stringBuffer.write("~$chat");
 
     return stringBuffer.toString();
   }
@@ -150,7 +152,7 @@ class Frame {
     kills = num.parse(fields[4]);
     stats = fields[5];
 
-    var objects = main[2].split("|");
+    var objects = main[1].split("|");
 
     objects.forEach( (str) {
       if (str == "") return;
@@ -163,6 +165,8 @@ class Frame {
       else
         visibleObjects.add(new WeaponDropInFrame.fromString(obj[1]));
     });
+    
+    chat = main.length == 3 ? main[2] : "";
   }
 }
 
@@ -170,6 +174,7 @@ class Cmd {
   num id;
   num ms, tr, moveX, moveY, moveR, fire, swap, mouseX, mouseY;
   String name;
+  String chat;
 
   Cmd() {
     ms = 5;
@@ -187,7 +192,7 @@ class Cmd {
         "$moveX,$moveY,$moveR," +
         "$fire,$swap," +
         "$mouseX,$mouseY," +
-        "$name";
+        "$name,$chat";
   }
 
   Cmd.fromData(String s) {
@@ -206,6 +211,7 @@ class Cmd {
     mouseX = num.parse(fields[8]);
     mouseY = num.parse(fields[9]);
     name = fields[10];
+    chat = fields[11];
   }
 }
 

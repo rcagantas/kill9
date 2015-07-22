@@ -7,10 +7,6 @@ import 'package:http_server/http_server.dart';
 
 List<World> worlds = new List<World>();
 List<WebSocket> sockets = new List<WebSocket>();
-num w = 20, h = 20;
-String hostname = "0.0.0.0";
-num port = 7777;
-num wsport = 4040;
 
 void insertPlayer(World world, WebSocket socket) {
   socket.add(JSON.encode(world.grid.surfaceList));
@@ -47,7 +43,7 @@ void handleWebSocket(WebSocket socket) {
       }
     });
     if (worldWithSpace == null) {
-      worlds.add(new World.size(w, h));
+      worlds.add(new World.size(Meta.w, Meta.h));
       worlds.last.start();
       worldWithSpace = worlds.last;
       print("[socket] created new world");
@@ -57,13 +53,13 @@ void handleWebSocket(WebSocket socket) {
 }
 
 void main() {
-  worlds.add(new World.size(w, h));
+  worlds.add(new World.size(Meta.w, Meta.h));
   
   var staticFiles = new VirtualDirectory("./build/web")
       ..allowDirectoryListing = true;
   
   runZoned(() {
-      HttpServer.bind(hostname, port).then((server) {
+      HttpServer.bind(Meta.host, Meta.httpPort).then((server) {
         print("[web] serving");
         server.listen(staticFiles.serveRequest);
       });
@@ -72,7 +68,7 @@ void main() {
   );
 
   runZoned(() async {
-    var server = await HttpServer.bind(hostname, wsport);
+    var server = await HttpServer.bind(Meta.host, Meta.wsPort);
     await for (var req in server) {
       if (req.uri.path == '/ws') {
         //Upgrade HTTP request to a WebSocket connection.

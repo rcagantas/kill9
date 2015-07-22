@@ -21,6 +21,8 @@ class World {
   //num totalTime = 0;
   bool worldEnded = false;
   List<Actor> topScore = new List<Actor>();
+  List<String> chatLogs = new List<String>();
+  String nextChat = "";
 
   World.size(num height, num width) {
     List<num> surface = MapGenerator.createSimpleRandomSurface(width, height);
@@ -62,9 +64,9 @@ class World {
   int countHumans() {
     int count = 0;
     for (Actor a in actors) {
-      if (!(a is RandomWalker)) count++;
+      if (a is RandomWalker) count++;
     }
-    return count;
+    return MAX_PLAYERS - count;
   }
   
   void removeActorAndReplaceWithBot(Actor a) {
@@ -76,7 +78,7 @@ class World {
     if (_timer == null && actors.length == MAX_PLAYERS) {
       //initializations
 
-      _weaponDropTimer = new Timer.periodic(new Duration(seconds: 3), (timer) {
+      _weaponDropTimer = new Timer.periodic(new Duration(seconds: 1), (timer) {
         if (!_objects.containsValue(_weaponDrop)) {
           _weaponDrop.spawn(this);
         }
@@ -197,6 +199,7 @@ class World {
     frame.topY = player.y - (WorldConst.VIEWPORT_HEIGHT/2);
     frame.time = 0;
     frame.kills = player.killCount;
+    frame.chat = nextChat;
 
     frame.visibleObjects.clear();
 
@@ -266,6 +269,9 @@ class World {
     // individal object updates
     _objects.forEach((k,v)=>v.update(elapsed));
 
+    nextChat = chatLogs.isNotEmpty? chatLogs.removeAt(0).replaceAll(";;;", ",") : "";
+    if (nextChat.isNotEmpty) print("chat: $nextChat");
+    
     //generate frame for each player
     _listeners.forEach((playerId,listener){
       var playerFrame = getFrameDetail(playerId);
@@ -361,6 +367,7 @@ class World {
         }
 
         if (c.name != a.name) { a.name = c.name; }
+        if (c.chat != "") { chatLogs.add(c.chat); }
       }
     }
   }

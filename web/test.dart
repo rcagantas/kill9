@@ -119,10 +119,9 @@ class TestArena extends DisplayObjectContainer {
   PlayerSprite p;
   HudLayer hud;
   TestArena() {
-    num w = 20, h = 20;
-    List<num> surface = MapGenerator.createSimpleRandomSurface(w, h);
-    arena = new Arena(w, h, surface)..addTo(this);
-    hud = new HudLayer(w, h, surface)..addTo(this);
+    List<num> surface = MapGenerator.createSimpleRandomSurface(Meta.w, Meta.h);
+    arena = new Arena(Meta.w, Meta.h, surface)..addTo(this);
+    hud = new HudLayer(Meta.w, Meta.h, surface)..addTo(this);
 
     p = new PlayerSprite(0);
     p.x = stage.stageWidth/2;
@@ -175,17 +174,16 @@ class TestSocket extends DisplayObjectContainer {
   }
 
   void initWebSocket() {
-    ws = new WebSocket("ws://127.0.0.1:4040/ws");
+    ws = new WebSocket("ws://${Meta.host}:${Meta.wsPort}/ws");
     ws.onOpen.listen((e) { connected = true; });
     ws.onClose.listen((e) { tryReconnect(); });
     ws.onError.listen((e) { tryReconnect(); });
     ws.onMessage.listen((e) {
       if (!connected) return;
       if (arena == null) {
-        num w = 20, h = 20;
         List<num> grid = JSON.decode(e.data);
-        arena = new Arena(w, h, grid)..addTo(this);
-        hud = new HudLayer(w, h, grid)..addTo(this);
+        arena = new Arena(Meta.w, Meta.h, grid)..addTo(this);
+        hud = new HudLayer(Meta.w, Meta.h, grid)..addTo(this);
       } else {
         Frame pf = new Frame.fromString(e.data);
         arena.updateFrame(pf);
