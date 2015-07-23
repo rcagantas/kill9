@@ -289,7 +289,7 @@ class World {
     watch.stop();
 
     num elapsed = watch.elapsedMilliseconds/1000;
-    totalTime += elapsed;
+    //totalTime += elapsed;
 
     watch.reset();
     watch.start();
@@ -298,6 +298,7 @@ class World {
     _update(elapsed);
   }
 
+  /*
   void _checkWin() {
     bool reachedKillCount = false;
     actors.forEach((a) {
@@ -310,7 +311,7 @@ class World {
       stop();
       worldEnded = true;
     }
-  }
+  }*/
 
   void action(CmdOld c) {
     if (_timer == null) return;
