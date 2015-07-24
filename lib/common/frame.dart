@@ -173,8 +173,8 @@ class Frame {
 class Cmd {
   num id;
   num ms, tr, moveX, moveY, moveR, fire, swap, mouseX, mouseY;
-  String name;
-  String chat;
+  String name = "";
+  String chat = "";
 
   Cmd() {
     ms = 5;
@@ -211,7 +211,7 @@ class Cmd {
     mouseX = num.parse(fields[8]);
     mouseY = num.parse(fields[9]);
     name = fields[10];
-    chat = fields[11];
+    //chat = fields.length == 11? fields[11]: "";
   }
 }
 

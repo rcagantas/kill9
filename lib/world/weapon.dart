@@ -266,7 +266,10 @@ class BulletFactory {
   }
 
   Bullet getBullet() {
-    if (_bullets.isEmpty) addBullet();
+    if (_bullets.isEmpty) {
+      print("not enough bullets. adding bullet [${_bullets.length + 1}]");
+      addBullet();
+    }
     var bullet = _bullets.removeFirst();
     counter = counter + 1;
     // print("Borrowed ${_bullets.length}: Total fire: $counter");

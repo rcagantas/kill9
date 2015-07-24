@@ -18,6 +18,9 @@ class RandomWalker extends Actor {
     if (_timer != null)     _timer.cancel();
     if (_fireTimer != null) _fireTimer.cancel();
     if (_stopTimer != null) _stopTimer.cancel();
+    _timer = null;
+    _fireTimer = null;
+    _stopTimer = null;
   }
 
   void _stopFiring(Timer timer) {

@@ -86,9 +86,11 @@ class World {
       
       //start game
       _timer = new Timer.periodic(new Duration(milliseconds: Frame.rate), this._goRound);
-      for (Actor a in actors) {
-        if (a is RandomWalker) a.start();
-      }
+      print("[world ${this.hashCode}] started/resumed game");
+    }
+    
+    for (Actor a in actors) {
+      if (a is RandomWalker) a.start();
     }
   }
   
@@ -104,6 +106,10 @@ class World {
     if (_weaponDropTimer != null) {
       _weaponDropTimer.cancel();
       _weaponDropTimer = null;
+    }
+    
+    for (Actor a in actors) {
+      if (a is RandomWalker) a.stop(); 
     }
   }
 
@@ -285,7 +291,7 @@ class World {
     _removals.clear();
   }
 
-  void _goRound(Timer timer) {    
+  void _goRound(Timer timer) {
     watch.stop();
 
     num elapsed = watch.elapsedMilliseconds/1000;
