@@ -168,9 +168,7 @@ class TestSocket extends DisplayObjectContainer {
   bool reconnecting = false;
   bool connected = false;
 
-  TestSocket() {
-    initWebSocket();
-  }
+  TestSocket() {}
 
   void initWebSocket() {
     ws = new WebSocket("ws://${Meta.host}:${Meta.wsPort}/ws");
@@ -202,6 +200,10 @@ class TestSocket extends DisplayObjectContainer {
   }
 
   void action(Cmd c) {
+    if (input.key[32]) {
+      initWebSocket();
+    }
+    
     c.id = c.hashCode;
     c.name = "Socket Test";
     if (ws != null && ws.readyState == WebSocket.OPEN) {
@@ -235,7 +237,7 @@ void main() {
     stages.putIfAbsent("local", () { return new TestLocalWorld(); });
     stages.putIfAbsent("socket", () { return new TestSocket(); });
 
-    setupStage(stages, "socket");
+    setupStage(stages, "local");
 
     querySelector("#red").onClick.listen((e) { setupStage(stages, "red"); });
     querySelector("#player").onClick.listen((e) { setupStage(stages, "player"); });

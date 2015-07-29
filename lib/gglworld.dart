@@ -11,4 +11,4 @@ part 'world/utility.dart';
 part 'world/weapon.dart';
 part 'world/world.dart';
 part 'world/map_generator.dart';
-part 'world/random_walker.dart';
+part 'world/bot.dart';

@@ -56,7 +56,7 @@ class World {
     
   int indexOfBot() {
     for (Actor a in actors) {
-      if (a is RandomWalker) return actors.indexOf(a);
+      if (a is Bot) return actors.indexOf(a);
     }
     return -1;
   }
@@ -64,7 +64,7 @@ class World {
   int countHumans() {
     int count = 0;
     for (Actor a in actors) {
-      if (a is RandomWalker) count++;
+      if (a is Bot) count++;
     }
     return MAX_PLAYERS - count;
   }
@@ -88,14 +88,14 @@ class World {
       _timer = new Timer.periodic(new Duration(milliseconds: Frame.rate), this._goRound);
       print("[world ${this.hashCode}] started/resumed game");
     }
-    
-    for (Actor a in actors) {
-      if (a is RandomWalker) a.start();
-    }
+    /*for (Actor a in actors) {
+      if (a is Bot) a.start();
+    }*/
   }
   
   bool hasSpace() { return countHumans() != MAX_PLAYERS; }
-
+  bool isPaused() { return _timer == null; }
+  
   void stop() {
     if (_timer != null) {
       _timer.cancel();
@@ -107,10 +107,9 @@ class World {
       _weaponDropTimer.cancel();
       _weaponDropTimer = null;
     }
-    
-    for (Actor a in actors) {
-      if (a is RandomWalker) a.stop(); 
-    }
+    /*for (Actor a in actors) {
+      if (a is Bot) a.stop();
+    }*/
   }
 
   void addObject(WorldObject object) {
@@ -133,8 +132,8 @@ class World {
         print("[world $hashCode] everyone is a player!");
         return null; // server full (no bots)
       } else {
-        RandomWalker bot = actors[botIndex];
-        bot.stop();
+        Bot bot = actors[botIndex];
+        //bot.stop();
         removeActor(bot);
         print("[world $hashCode] attempt to replace bot $botIndex");
         index = botIndex;
@@ -142,7 +141,7 @@ class World {
     }
     
     var newPlayer;
-    if (bot) { newPlayer = new RandomWalker(); newPlayer.start(); }
+    if (bot) { newPlayer = new SmarterBot(); /*newPlayer.start();*/ }
     else { newPlayer = new Actor(); }
     
     addObject(newPlayer);
@@ -350,7 +349,7 @@ class World {
   }
 
   void action2(Cmd c) {
-    if (_timer == null) return;
+    if (isPaused()) return;
     for (Actor a in actors) {
       if (a.hashCode == c.id) {
         if (c.moveX == -1) a.moveLeft();
