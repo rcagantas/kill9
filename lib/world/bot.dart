@@ -12,6 +12,7 @@ class Bot extends Actor {
   void doBotThings(Timer timer) {
     c.id = this.hashCode;
     if (random.nextBool()) {
+      if (this.weapon.ammo == 0) c.swap = 1;
       c.fire = 1;
     }
     if (random.nextBool()) c.moveX = random.nextInt(3)-1;
@@ -22,8 +23,8 @@ class Bot extends Actor {
   void sendCmd(Timer timer) {
     if (this.myWorld == null) return;
     c.name = this.name;
-    if (this.weapon.ammo == 0) c.swap = 1;
     this.myWorld.action2(c);
+    c.fire = 0;
     c.swap = 0;
   }
 }
@@ -41,6 +42,7 @@ class SmarterBot extends Bot {
 
   void doBotThings(Timer timer) {
     if (this.myWorld == null) return;
+    num ammoCount = double.MAX_FINITE;
     c.id = this.hashCode;
 
     num distanceToNearestPlayer = double.MAX_FINITE;
@@ -53,6 +55,7 @@ class SmarterBot extends Bot {
       if (obj is ActorInFrame) {
         if (obj.id == hashCode) { 
           mx = obj.x; my = obj.y;
+          ammoCount = obj.weaponAmmo;
         } 
       }
     });
@@ -89,7 +92,8 @@ class SmarterBot extends Bot {
       if (random.nextBool()) c.moveR = random.nextInt(3)-1;
     }
     
-    if (distanceToNearestPlayer < double.MAX_FINITE){
+    if (distanceToNearestPlayer < double.MAX_FINITE) {
+      if (ammoCount == 0) c.swap = 1;
       c.fire = 1;
       c.mouseX = ex + variance(5) - mx;
       c.mouseY = ey + variance(5) - my;
