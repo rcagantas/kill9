@@ -88,9 +88,6 @@ class World {
       _timer = new Timer.periodic(new Duration(milliseconds: Frame.rate), this._goRound);
       print("[world ${this.hashCode}] started/resumed game");
     }
-    /*for (Actor a in actors) {
-      if (a is Bot) a.start();
-    }*/
   }
   
   bool hasSpace() { return countHumans() != MAX_PLAYERS; }
@@ -107,9 +104,6 @@ class World {
       _weaponDropTimer.cancel();
       _weaponDropTimer = null;
     }
-    /*for (Actor a in actors) {
-      if (a is Bot) a.stop();
-    }*/
   }
 
   void addObject(WorldObject object) {
@@ -133,7 +127,6 @@ class World {
         return null; // server full (no bots)
       } else {
         Bot bot = actors[botIndex];
-        //bot.stop();
         removeActor(bot);
         print("[world $hashCode] attempt to replace bot $botIndex");
         index = botIndex;
@@ -141,7 +134,7 @@ class World {
     }
     
     var newPlayer;
-    if (bot) { newPlayer = new SmarterBot(); /*newPlayer.start();*/ }
+    if (bot) { newPlayer = new SmarterBot(); }
     else { newPlayer = new Actor(); }
     
     addObject(newPlayer);
@@ -317,36 +310,6 @@ class World {
       worldEnded = true;
     }
   }*/
-
-  void action(CmdOld c) {
-    if (_timer == null) return;
-    for (Actor a in actors) {
-      if (a.hashCode == c.id) {
-        if (c.moveX == -1) a.moveLeft();
-        else if (c.moveX == 1) a.moveRight();
-        else if (c.moveX == 0) a.stopLeftRightMove();
-
-        if (c.moveY == -1) a.moveUp();
-        else if (c.moveY == 1) a.moveDown();
-        else if (c.moveY == 0) a.stopTopDownMove();
-
-        if (c.rotate == -1) a.turnCounterClockwise();
-        else if (c.rotate == 1) a.turnClockwise();
-        else if (c.rotate == 0) a.stopTurn();
-
-        if (c.fire) a.weapon.fire();
-        else if (!c.fire) a.weapon.stop();
-
-        if (c.swap) a.switchWeapon();
-
-        if (c.mouseX != -1 && c.mouseY != -1) {
-          a.turnToPoint(c.mouseX + a.x, c.mouseY + a.y);
-        }
-
-        if (c.name != a.name) { a.name = c.name; }
-      }
-    }
-  }
 
   void action2(Cmd c) {
     if (isPaused()) return;
