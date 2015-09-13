@@ -1,44 +1,53 @@
-<!doctype html>
+<!DOCTYPE html>
+
+<!--
+  Copyright (c) 2015, Roel Cagantas. All rights reserved. Use of this source code
+  is governed by a BSD-style license that can be found in the LICENSE file.
+-->
+
 <html>
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Kill-9 by rcagantas</title>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="scaffolded-by" content="https://github.com/google/stagehand">
+  <title>kill-9</title>
 
-    <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/github-light.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-  </head>
-  <body>
-    <div class="wrapper">
-      <header>
-        <h1>Kill-9</h1>
-        <p></p>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+  <link href="//fonts.googleapis.com/css?family=Roboto:400,300,600" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="css/normalize.css">
+  <link rel="stylesheet" href="css/skeleton.css">
+  <link rel="stylesheet" href="css/extra.css">
+</head>
 
-        <p class="view"><a href="https://github.com/rcagantas/kill9">View the Project on GitHub <small>rcagantas/kill9</small></a></p>
+<body>
 
-
-        <ul>
-          <li><a href="https://github.com/rcagantas/kill9/zipball/master">Download <strong>ZIP File</strong></a></li>
-          <li><a href="https://github.com/rcagantas/kill9/tarball/master">Download <strong>TAR Ball</strong></a></li>
-          <li><a href="https://github.com/rcagantas/kill9">View On <strong>GitHub</strong></a></li>
+  <div class="container">
+    <div class="u-full-width">
+      <h1>Kill 9</h1>
+      <p><b>WASD</b> to move. <b>MOUSE/ARROWS</b> to fire, change weapons or rotate. </p>
+      <canvas id="maincanvas" class="f1" width="640" height="480"></canvas>
+      <div class="row">
+        <label class="one columns label-body" for="inputName">Name</label>
+        <input class="seven columns" type="text" id="inputName" maxlength="20">
+      </div>
+      <div class="row">
+        <label class="one columns" for="chat">Chat: </label>
+        <input class="seven columns" type="text" id="chat" maxlength="100">
+      </div>
+      <div class="row">
+        <ul id="chatLog">
         </ul>
-      </header>
-      <section>
-        <h3>
-<a id="kill-9" class="anchor" href="#kill-9" aria-hidden="true"><span class="octicon octicon-link"></span></a>Kill-9</h3>
-
-<p>Use WASD to move and mouse buttons(or up/down) to shoot/change weapons</p>
-      </section>
-      <footer>
-        <p>This project is maintained by <a href="https://github.com/rcagantas">rcagantas</a></p>
-        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
-      </footer>
+      </div>
+      <div class="row">
+        <p>Made by <a href="https://github.com/rcagantas">rcagantas</a> and <a href="https://github.com/happyslurpy">happyslurpy</a></p>
+      </div>
     </div>
-    <script src="javascripts/scale.fix.js"></script>
-    
-  </body>
+  </div>
+
+<script src="//ajax.googleapis.com/ajax/libs/webfont/1/webfont.js"></script>
+<script type="application/dart" src="main.dart"></script>
+<script data-pub-inline src="packages/browser/dart.js"></script>
+</body>
 </html>
